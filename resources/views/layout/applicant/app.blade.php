@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard')</title>
     <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- calendar --}}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @vite('resources/css/app.css')
     @vite(['resources/css/app.css', 'resources/js/app.js']) {{-- Adjust as needed --}}
 </head>
@@ -28,6 +30,8 @@
             @yield('content')
             @yield('form')
             @yield('schedule')
+            @yield('setting')
+            @yield('update_profile')
         </main>
 
         {{-- Optional Footer --}}

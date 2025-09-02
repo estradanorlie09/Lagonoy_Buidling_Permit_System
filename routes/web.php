@@ -3,7 +3,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LocationController;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\ApplicantController;
 
 // page controller
@@ -26,7 +26,10 @@ Route::middleware(['auth', 'role:applicant'])->group(function () {
     Route::get('/applicant/records', [ApplicantController::class, 'records'])->name('applicant.records');
     Route::get('/applicant/form', [ApplicantController::class, 'form'])->name('applicant.forms.form');
     Route::get('/applicant/schedule', [ApplicantController::class, 'schedule'])->name('applicant.calendar.schedule');
+    Route::get('/applicant/setting', [ApplicantController::class, 'setting'])->name('applicant.setting');
 
+    Route::get('/applicant/update_profile', [ApplicantController::class, 'update_profile'])->name('applicant.forms.profile.update_form');
+    Route::post('/update_user', [FormController::class, 'update_user_profile'])->name('update_user_profile');
     Route::post('/location/municipalities', [ApplicantController::class, 'getMunicipalities']);
     Route::post('/location/barangays', [ApplicantController::class, 'getBarangays']);
 });

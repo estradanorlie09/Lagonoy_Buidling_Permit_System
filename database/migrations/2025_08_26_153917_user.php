@@ -15,11 +15,16 @@ return new class extends Migration {
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
+            $table->string('suffix')->nullable();
             $table->date('birth_date');
             $table->enum('gender', ['male', 'female'])->default('male');
             $table->string('email')->unique();
             $table->string('password'); // Store hashed password
             $table->string('phone')->nullable();
+            $table->string('province')->nullable();
+            $table->string('municipality')->nullable();
+            $table->string('barangay')->nullable();
+            $table->string('street')->nullable();
             $table->enum('role', ['applicant', 'obo', 'do', 'bfp'])->default('applicant');
             $table->timestamps(); // created_at and updated_at
         });
