@@ -18,6 +18,11 @@ class ApplicantController extends Controller
         return view('applicant.calendar.schedule');
     }
 
+    public function permit()
+    {
+        // $users = User::all();
+        return view('applicant.permit');
+    }
     public function setting()
     {
         // $users = User::all();
@@ -86,6 +91,17 @@ class ApplicantController extends Controller
         $provinces = $locations->getProvincesByRegion($regionCode);
 
         return view('applicant.forms.form', compact('provinces', 'regionCode'));
+    }
+
+    public function zoning_form()
+    {
+        $locations = new LocationService();
+        $regionCode = '05'; // Region V - Bicol
+
+        // Get provinces only from Region V
+        $provinces = $locations->getProvincesByRegion($regionCode);
+
+        return view('applicant.forms.zoning.zoning_form', compact('provinces', 'regionCode'));
     }
 
     public function getMunicipalities(Request $request)

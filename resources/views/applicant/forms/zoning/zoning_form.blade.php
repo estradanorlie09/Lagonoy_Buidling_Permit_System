@@ -1,12 +1,12 @@
 @extends('layout.applicant.app')
 
-@section('title', '📝Form')
+@section('title', 'Zoning')
 
-@section('form')
+@section('zoning_form')
     <div class="w-full mx-auto mt-10 p-6 bg-white rounded shadow" x-data="formTabs()">
         <form method="POST" action="#" enctype="multipart/form-data">
             @csrf
-            <h1 class="text-3xl font-bold text-red-600 mb-4">Project Registration Form</h1>
+            <h1 class="text-3xl font-bold text-red-600 mb-4">Application for Zoning Permit</h1>
             <p class="mb-6">Please fill out the form!</p>
 
             <!-- Tabs Header -->
@@ -85,7 +85,23 @@
                         </div>
                         <p class="mt-1 text-sm text-gray-500">Allowed formats: PDF, JPG, PNG. Max size: 2MB.</p>
                     </div>
+                    <div>
+                        <h1 class="text-xl font-bold">Type of Ownership</h1>
+                    </div>
+                    <div class="flex flex-wrap gap-10" x-data="{ ownershipType: 'sole_proprietorship' }">
+                        <div>
+                            <input type="radio" id="sole_proprietorship" name="ownership_type" value="sole_proprietorship"
+                                x-model="ownershipType">
+                            <label for="sole_proprietorship">Resedential</label>
+                        </div>
 
+                        <div>
+                            <input type="radio" id="partnership" name="ownership_type" value="partnership"
+                                x-model="ownershipType">
+                            <label for="partnership">Non-Resedential</label>
+                        </div>
+
+                    </div>
                     <!-- Owner Information -->
                     <div>
                         <h1 class="text-xl font-bold">Owner Information</h1>
@@ -231,12 +247,6 @@
                             x-model="ownershipType">
                         <label for="government">Government</label>
                     </div>
-                </div>
-                <div class="w-full">
-                    <label for="project" class="block text-sm font-medium text-gray-700">Name of Project</label>
-                    <input type="text" id="project" name="project" placeholder="Name of Project"
-                        class="w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500">
-
                 </div>
                 <div class="mt-5">
                     <h1 class="text-xl font-bold">Project Location (No.,Street,Barangay,City/Municipality)</h1>
@@ -918,10 +928,10 @@
                         label: 'Owner Information'
                     },
                     {
-                        label: 'Project Details'
+                        label: 'Property Information'
                     },
                     {
-                        label: 'Designing Eng. / Architech Info.'
+                        label: 'Construction Details'
                     },
                     {
                         label: 'Documents'

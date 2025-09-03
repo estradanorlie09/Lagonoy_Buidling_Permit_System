@@ -29,7 +29,9 @@
         <main class="flex-1 overflow-y-auto p-6">
             @yield('content')
             @yield('form')
+            @yield('zoning_form')
             @yield('schedule')
+            @yield('permit')
             @yield('setting')
             @yield('update_profile')
         </main>
