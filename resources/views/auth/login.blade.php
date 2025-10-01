@@ -65,7 +65,7 @@
                 @enderror
             </div>
             <div class="flex justify-end mt-2">
-                <a href="#" class="text-gray-400">Forget password?</a>
+                <a href="{{ route('password.email') }}" class="text-gray-400">Forget password?</a>
             </div>
 
             {{-- button login/signup --}}
@@ -85,7 +85,20 @@
             </div>
         </form>
     </div>
-
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Account Verified! Please Login Again",
+                showConfirmButton: false,
+                timer: 2500
+            });
+            setTimeout(function() {
+                window.location.href = "{{ route('login') }}";
+            }, 2500);
+        </script>
+    @endif
 
 
     <script>

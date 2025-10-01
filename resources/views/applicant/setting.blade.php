@@ -34,7 +34,8 @@
                                 <h4 class="text-gray-400 text-sm w-40">Middle Name</h4>
                                 <span>:</span>
                                 <div class="text-sm">
-                                    {{ !empty(ucwords(Auth::user()->middle_name)) ? Auth::user()->middle_name : 'N/A' }}
+                                    {{ !empty(Auth::user()->middle_name) ? ucwords(Auth::user()->middle_name) : 'N/A' }}
+
                                 </div>
                             </div>
                             <div class="flex flex-wrap items-center gap-2">

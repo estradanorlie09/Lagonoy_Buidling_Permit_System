@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\LocationService;
+use App\Models\ZoningApplication;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Utils\StringHelper;
 
@@ -18,6 +20,11 @@ class ApplicantController extends Controller
         return view('applicant.calendar.schedule');
     }
 
+    public function safety()
+    {
+        // $users = User::all();
+        return view('applicant.safety');
+    }
     public function permit()
     {
         // $users = User::all();
@@ -28,7 +35,16 @@ class ApplicantController extends Controller
         // $users = User::all();
         return view('applicant.setting');
     }
+    
+    public function zoning_page()
+    {
+       $applications = ZoningApplication::with('property')
+        ->where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->get();
 
+        return view('applicant.zoning.zoning_page', compact('applications'));
+    }
     public function update_profile()
     {
         $locations = new LocationService();
@@ -101,7 +117,49 @@ class ApplicantController extends Controller
         // Get provinces only from Region V
         $provinces = $locations->getProvincesByRegion($regionCode);
 
-        return view('applicant.forms.zoning.zoning_form', compact('provinces', 'regionCode'));
+        $user = auth()->user();
+
+        $provinceRaw = $user->province ?? '';
+        $municipalityRaw = $user->municipality ?? '';
+
+        // Normalize user data
+        $provinceName = StringHelper::normalizeName($provinceRaw);
+        $municipalityName = StringHelper::normalizeName($municipalityRaw);
+
+        $provincesRaw = $locations->getProvincesByRegion($regionCode);
+
+        $originalProvinceKey = null;
+        foreach ($provincesRaw as $key => $_) {
+            if (StringHelper::normalizeName($key) === $provinceName) {
+                $originalProvinceKey = $key;
+                break;
+            }
+        }
+
+        $municipalitiesRaw = [];
+        $barangays = [];
+
+        if ($originalProvinceKey !== null) {
+            $municipalitiesRaw = $locations->getMunicipalities($regionCode, $originalProvinceKey);
+
+            $originalMunicipalityKey = null;
+            foreach ($municipalitiesRaw as $key => $_) {
+                if (StringHelper::normalizeName($key) === $municipalityName) {
+                    $originalMunicipalityKey = $key;
+                    break;
+                }
+            }
+
+            if ($originalMunicipalityKey !== null) {
+                $barangays = $locations->getBarangays($regionCode, $originalProvinceKey, $originalMunicipalityKey);
+            }
+        }
+
+
+        return view('applicant.forms.zoning.zoning_form', compact('provinces', 'regionCode'),[
+            'municipalities' => $municipalitiesRaw,
+            'barangays' => $barangays,
+        ]);
     }
 
     public function getMunicipalities(Request $request)

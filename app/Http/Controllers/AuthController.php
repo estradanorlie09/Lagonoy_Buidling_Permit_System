@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Auth\Events\Registered;
 use App\Models\User;
 class AuthController extends Controller
 {
@@ -39,7 +40,10 @@ class AuthController extends Controller
             'role' => $request->role,
         ]);
 
-        return redirect()->back()->with('success', 'User registered successfully!');
+        event(new Registered($user));
+        Auth::login($user);
+        return redirect()->route('verification.notice')->with('success','Account Created');
+        // return redirect()->back()->with('success', 'User registered successfully!');
     }
 
     // login
@@ -59,9 +63,11 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        $user = Auth::user();
+        $user = Auth::user();   
 
         if ($user->isApplicant()) {
+            //dd($user);
+           // dd($request);
             return redirect()->intended(route('applicant.dashboard'));
         } elseif ($user->isObo()) {
             return redirect()->intended(route('obo.dashboard'));

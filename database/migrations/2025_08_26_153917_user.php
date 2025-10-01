@@ -26,7 +26,15 @@ return new class extends Migration {
             $table->string('barangay')->nullable();
             $table->string('street')->nullable();
             $table->enum('role', ['applicant', 'obo', 'do', 'bfp'])->default('applicant');
+            $table->rememberToken();
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamps(); // created_at and updated_at
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->index();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
         });
     }
 
