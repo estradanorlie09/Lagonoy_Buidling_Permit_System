@@ -145,183 +145,183 @@
                 </div>
             </div>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
 
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-
-        <!-- Applicant Information Card -->
-        <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-            <div class="flex items-center mb-4">
-                <i class="fas fa-user-circle text-2xl text-blue-500 mr-3"></i>
-                <h3 class="text-lg font-semibold text-gray-800">Applicant Information</h3>
-            </div>
-            <div class="grid grid-cols-1 gap-3">
-                <div>
-                    <p class="text-gray-500 text-sm">Full Name</p>
-                    <p class="font-semibold text-gray-800">
-                        {{ ucfirst($application->user->first_name) }}
-                        {{ $application->user->middle_name ? ucfirst($application->user->middle_name) : '' }}
-                        {{ ucfirst($application->user->last_name) }}
-                        {{ $application->user->suffix ? ', ' . $application->user->suffix : '' }}
-                    </p>
+            <!-- Applicant Information Card -->
+            <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-user-circle text-2xl text-blue-500 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Applicant Information</h3>
                 </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Email</p>
-                    <p class="font-semibold text-gray-800">{{ $application->user->email }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Phone</p>
-                    <p class="font-semibold text-gray-800">{{ $application->user->phone ?? 'N/A' }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Birth Date</p>
-                    <p class="font-semibold text-gray-800">
-                        {{ \Carbon\Carbon::parse($application->user->birth_date)->format('M d, Y') }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Gender</p>
-                    <p class="font-semibold text-gray-800">{{ ucfirst($application->user->gender) }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Address</p>
-                    <p class="font-semibold text-gray-800">
-                        {{ $application->user->street ? $application->user->street . ', ' : '' }}
-                        {{ $application->user->barangay ? $application->user->barangay . ', ' : '' }}
-                        {{ $application->user->municipality ? $application->user->municipality . ', ' : '' }}
-                        {{ $application->user->province ?? '' }}
-                    </p>
+                <div class="grid grid-cols-1 gap-3">
+                    <div>
+                        <p class="text-gray-500 text-sm">Full Name</p>
+                        <p class="font-semibold text-gray-800">
+                            {{ ucfirst($application->user->first_name) }}
+                            {{ $application->user->middle_name ? ucfirst($application->user->middle_name) : '' }}
+                            {{ ucfirst($application->user->last_name) }}
+                            {{ $application->user->suffix ? ', ' . $application->user->suffix : '' }}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Email</p>
+                        <p class="font-semibold text-gray-800">{{ $application->user->email }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Phone</p>
+                        <p class="font-semibold text-gray-800">{{ $application->user->phone ?? 'N/A' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Birth Date</p>
+                        <p class="font-semibold text-gray-800">
+                            {{ \Carbon\Carbon::parse($application->user->birth_date)->format('M d, Y') }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Gender</p>
+                        <p class="font-semibold text-gray-800">{{ ucfirst($application->user->gender) }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Address</p>
+                        <p class="font-semibold text-gray-800">
+                            {{ $application->user->street ? $application->user->street . ', ' : '' }}
+                            {{ $application->user->barangay ? $application->user->barangay . ', ' : '' }}
+                            {{ $application->user->municipality ? $application->user->municipality . ', ' : '' }}
+                            {{ $application->user->province ?? '' }}
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Property Information Card -->
-        <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
-            <div class="flex items-center mb-4">
-                <i class="fas fa-building text-2xl text-green-500 mr-3"></i>
-                <h3 class="text-lg font-semibold text-gray-800">Property Information</h3>
+            <!-- Property Information Card -->
+            <div class="bg-white shadow-lg rounded-xl p-6 border border-gray-100">
+                <div class="flex items-center mb-4">
+                    <i class="fas fa-building text-2xl text-green-500 mr-3"></i>
+                    <h3 class="text-lg font-semibold text-gray-800">Property Information</h3>
+                </div>
+                <div class="grid grid-cols-1 gap-3">
+                    <div>
+                        <p class="text-gray-500 text-sm">Property Address</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Province</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Municipality/City</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Barangay</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Lot Area (sq.m)</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->lot_area }}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Tax Declaration No</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-1 gap-3">
-                <div>
-                    <p class="text-gray-500 text-sm">Property Address</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Province</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Municipality/City</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Barangay</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Lot Area (sq.m)</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->lot_area }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Tax Declaration No</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-
-    <!-- Additional Notes -->
-    @if ($application->property->comments)
-        <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">🗒️ Additional Notes</h3>
-            <p class="text-gray-700">{{ $application->property->comments }}</p>
-        </div>
-    @endif
-
-    <!-- Documents -->
-    <div class="bg-white shadow-lg rounded-xl mt-5 p-6 mb-6">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-semibold text-gray-800">Submitted Documents</h3>
 
         </div>
 
-        @php
-            // Group documents by version and sort descending
-            $docsByVersion = $application->documents->groupBy('version')->sortKeysDesc();
-            $latestVersion = $docsByVersion->keys()->first();
-        @endphp
 
-        @if ($docsByVersion->count())
-            @foreach ($docsByVersion as $version => $docs)
-                <div class="mb-6 relative">
-                    <!-- Version Badge -->
-                    <h4 class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold mb-3">
-                        Version {{ $version }}
-                    </h4>
+        <!-- Additional Notes -->
+        @if ($application->property->comments)
+            <div class="bg-white shadow-md rounded-xl p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">🗒️ Additional Notes</h3>
+                <p class="text-gray-700">{{ $application->property->comments }}</p>
+            </div>
+        @endif
 
-                    <!-- Latest Version Ribbon -->
-                    @if ($version == $latestVersion)
-                        <span
-                            class="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
-                            Latest
-                        </span>
-                    @endif
+        <!-- Documents -->
+        <div class="bg-white shadow-lg rounded-xl mt-5 p-6 mb-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Submitted Documents</h3>
 
-                    <ul class="space-y-4">
-                        @foreach ($docs as $doc)
-                            <li>
-                                <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                                    class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
+            </div>
 
-                                    <!-- Document Icon with colored background -->
-                                    <div
-                                        class="flex-shrink-0 p-2 rounded-md
+            @php
+                // Group documents by version and sort descending
+                $docsByVersion = $application->documents->groupBy('version')->sortKeysDesc();
+                $latestVersion = $docsByVersion->keys()->first();
+            @endphp
+
+            @if ($docsByVersion->count())
+                @foreach ($docsByVersion as $version => $docs)
+                    <div class="mb-6 relative">
+                        <!-- Version Badge -->
+                        <h4 class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 font-semibold mb-3">
+                            Version {{ $version }}
+                        </h4>
+
+                        <!-- Latest Version Ribbon -->
+                        @if ($version == $latestVersion)
+                            <span
+                                class="absolute top-0 right-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg">
+                                Latest
+                            </span>
+                        @endif
+
+                        <ul class="space-y-4">
+                            @foreach ($docs as $doc)
+                                <li>
+                                    <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                                        class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
+
+                                        <!-- Document Icon with colored background -->
+                                        <div
+                                            class="flex-shrink-0 p-2 rounded-md
                                 @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif'])) bg-yellow-100 text-yellow-600
                                 @elseif(Str::endsWith($doc->file_path, 'pdf')) bg-red-100 text-red-600
                                 @elseif(Str::endsWith($doc->file_path, ['doc', 'docx'])) bg-blue-100 text-blue-600
                                 @elseif(Str::endsWith($doc->file_path, 'txt')) bg-gray-100 text-gray-600
                                 @else bg-gray-100 text-gray-500 @endif
                                 ">
-                                        @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
-                                            <i class="fas fa-file-image text-2xl"></i>
-                                        @elseif(Str::endsWith($doc->file_path, 'pdf'))
-                                            <i class="fas fa-file-pdf text-2xl"></i>
-                                        @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
-                                            <i class="fas fa-file-word text-2xl"></i>
-                                        @elseif(Str::endsWith($doc->file_path, 'txt'))
-                                            <i class="fas fa-file-alt text-2xl"></i>
-                                        @else
-                                            <i class="fas fa-file text-2xl"></i>
-                                        @endif
-                                    </div>
+                                            @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
+                                                <i class="fas fa-file-image text-2xl"></i>
+                                            @elseif(Str::endsWith($doc->file_path, 'pdf'))
+                                                <i class="fas fa-file-pdf text-2xl"></i>
+                                            @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
+                                                <i class="fas fa-file-word text-2xl"></i>
+                                            @elseif(Str::endsWith($doc->file_path, 'txt'))
+                                                <i class="fas fa-file-alt text-2xl"></i>
+                                            @else
+                                                <i class="fas fa-file text-2xl"></i>
+                                            @endif
+                                        </div>
 
-                                    <!-- Document Details -->
-                                    <div class="flex-1">
-                                        <span class="block text-lg font-medium text-gray-800">
-                                            {{ $doc->filename ?? 'Submitted Document' }}
-                                        </span>
-
-                                        @if ($doc->document_type)
-                                            <span class="text-sm text-gray-500">
-                                                {{ $doc->document_type }}
+                                        <!-- Document Details -->
+                                        <div class="flex-1">
+                                            <span class="block text-lg font-medium text-gray-800">
+                                                {{ $doc->filename ?? 'Submitted Document' }}
                                             </span>
-                                        @endif
-                                    </div>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endforeach
-        @else
-            <p class="text-gray-500">No documents submitted.</p>
-        @endif
+
+                                            @if ($doc->document_type)
+                                                <span class="text-sm text-gray-500">
+                                                    {{ $doc->document_type }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endforeach
+            @else
+                <p class="text-gray-500">No documents submitted.</p>
+            @endif
 
 
 
+        </div>
     </div>
+
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endsection

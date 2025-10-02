@@ -19,6 +19,7 @@ class ZoningApplication extends Model
         'property_id',
         'application_no',
         'status',
+        'approved_by'
     ];
 
     protected static function boot()
@@ -60,6 +61,11 @@ class ZoningApplication extends Model
     public function remarks()
 {
     return $this->hasMany(ApplicationRemark::class);
+}
+
+public function approver()
+{
+    return $this->belongsTo(User::class, 'approved_by');
 }
     // public function user() {
     //     return $this->belongsTo(User::class, 'user_id', 'id');

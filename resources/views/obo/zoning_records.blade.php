@@ -107,32 +107,54 @@
                                             'disapproved' => 'bg-red-100 text-red-700',
                                             'resubmit' => 'bg-gray-200 text-gray-700',
                                         ];
+
+                                        $stageLabels = [
+                                            'submitted' => 'Submitted',
+                                            'under_review' => 'Under Review',
+                                            'approved' => 'Approved',
+                                            'disapproved' => 'Disapproved',
+                                            'resubmit' => 'Resubmit',
+                                        ];
                                     @endphp
                                     <span
                                         class="px-3 py-1 text-xs font-semibold rounded-full {{ $statusColors[$application->status] ?? 'bg-gray-100 text-gray-700' }}">
-                                        {{ ucfirst($application->status) }}
+                                        {{ $stageLabels[$application->status] ?? ucfirst($application->status) }}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-left space-x-2 flex items-center">
 
                                     <!-- View -->
                                     <a href="{{ route('obo.zoning.zoning_view_record', $application->id) }}"
-                                        class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                        class="relative inline-block text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                        x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
+
                                         <span class="p-2 bg-blue-100 rounded-md hover:bg-blue-200 transition">
                                             <i class="fas fa-eye"></i>
                                         </span>
+
+                                        <div x-show="open" x-transition
+                                            class="absolute left-1/2 -translate-x-1/2 mt-2 px-3 py-2 text-sm font-medium text-white bg-blue-900 rounded-lg shadow-lg z-50"
+                                            style="display: none;">
+                                            View
+                                        </div>
                                     </a>
+
 
                                     @if ($application->status === 'under_review')
                                         <!-- Approve -->
                                         <form action="{{ route('obo.zoning.approve', $application->id) }}" method="POST"
                                             class="inline">
                                             @csrf
-                                            <button type="button"
+                                            <button type="button" data-tooltip-target="tooltip-approved"
                                                 @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approved', par: 'approve'})"
                                                 class="p-2 bg-green-100 rounded-md hover:bg-green-200 transition text-green-600">
                                                 <i class="fas fa-check-circle"></i>
                                             </button>
+                                            <div id="tooltip-approved" role="tooltip"
+                                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-green-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                                Approved
+                                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                            </div>
                                         </form>
 
                                         <!-- Disapprove -->
@@ -140,21 +162,32 @@
                                             method="POST" class="inline">
                                             @csrf
                                             <button type="button"
+                                                data-tooltip-target="tooltip-disapproved"data-tooltip-placement="bottom"
                                                 @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Disapproved', par: 'disapprove'})"
                                                 class="p-2 bg-red-100 rounded-md hover:bg-red-200 transition text-red-600">
                                                 <i class="fas fa-times-circle"></i>
                                             </button>
+                                            <div id="tooltip-disapproved" role="tooltip-1"
+                                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-red-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                                Disapproved
+                                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                            </div>
                                         </form>
 
                                         <!-- Request Resubmission -->
                                         <form action="{{ route('obo.zoning.resubmit', $application->id) }}" method="POST"
                                             class="inline">
                                             @csrf
-                                            <button type="button"
+                                            <button type="button" data-tooltip-target="tooltip-resubmit"
                                                 @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Resubmit', par:'resubmit'})"
                                                 class="p-2 bg-yellow-100 rounded-md hover:bg-yellow-200 transition text-yellow-600">
                                                 <i class="fas fa-edit"></i>
                                             </button>
+                                            <div id="tooltip-resubmit" role="tooltip-1"
+                                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-yellow-900 rounded-lg shadow-xs opacity-0 tooltip dark:bg-gray-700">
+                                                Resubmit
+                                                <div class="tooltip-arrow" data-popper-arrow></div>
+                                            </div>
                                         </form>
                                     @endif
                                 </td>
@@ -166,9 +199,22 @@
             </div>
         </div>
     </div>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Account Created!",
+                showConfirmButton: false,
+                timer: 2500
+            });
+            setTimeout(function() {
 
+            }, 2500);
+        </script>
+    @endif
     <!-- Modal -->
-    <div x-data="{ open: false, appId: null, appTitle: '' ,appPar:''}"
+    <div x-data="{ open: false, appId: null, appTitle: '', appPar: '' }"
         x-on:open-remarks-modal.window="
         open = true; 
         appId = $event.detail.id; 
@@ -198,6 +244,20 @@
             </form>
         </div>
     </div>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Status Update",
+                showConfirmButton: false,
+                timer: 2500
+            });
+            setTimeout(function() {
+
+            }, 2500);
+        </script>
+    @endif
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- DataTable Script -->
@@ -217,9 +277,39 @@
             });
         });
     </script>
+    <!-- Custom Styles -->
     <style>
         [x-cloak] {
-            display: none;
+            display: none !important;
         }
+
+        .dataTable td {
+            padding: 1rem 1rem !important;
+        }
+
+        table.dataTable thead th {
+            text-align: left !important;
+        }
+
+        /* DataTable Pagination */
+        /* .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: #f8f8f8;
+            color: #333 !important;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 4px 12px;
+            margin: 2px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #dc2626 !important;
+            color: #fff !important;
+            border: 1px solid #dc2626;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background: #ef4444 !important;
+            color: #fff !important;
+        } */
     </style>
 @endsection

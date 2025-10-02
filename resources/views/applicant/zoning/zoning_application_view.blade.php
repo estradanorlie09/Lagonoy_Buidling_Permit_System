@@ -10,6 +10,18 @@
             <h2 class="text-2xl font-bold text-red-700">📄 Zoning Application Details</h2>
             <p class="text-gray-700 text-sm mt-1">Review all information for your submitted application.</p>
         </div>
+        @if ($application->status == 'approved')
+            <a href="{{ route('obo.pdf', $application->id) }}"
+                class="flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 transition duration-200 mb-5">
+                <!-- Download Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                </svg>
+                Download Certificate
+            </a>
+        @endif
 
         @php
             // Normalize status to lowercase
@@ -69,6 +81,7 @@
                     <p class="text-gray-500 text-sm">Submitted On:</p>
                     <p class="font-semibold text-gray-800">{{ $application->created_at->format('M d, Y') }}</p>
                 </div>
+
             </div>
 
             <!-- Status Tracker -->
@@ -145,111 +158,115 @@
                 </div>
             </div>
         </div>
-
-    </div>
-
-    <!-- Property Info Card -->
-    <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Property Information</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <p class="text-gray-500 text-sm">Property Address:</p>
-                <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
-            </div>
-            <div>
-                <p class="text-gray-500 text-sm">Province:</p>
-                <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
-            </div>
-            <div>
-                <p class="text-gray-500 text-sm">Municipality/City:</p>
-                <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
-            </div>
-            <div>
-                <p class="text-gray-500 text-sm">Barangay:</p>
-                <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
-            </div>
-            <div>
-                <p class="text-gray-500 text-sm">Lot Area (sq.m):</p>
-                <p class="font-semibold text-gray-800">{{ $application->property->lot_area }}</p>
-            </div>
-            <div>
-                <p class="text-gray-500 text-sm">Tax Declaration No:</p>
-                <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Additional Notes -->
-    @if ($application->property->comments)
+        <!-- Property Info Card -->
         <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">🗒️ Additional Notes</h3>
-            <p class="text-gray-700">{{ $application->property->comments }}</p>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Property Information</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p class="text-gray-500 text-sm">Property Address:</p>
+                    <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Province:</p>
+                    <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Municipality/City:</p>
+                    <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Barangay:</p>
+                    <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Lot Area (sq.m):</p>
+                    <p class="font-semibold text-gray-800">{{ $application->property->lot_area }}</p>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm">Tax Declaration No:</p>
+                    <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
+                </div>
+            </div>
         </div>
-    @endif
 
-    <!-- Documents -->
-    <div class="bg-white shadow-lg rounded-xl p-6 mb-6">
-        <div class="flex justify-between items-center mb-6">
-            <h3 class="text-xl font-semibold text-gray-800">Submitted Documents</h3>
+        <!-- Additional Notes -->
+        @if ($application->property->comments)
+            <div class="bg-white shadow-md rounded-xl p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">🗒️ Additional Notes</h3>
+                <p class="text-gray-700">{{ $application->property->comments }}</p>
+            </div>
+        @endif
 
-            {{-- ✅ FIX: case-insensitive check --}}
-            @if (strtolower($application->status) === 'resubmit')
-                <a href="{{ route('applicant.zoning.zoning_application_view.resubmit_doc', $application->id) }}"
-                    class="px-5 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg shadow-md text-sm font-medium transition">
-                    <i class="fas fa-redo mr-2"></i> Resubmit Documents
-                </a>
+        <!-- Documents -->
+        <div class="bg-white shadow-lg rounded-xl p-6 mb-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-semibold text-gray-800">Submitted Documents</h3>
+
+                {{-- ✅ FIX: case-insensitive check --}}
+                @if (strtolower($application->status) === 'resubmit')
+                    <a href="{{ route('applicant.zoning.zoning_application_view.resubmit_doc', $application->id) }}"
+                        class="px-5 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg shadow-md text-sm font-medium transition">
+                        <i class="fas fa-redo mr-2"></i> Resubmit Documents
+                    </a>
+                @endif
+            </div>
+
+            @php
+                $latestDocs = $application->documents
+                    ->groupBy('document_type')
+                    ->map(fn($docs) => $docs->sortByDesc('version')->first());
+            @endphp
+
+            @if ($latestDocs->count() > 0)
+                <ul class="space-y-4">
+                    @foreach ($latestDocs as $doc)
+                        <li>
+                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                                class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
+
+                                <!-- Document Icon -->
+                                <div class="flex-shrink-0">
+                                    @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
+                                        <img src="{{ asset('storage/' . $doc->file_path) }}" alt="{{ $doc->filename }}"
+                                            class="h-10 w-10 object-cover rounded">
+                                    @elseif(Str::endsWith($doc->file_path, 'pdf'))
+                                        <i class="fas fa-file-pdf text-red-600 text-2xl"></i>
+                                    @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
+                                        <i class="fas fa-file-word text-blue-600 text-2xl"></i>
+                                    @elseif(Str::endsWith($doc->file_path, 'txt'))
+                                        <i class="fas fa-file-alt text-gray-600 text-2xl"></i>
+                                    @else
+                                        <i class="fas fa-file text-gray-500 text-2xl"></i>
+                                    @endif
+                                </div>
+
+                                <!-- Document Details -->
+                                <div class="flex-1">
+                                    <span class="block text-lg font-medium text-gray-800">
+                                        {{ $doc->filename ?? 'Submitted Document' }}
+                                    </span>
+
+                                    @if ($doc->document_type)
+                                        <span class="text-sm text-gray-500">
+                                            {{ $doc->document_type }} (v{{ $doc->version }})
+                                        </span>
+                                    @endif
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-gray-500">No documents submitted.</p>
             @endif
         </div>
-
-        @php
-            $latestDocs = $application->documents
-                ->groupBy('document_type')
-                ->map(fn($docs) => $docs->sortByDesc('version')->first());
-        @endphp
-
-        @if ($latestDocs->count() > 0)
-            <ul class="space-y-4">
-                @foreach ($latestDocs as $doc)
-                    <li>
-                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                            class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
-
-                            <!-- Document Icon -->
-                            <div class="flex-shrink-0">
-                                @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
-                                    <img src="{{ asset('storage/' . $doc->file_path) }}" alt="{{ $doc->filename }}"
-                                        class="h-10 w-10 object-cover rounded">
-                                @elseif(Str::endsWith($doc->file_path, 'pdf'))
-                                    <i class="fas fa-file-pdf text-red-600 text-2xl"></i>
-                                @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
-                                    <i class="fas fa-file-word text-blue-600 text-2xl"></i>
-                                @elseif(Str::endsWith($doc->file_path, 'txt'))
-                                    <i class="fas fa-file-alt text-gray-600 text-2xl"></i>
-                                @else
-                                    <i class="fas fa-file text-gray-500 text-2xl"></i>
-                                @endif
-                            </div>
-
-                            <!-- Document Details -->
-                            <div class="flex-1">
-                                <span class="block text-lg font-medium text-gray-800">
-                                    {{ $doc->filename ?? 'Submitted Document' }}
-                                </span>
-
-                                @if ($doc->document_type)
-                                    <span class="text-sm text-gray-500">
-                                        {{ $doc->document_type }} (v{{ $doc->version }})
-                                    </span>
-                                @endif
-                            </div>
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-        @else
-            <p class="text-gray-500">No documents submitted.</p>
-        @endif
     </div>
+
+
+
+
+
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endsection

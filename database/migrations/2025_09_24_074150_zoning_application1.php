@@ -17,11 +17,16 @@ return new class extends Migration
         $table->uuid('property_id'); // UUID foreign key
         $table->string('application_no')->unique(); // Business ID (ZN-XXXXXXXX)
         $table->enum('status', ['submitted','approved','disapproved','resubmit','under_review'])->default('submitted');
+        $table->uuid('approved_by')->nullable();
         $table->timestamps();
 
         // foreign key constraint
         $table->foreign('property_id')->references('id')->on('zoning_property')->onDelete('cascade');
         $table->foreign('user_id')->references('id')->on('users');
+        $table->foreign('approved_by')
+          ->references('id')
+          ->on('users')
+          ->nullOnDelete();
     });
 
     }

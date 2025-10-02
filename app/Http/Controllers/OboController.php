@@ -22,6 +22,7 @@ class OboController extends Controller
 
     $application = ZoningApplication::findOrFail($id);
     $application->status = 'approved';
+    $application->approved_by = Auth::id();
     $application->save();
 
     ApplicationRemark::create([
@@ -29,6 +30,8 @@ class OboController extends Controller
         'zoning_application_id'=> $application->id, 
         'remark' => $request->remarks,
     ]);
+
+    
 
     return redirect()->back()->with('success', 'Application sent back for resubmission with remarks.');
 }

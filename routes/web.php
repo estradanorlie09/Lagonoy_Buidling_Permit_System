@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\PdfController;
 use App\Http\Controllers\ZoningController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\OboController;
@@ -54,6 +55,9 @@ Route::middleware(['auth','verified', 'role:applicant'])->group(function () {
 
     Route::get('/applicant/zoning/view_application/resubmit/{id}', [ZoningController::class, 'resubmit'])->name('applicant.zoning.zoning_application_view.resubmit_doc');
     Route::post('/resubmit/{id}', [ZoningController::class, 'doc_resubmit'])->name('zoning.resubmit')->middleware('auth');
+
+      // pdf
+    Route::get('/zoning/pdf/{id}', [PdfController::class, 'applicationReport'])->name('obo.pdf');
 });
 
 // OBO
@@ -66,8 +70,9 @@ Route::middleware(['auth', 'role:obo'])->group(function () {
     Route::post('/obo/zoning/{id}/approve', [OboController::class, 'approve'])->name('obo.zoning.approve');
     Route::post('/obo/zoning/{id}/disapprove', [OboController::class, 'disapprove'])->name('obo.zoning.disapprove');
     Route::post('/obo/zoning/{id}/resubmit', [OboController::class, 'resubmit'])->name('obo.zoning.resubmit');
-       Route::get('/obo/zoning/view_application_data/{id}', [OboController::class, 'show'])->name('obo.zoning.zoning_view_record');
+    Route::get('/obo/zoning/view_application_data/{id}', [OboController::class, 'show'])->name('obo.zoning.zoning_view_record');
 
+  
 });
 
 // logout
@@ -143,3 +148,5 @@ Route::post('/reset-password', function (Request $request) {
         ? redirect()->route('login')->with('status', __($status))
         : back()->withErrors(['email' => [__($status)]]);
 })->name('password.update');
+
+ Route::get('/certificate/{id}/verify', [PdfController::class, 'verify'])->name('certificate.verify');
