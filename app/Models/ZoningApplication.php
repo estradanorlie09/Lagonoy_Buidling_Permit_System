@@ -62,7 +62,10 @@ class ZoningApplication extends Model
 {
     return $this->hasMany(ApplicationRemark::class);
 }
-
+public function visitation()
+{
+    return $this->hasOne(Visitation::class, 'zoning_application_id');
+}
 public function approver()
 {
     return $this->belongsTo(User::class, 'approved_by');

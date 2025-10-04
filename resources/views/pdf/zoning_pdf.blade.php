@@ -32,12 +32,32 @@
         }
 
         .header {
+            position: relative;
             text-align: center;
+            /* center all header content */
             margin-bottom: 20px;
         }
 
-        .header img {
+        .header .qr {
+            position: absolute;
+            /* fix QR on the left */
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .header .qr img {
             width: 80px;
+            height: 80px;
+            margin-bottom: 5px;
+        }
+
+        .header .text-center {
+            display: inline-block;
+            /* allow text to stay centered */
         }
 
         h2,
@@ -86,15 +106,25 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <img src="{{ public_path('asset/icon/logo.png') }}" alt="Seal" width="80">
+        <!-- QR code fixed to the left -->
+        <div class="qr">
+            <img src="{{ $qrCodeUrl }}" alt="QR Code">
+            <p>Scan to Verify</p>
+        </div>
 
-        <h3>Republic of the Philippines</h3>
-        <h3>Province of Camarines Sur</h3>
-        <h2><strong>MUNICIPALITY OF Lagonoy</strong></h2>
-        <h3>ZONING ADMINISTRATION</h3>
-        <h3><u>ZONING CERTIFICATION</u></h3>
-        <p>No. <span class="app_no">{{ $application->application_no }}</span></p>
+        <!-- Centered header content -->
+        <div class="text-center">
+            <img src="{{ public_path('asset/icon/logo.png') }}" alt="Seal" width="80">
+            <h3>Republic of the Philippines</h3>
+            <h3>Province of Camarines Sur</h3>
+            <h2><strong>MUNICIPALITY OF Lagonoy</strong></h2>
+            <h3>ZONING ADMINISTRATION</h3>
+            <h3><u>ZONING CERTIFICATION</u></h3>
+            <p>No. <span class="app_no">{{ $application->application_no }}</span></p>
+        </div>
     </div>
+
+
 
     <!-- Body -->
     <p>
@@ -154,11 +184,7 @@
     <p>{{ $application->id }}</p>
 
 
-    <p>
-        <img src="{{ $qrCodeUrl }}" alt="QR Code">
-        <br>
-        Scan to Verify
-    </p>
+
 </body>
 
 </html>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\LocationService;
 use App\Models\ZoningApplication;
+use App\Models\Visitation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Utils\StringHelper;
@@ -19,6 +20,33 @@ class ApplicantController extends Controller
     {
         return view('applicant.calendar.schedule');
     }
+
+   public function getVisitationEvents()
+{
+    $visitations = Visitation::whereHas('application', function($q) {
+        $q->where('user_id', auth()->id()); 
+    })->get();
+
+    $events = $visitations->map(function ($visitation) {
+        return [
+            'id'    => $visitation->id,
+            'title' => 'Visitation - ' . $visitation->application->application_no,
+            'start' => $visitation->visit_date . 'T' . $visitation->visit_time,
+            'status' => $visitation->status,
+            'remarks' => $visitation->remarks,
+            'color' => match($visitation->status) {
+                'completed' => '#16a34a',   // green
+                'cancelled' => '#dc2626',   // red
+                'rescheduled' => '#f59e0b', // yellow
+                'absent' => '#6b7280',      // gray
+                default => '#2563eb',       // blue
+            },
+        ];
+    });
+
+    return response()->json($events);
+}
+
 
     public function safety()
     {

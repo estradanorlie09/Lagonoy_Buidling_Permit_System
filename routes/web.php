@@ -56,6 +56,10 @@ Route::middleware(['auth','verified', 'role:applicant'])->group(function () {
     Route::get('/applicant/zoning/view_application/resubmit/{id}', [ZoningController::class, 'resubmit'])->name('applicant.zoning.zoning_application_view.resubmit_doc');
     Route::post('/resubmit/{id}', [ZoningController::class, 'doc_resubmit'])->name('zoning.resubmit')->middleware('auth');
 
+    Route::get('/applicant/visitations/events', [ApplicantController::class, 'getVisitationEvents'])
+    ->name('applicant.visitations.events');
+
+
       // pdf
     Route::get('/zoning/pdf/{id}', [PdfController::class, 'applicationReport'])->name('obo.pdf');
 });
@@ -71,6 +75,14 @@ Route::middleware(['auth', 'role:obo'])->group(function () {
     Route::post('/obo/zoning/{id}/disapprove', [OboController::class, 'disapprove'])->name('obo.zoning.disapprove');
     Route::post('/obo/zoning/{id}/resubmit', [OboController::class, 'resubmit'])->name('obo.zoning.resubmit');
     Route::get('/obo/zoning/view_application_data/{id}', [OboController::class, 'show'])->name('obo.zoning.zoning_view_record');
+    Route::get('/obo/zoning_schedule', [OboController::class, 'schedule'])->name('obo.zoning_schedule');
+   
+    Route::post('/obo/zoning/{id}/set_schedule', [OboController::class, 'scheduleVisit'])->name('obo.zoning.schedule')->middleware('auth');
+    Route::post('/obo/zoning/{id}/reschedule', [OboController::class, 'reschedule'])->name('obo.zoning.reschedule');
+    Route::put('/visitations/{id}/status', [OboController::class, 'updateStatus'])->name('visitations.updateStatus');
+
+
+    // Route::put('/visitations/{id}/status', [OboController::class, 'cancel'])->name('schedules.cancel');
 
   
 });

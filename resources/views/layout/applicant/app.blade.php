@@ -4,10 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard')</title>
-    
+    <link rel="shortcut icon" href="{{ asset('asset/icon/images.ico') }}">
     {{-- alpine --}}
     <script src="//unpkg.com/alpinejs" defer></script>
-   
+    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     {{-- alert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    

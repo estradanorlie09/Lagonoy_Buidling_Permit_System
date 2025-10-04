@@ -7,7 +7,7 @@
 
         <!-- Header -->
         <div class="rounded-xl p-6 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 shadow-md mb-6">
-            <h2 class="text-2xl font-bold text-blue-700">🏛️ Zoning Officer Dashboard</h2>
+            <h2 class="text-2xl font-bold text-blue-700">🏛️ Zoning Record Dashboard</h2>
             <p class="text-gray-700 text-sm mt-1">
                 Review, approve, or request changes on zoning applications submitted by applicants.
             </p>
@@ -65,13 +65,49 @@
 
         <!-- Applications Table -->
         <div class="bg-white shadow-lg rounded-xl overflow-hidden">
-            <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-200 px-6 py-4 gap-4">
-                <div class="flex items-center w-full sm:w-1/3 relative">
-                    <input type="search" id="customSearch" placeholder="🔍 Search applications..."
-                        class="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    <i class="fas fa-search absolute left-3 text-gray-400"></i>
+            <div class="m-5">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-4 px-6">
+
+                    <div class="w-full sm:w-1/2 mb-2 sm:mb-0">
+                        <h1 class="text-xl font-bold text-gray-800">ZONING RECORDS TABLE</h1>
+                    </div>
+
+                    <div class="w-full sm:w-1/2">
+                        <div class="relative w-full">
+                            <input type="search" id="customSearch" placeholder="🔍 Search applications..."
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <hr class="border-t border-gray-300 my-4">
+
+            <div class="flex gap-3 mb-4 px-6 flex-wrap">
+                <!-- Status Filters -->
+                <button class="filter-btn status-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium"
+                    data-type="status" data-value="all">All</button>
+                <button class="filter-btn status-btn bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium"
+                    data-type="status" data-value="under_review">Under Review</button>
+                <button class="filter-btn status-btn bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium"
+                    data-type="status" data-value="approved">Approved</button>
+                <button class="filter-btn status-btn bg-red-100 text-red-800 px-4 py-2 rounded-full font-medium"
+                    data-type="status" data-value="disapproved">Disapproved</button>
+                <button class="filter-btn status-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium"
+                    data-type="status" data-value="resubmit">Resubmit</button>
+
+                <!-- Date Filters -->
+                <button class="filter-btn date-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium"
+                    data-type="date" data-value="all">All Dates</button>
+                <button class="filter-btn date-btn bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium"
+                    data-type="date" data-value="today">Today</button>
+                <button class="filter-btn date-btn bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium"
+                    data-type="date" data-value="last_week">Last Week</button>
+                <button class="filter-btn date-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium"
+                    data-type="date" data-value="last_month">Last Month</button>
+            </div>
+
+
 
             <div class="overflow-x-auto p-10">
                 <table id="example" class="w-full text-sm border-t border-gray-200">
@@ -175,8 +211,8 @@
                                         </form>
 
                                         <!-- Request Resubmission -->
-                                        <form action="{{ route('obo.zoning.resubmit', $application->id) }}" method="POST"
-                                            class="inline">
+                                        <form action="{{ route('obo.zoning.resubmit', $application->id) }}"
+                                            method="POST" class="inline">
                                             @csrf
                                             <button type="button" data-tooltip-target="tooltip-resubmit"
                                                 @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Resubmit', par:'resubmit'})"
@@ -260,6 +296,7 @@
     @endif
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <!-- DataTable Script -->
     <script>
         $(document).ready(function() {
@@ -272,13 +309,189 @@
                 }
             });
 
-            $('#customSearch').on('keyup', function() {
+            $('#customSearch').on('input', function() {
                 table.search(this.value).draw();
             });
+
+            let selectedStatus = "all";
+            let selectedDate = "all";
+
+            $(".filter-btn").on("click", function() {
+                let type = $(this).data("type");
+                let value = $(this).data("value");
+
+                if (type === "status") {
+                    if (selectedStatus === value) {
+                        selectedStatus = "all";
+                    } else {
+                        selectedStatus = value;
+                    }
+
+                    // Reset all status buttons to their original bg/text color
+                    $(".status-btn").each(function() {
+                        let val = $(this).data("value");
+                        switch (val) {
+                            case "all":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "under_review":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "approved":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "disapproved":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-red-100 text-red-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "resubmit":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                        }
+                    });
+
+                    // Add dark background for active
+                    if (selectedStatus !== "all") {
+                        $(this).removeClass().addClass(
+                            "filter-btn status-btn bg-gray-800 text-white px-4 py-2 rounded-full font-medium"
+                            );
+                        switch (selectedStatus) {
+                            case "under_review":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-blue-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "approved":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-green-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "disapproved":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-red-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "resubmit":
+                                $(this).removeClass().addClass(
+                                    "filter-btn status-btn bg-yellow-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                        }
+                    }
+                }
+
+                if (type === "date") {
+                    if (selectedDate === value) {
+                        selectedDate = "all";
+                    } else {
+                        selectedDate = value;
+                    }
+
+                    // Reset all date buttons to original colors
+                    $(".date-btn").each(function() {
+                        let val = $(this).data("value");
+                        switch (val) {
+                            case "all":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "today":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "last_week":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "last_month":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                        }
+                    });
+
+                    // Add dark background for active
+                    if (selectedDate !== "all") {
+                        switch (selectedDate) {
+                            case "today":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-blue-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "last_week":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-green-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                            case "last_month":
+                                $(this).removeClass().addClass(
+                                    "filter-btn date-btn bg-yellow-800 text-white px-4 py-2 rounded-full font-medium"
+                                    );
+                                break;
+                        }
+                    }
+                }
+
+                table.draw(); 
+            });
+
+
+           
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                let statusCell = data[3]; 
+                let dateStr = data[2]; 
+
+                // Normalize status text
+                let statusText = statusCell
+                    .trim() 
+                    .toLowerCase() 
+                    .replace(/\s+/g, "_"); 
+               
+                let filterStatus = selectedStatus.toLowerCase().trim();
+
+                let recordDate = moment(dateStr, "MMM DD, YYYY");
+
+             
+                let statusPass = (selectedStatus === "all") || statusText === selectedStatus;
+
+                // DATE filter
+                let datePass = true;
+                let today = moment();
+                if (selectedDate === "today") {
+                    datePass = recordDate.isSame(today, "day");
+                } else if (selectedDate === "last_week") {
+                    datePass = recordDate.isBetween(today.clone().subtract(7, 'days'), today, 'day', '[]');
+                } else if (selectedDate === "last_month") {
+                    datePass = recordDate.isSame(today.clone().subtract(1, 'month'), "month");
+                }
+
+                return statusPass && datePass;
+            });
+
+
         });
     </script>
     <!-- Custom Styles -->
     <style>
+        /* input[type="search"]::-webkit-search-cancel-button {
+                                                                            -webkit-appearance: none;
+                                                                            appearance: none;
+                                                                            display: none;
+                                                                        } */
+
         [x-cloak] {
             display: none !important;
         }
@@ -293,23 +506,23 @@
 
         /* DataTable Pagination */
         /* .dataTables_wrapper .dataTables_paginate .paginate_button {
-            background: #f8f8f8;
-            color: #333 !important;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 4px 12px;
-            margin: 2px;
-        }
+                                                                                                                                                                background: #f8f8f8;
+                                                                                                                                                                color: #333 !important;
+                                                                                                                                                                border: 1px solid #ddd;
+                                                                                                                                                                border-radius: 6px;
+                                                                                                                                                                padding: 4px 12px;
+                                                                                                                                                                margin: 2px;
+                                                                                                                                                            }
 
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: #dc2626 !important;
-            color: #fff !important;
-            border: 1px solid #dc2626;
-        }
+                                                                                                                                                            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                                                                                                                                                                background: #dc2626 !important;
+                                                                                                                                                                color: #fff !important;
+                                                                                                                                                                border: 1px solid #dc2626;
+                                                                                                                                                            }
 
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background: #ef4444 !important;
-            color: #fff !important;
-        } */
+                                                                                                                                                            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                                                                                                                                                                background: #ef4444 !important;
+                                                                                                                                                                color: #fff !important;
+                                                                                                                                                            } */
     </style>
 @endsection
