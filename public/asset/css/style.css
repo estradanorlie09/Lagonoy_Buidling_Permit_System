@@ -1,0 +1,132 @@
+/* Hide Alpine.js cloaked elements */
+[x-cloak] {
+    display: none !important;
+}
+
+/* Table cell spacing */
+.dataTable td {
+    padding: 1rem 1rem !important;
+    vertical-align: middle !important;
+}
+
+/* Table header alignment */
+table.dataTable thead th {
+    text-align: center !important;
+    font-weight: 700 !important;
+    color: #374151;
+    /* Tailwind gray-700 */
+    background-color: #f9fafb;
+    /* Tailwind gray-50 */
+}
+
+/* Table rows hover effect */
+table.dataTable tbody tr:hover {
+    background-color: #f1f5f9 !important;
+    /* Tailwind gray-100 */
+}
+
+/* Pagination container */
+.dataTables_wrapper .dataTables_paginate {
+    margin-top: 1rem !important;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+/* ===== DataTables Pagination Styling ===== */
+
+/* Base pagination button */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    background: #f9fafb;
+    /* gray-50 */
+    color: #374151 !important;
+    /* gray-700 */
+    border: 1px solid #e5e7eb;
+    /* gray-200 */
+    border-radius: 8px;
+    padding: 6px 14px;
+    margin: 3px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.25s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: #dc2626 !important;
+    /* red-600 */
+    color: #ffffff !important;
+    border-color: #dc2626 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
+}
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: #b91c1c !important;
+    /* red-700 */
+    color: #fff !important;
+    border-color: #b91c1c !important;
+    font-weight: 600;
+    box-shadow: 0 3px 8px rgba(185, 28, 28, 0.3);
+    transform: translateY(-1px);
+}
+
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    background: #f3f4f6 !important;
+    /* gray-100 */
+    color: #9ca3af !important;
+    /* gray-400 */
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+.dataTables_wrapper .dataTables_paginate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.25rem;
+}
+
+
+.dataTables_wrapper .dataTables_paginate {
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Search & length controls */
+.dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #e5e7eb !important;
+    /* gray-200 */
+    border-radius: 0.5rem !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem;
+    color: #374151 !important;
+    outline: none !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+}
+
+/* Responsive table scroll */
+.dataTables_wrapper .dataTables_scrollBody {
+    border-radius: 0.75rem !important;
+}

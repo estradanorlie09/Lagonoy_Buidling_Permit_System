@@ -3,18 +3,23 @@
 @section('title', 'Settings')
 
 @section('content')
-    <div class="w-full h-auto bg-white shadow rounded">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-red-500 mb-3 p-5">User Settings ⚙️</h1>
-            <a href="{{ route('applicant.forms.profile.update_form') }}" class="m-5 border-b-1 text-red-400 ">✏️Update
-                Your
-                Profile</a>
+    <div class="w-full h-auto p-10 bg-white shadow rounded">
+        <div class="flex flex-col md:flex-row justify-between items-center pb-4 mb-8">
+            <h1 class="text-3xl font-bold text-red-600 flex items-center gap-3">
+                <i class="fas fa-cog text-2xl"></i> User Settings
+            </h1>
+            <a href="{{ route('applicant.forms.profile.update_form') }}"
+                class="mt-4 md:mt-0 border border-red-500 text-red-500 px-5 py-2 rounded-lg hover:bg-red-500 hover:text-white transition duration-300">
+                <i class="fas fa-pen me-1"></i> Update Profile
+            </a>
         </div>
 
 
         <div class="w-full flex justify-center">
             <div class="w-[95%]">
-                <h1 class="m-5 text-xl">Personal Details 👤</h1>
+                <h2 class="text-xl font-semibold mb-3 flex items-center gap-2 text-red-500">
+                    <i class="fas fa-user text-red-500"></i> Personal Details
+                </h2>
                 <hr class="border border-gray-300">
                 <div class="w-full flex flex-col lg:flex-row justify-between gap-5">
                     <!-- Left Column -->
@@ -87,7 +92,9 @@
 
         <div class="w-full flex justify-center">
             <div class="w-[95%]">
-                <h1 class="m-5 text-xl">Address 🗺️ / Other Details</h1>
+                <h2 class="text-xl font-semibold mt-3 mb-3 flex items-center gap-2 text-red-500">
+                    <i class="fas fa-map-marker-alt text-red-500"></i> Address / Other Details
+                </h2>
                 <hr class="border border-gray-300">
                 <div class="w-full flex flex-col lg:flex-row justify-between gap-5">
                     <!-- Left Column -->
@@ -145,11 +152,5 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
 
 @endsection

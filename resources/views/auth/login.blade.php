@@ -28,10 +28,14 @@
                     <option value="">-- Please choose an option --</option>
 
                     <option value="applicant" {{ old('role') == 'applicant' ? 'selected' : '' }}>Applicant</option>
+                    <option value="zoning_officer" {{ old('role') == 'zoning_officer' ? 'selected' : '' }}>Zoning
+                        Officer</option>
+                    <option value="sanitary_officer" {{ old('role') == 'sanitary_officer' ? 'selected' : '' }}>Sanitary
+                        Officer</option>
                     <option value="obo" {{ old('role') == 'obo' ? 'selected' : '' }}>Office of the Building Official
                     </option>
-                    <option value="do" {{ old('role') == 'do' ? 'selected' : '' }}>Division Office</option>
-                    <option value="bfp" {{ old('role') == 'bfp' ? 'selected' : '' }}>Bureau of Fire Protection
+
+
                     </option>
                 </select>
                 @error('role')

@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 
 class ScheduleRescheduleEmail extends Mailable
 {
-     use Queueable, SerializesModels;
+    use Queueable, SerializesModels;
 
     public $application;
 
@@ -22,6 +22,6 @@ class ScheduleRescheduleEmail extends Mailable
 
     public function build()
     {
-        return $this->subject('Visitation Reschedule') ->view('email.visitation_reschedule');
+        return $this->subject('Visitation Reschedule')->view('email.visitation_reschedule');
     }
 }

@@ -14,21 +14,26 @@ return new class extends Migration
         Schema::create('application_remark', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('zoning_application_id');
+            $table->uuid('zoning_application_id')->nullable();
+            $table->uuid('sanitary_application_id')->nullable();
             $table->uuid('officer_id');
 
             $table->text('remark');
             $table->timestamps();
 
-        // Foreign keys
+            // Foreign keys
             $table->foreign('zoning_application_id')
-          ->references('id')->on('zoning_applications')
-          ->onDelete('cascade');
+                ->references('id')->on('zoning_applications')
+                ->onDelete('cascade');
 
-           $table->foreign('officer_id')
-          ->references('id')->on('users')
-          ->onDelete('cascade');
-});
+            $table->foreign('sanitary_application_id')
+                ->references('id')->on('sanitary_applications')
+                ->onDelete('cascade');
+
+            $table->foreign('officer_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+        });
 
     }
 

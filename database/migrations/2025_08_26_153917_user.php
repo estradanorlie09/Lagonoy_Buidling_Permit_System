@@ -25,7 +25,7 @@ return new class extends Migration {
             $table->string('municipality')->nullable();
             $table->string('barangay')->nullable();
             $table->string('street')->nullable();
-            $table->enum('role', ['applicant', 'obo', 'do', 'bfp'])->default('applicant');
+            $table->enum('role', ['applicant', 'obo','zoning_officer','sanitary_officer', 'do', 'bfp'])->default('applicant');
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps(); // created_at and updated_at

@@ -1,15 +1,15 @@
 @extends('layout.applicant.app')
 
-@section('title', 'Zoning Applications Management')
+@section('title', 'Sanitary Applications Records')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-6 py-8">
 
         <!-- Header -->
         <div class="rounded-xl p-6 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 shadow-md mb-6">
-            <h2 class="text-2xl font-bold text-blue-700">🏛️ Zoning Record Dashboard</h2>
+            <h2 class="text-2xl font-bold text-blue-700">🏛️ Sanitary Record Dashboard</h2>
             <p class="text-gray-700 text-sm mt-1">
-                Review, approve, or request changes on zoning applications submitted by applicants.
+                Review, approve, or request changes on sanitary applications submitted by applicants.
             </p>
         </div>
 
@@ -69,7 +69,7 @@
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-4 px-6">
 
                     <div class="w-full sm:w-1/2 mb-2 sm:mb-0">
-                        <h1 class="text-xl font-bold text-gray-800">ZONING RECORDS TABLE</h1>
+                        <h1 class="text-xl font-bold text-gray-800">SANITARY RECORDS TABLE</h1>
                     </div>
 
                     <div class="w-full sm:w-1/2">
@@ -116,6 +116,7 @@
                             <th class="px-6 py-3 text-center">Application ID</th>
                             <th class="px-6 py-3 text-center">Applicant Name</th>
                             <th class="px-6 py-3 text-center">Date Submitted</th>
+                            <th class="px-6 py-3 text-center">Approve By</th>
                             <th class="px-6 py-3 text-center">Status</th>
                             <th class="px-6 py-3 text-center">Action</th>
                         </tr>
@@ -134,6 +135,15 @@
                                 <td class="px-6 py-4 text-left text-gray-600">
                                     {{ $application->created_at->format('M d, Y') }}
                                 </td>
+                                @if ($application->status == 'approved')
+                                    <td class="px-6 py-4 text-left text-gray-800">
+                                        {{ $application->approver->first_name }}
+                                    </td>
+                                @else
+                                    <td class="px-6 py-4 text-left text-gray-800">
+                                        --
+                                    </td>
+                                @endif
                                 <td class="px-6 py-4 text-left">
                                     @php
                                         $statusColors = [
@@ -160,7 +170,7 @@
                                 <td class="px-6 py-4 text-left space-x-2 flex items-center">
 
                                     <!-- View -->
-                                    <a href="{{ route('obo.zoning.zoning_view_record', $application->id) }}"
+                                    <a href="{{ route('sanitary_officer.sanitary.sanitary_view_record', $application->id) }}"
                                         class="relative inline-block text-blue-600 hover:text-blue-800 text-sm font-medium"
                                         x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
 
@@ -178,8 +188,8 @@
 
                                     @if ($application->status === 'under_review')
                                         <!-- Approve -->
-                                        <form action="{{ route('obo.zoning.approve', $application->id) }}" method="POST"
-                                            class="inline">
+                                        <form action="{{ route('sanitary_officer.sanitary.approve', $application->id) }}"
+                                            method="POST" class="inline">
                                             @csrf
                                             <button type="button" data-tooltip-target="tooltip-approved"
                                                 @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approved', par: 'approve'})"
@@ -194,7 +204,8 @@
                                         </form>
 
                                         <!-- Disapprove -->
-                                        <form action="{{ route('obo.zoning.disapprove', $application->id) }}"
+                                        <form
+                                            action="{{ route('sanitary_officer.sanitary.disapprove', $application->id) }}"
                                             method="POST" class="inline">
                                             @csrf
                                             <button type="button"
@@ -211,7 +222,7 @@
                                         </form>
 
                                         <!-- Request Resubmission -->
-                                        <form action="{{ route('obo.zoning.resubmit', $application->id) }}"
+                                        <form action="{{ route('sanitary_officer.sanitary.resubmit', $application->id) }}"
                                             method="POST" class="inline">
                                             @csrf
                                             <button type="button" data-tooltip-target="tooltip-resubmit"
@@ -264,7 +275,7 @@
                 Add Remarks for <span x-text="appTitle"></span>
             </h2>
 
-            <form :action="`/obo/zoning/${appId}/${appPar}`" method="POST">
+            <form :action="`/sanitary_officer/sanitary/${appId}/${appPar}`" method="POST">
                 @csrf
                 <textarea name="remarks" rows="4" required
                     class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-yellow-500"></textarea>
@@ -295,234 +306,6 @@
         </script>
     @endif
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <!-- DataTable Script -->
-    <script>
-        $(document).ready(function() {
-            let table = $('#example').DataTable({
-                dom: "<'hidden'f>rt<'flex flex-col sm:flex-row justify-between items-center mt-4 gap-3'<'w-full sm:w-1/2'i><'w-full sm:w-1/2'p>>",
-                language: {
-                    search: "",
-                    lengthMenu: "Show _MENU_ entries",
-                    emptyTable: "🚫 No applications found."
-                }
-            });
-
-            $('#customSearch').on('input', function() {
-                table.search(this.value).draw();
-            });
-
-            let selectedStatus = "all";
-            let selectedDate = "all";
-
-            $(".filter-btn").on("click", function() {
-                let type = $(this).data("type");
-                let value = $(this).data("value");
-
-                if (type === "status") {
-                    if (selectedStatus === value) {
-                        selectedStatus = "all";
-                    } else {
-                        selectedStatus = value;
-                    }
-
-                    // Reset all status buttons to their original bg/text color
-                    $(".status-btn").each(function() {
-                        let val = $(this).data("value");
-                        switch (val) {
-                            case "all":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "under_review":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "approved":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "disapproved":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-red-100 text-red-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "resubmit":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                        }
-                    });
-
-                    // Add dark background for active
-                    if (selectedStatus !== "all") {
-                        $(this).removeClass().addClass(
-                            "filter-btn status-btn bg-gray-800 text-white px-4 py-2 rounded-full font-medium"
-                            );
-                        switch (selectedStatus) {
-                            case "under_review":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-blue-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "approved":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-green-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "disapproved":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-red-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "resubmit":
-                                $(this).removeClass().addClass(
-                                    "filter-btn status-btn bg-yellow-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                        }
-                    }
-                }
-
-                if (type === "date") {
-                    if (selectedDate === value) {
-                        selectedDate = "all";
-                    } else {
-                        selectedDate = value;
-                    }
-
-                    // Reset all date buttons to original colors
-                    $(".date-btn").each(function() {
-                        let val = $(this).data("value");
-                        switch (val) {
-                            case "all":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-gray-200 text-gray-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "today":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "last_week":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-green-100 text-green-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "last_month":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                        }
-                    });
-
-                    // Add dark background for active
-                    if (selectedDate !== "all") {
-                        switch (selectedDate) {
-                            case "today":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-blue-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "last_week":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-green-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                            case "last_month":
-                                $(this).removeClass().addClass(
-                                    "filter-btn date-btn bg-yellow-800 text-white px-4 py-2 rounded-full font-medium"
-                                    );
-                                break;
-                        }
-                    }
-                }
-
-                table.draw(); 
-            });
-
-
-           
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                let statusCell = data[3]; 
-                let dateStr = data[2]; 
-
-                // Normalize status text
-                let statusText = statusCell
-                    .trim() 
-                    .toLowerCase() 
-                    .replace(/\s+/g, "_"); 
-               
-                let filterStatus = selectedStatus.toLowerCase().trim();
-
-                let recordDate = moment(dateStr, "MMM DD, YYYY");
-
-             
-                let statusPass = (selectedStatus === "all") || statusText === selectedStatus;
-
-                // DATE filter
-                let datePass = true;
-                let today = moment();
-                if (selectedDate === "today") {
-                    datePass = recordDate.isSame(today, "day");
-                } else if (selectedDate === "last_week") {
-                    datePass = recordDate.isBetween(today.clone().subtract(7, 'days'), today, 'day', '[]');
-                } else if (selectedDate === "last_month") {
-                    datePass = recordDate.isSame(today.clone().subtract(1, 'month'), "month");
-                }
-
-                return statusPass && datePass;
-            });
-
-
-        });
-    </script>
-    <!-- Custom Styles -->
-    <style>
-        /* input[type="search"]::-webkit-search-cancel-button {
-                                                                            -webkit-appearance: none;
-                                                                            appearance: none;
-                                                                            display: none;
-                                                                        } */
-
-        [x-cloak] {
-            display: none !important;
-        }
-
-        .dataTable td {
-            padding: 1rem 1rem !important;
-        }
-
-        table.dataTable thead th {
-            text-align: left !important;
-        }
-
-        /* DataTable Pagination */
-        /* .dataTables_wrapper .dataTables_paginate .paginate_button {
-                                                                                                                                                                background: #f8f8f8;
-                                                                                                                                                                color: #333 !important;
-                                                                                                                                                                border: 1px solid #ddd;
-                                                                                                                                                                border-radius: 6px;
-                                                                                                                                                                padding: 4px 12px;
-                                                                                                                                                                margin: 2px;
-                                                                                                                                                            }
-
-                                                                                                                                                            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-                                                                                                                                                                background: #dc2626 !important;
-                                                                                                                                                                color: #fff !important;
-                                                                                                                                                                border: 1px solid #dc2626;
-                                                                                                                                                            }
-
-                                                                                                                                                            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-                                                                                                                                                                background: #ef4444 !important;
-                                                                                                                                                                color: #fff !important;
-                                                                                                                                                            } */
-    </style>
+    <script src="{{ asset('asset/js/sanitaryRecordFilter.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
 @endsection

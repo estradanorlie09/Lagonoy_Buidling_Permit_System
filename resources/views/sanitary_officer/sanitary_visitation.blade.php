@@ -1,15 +1,15 @@
 @extends('layout.applicant.app')
 
-@section('title', 'Zoning Schedule')
+@section('title', 'Sanitary Schedule')
 
 @section('content')
     <div class="max-w-7xl mx-auto px-6 py-8">
 
         <!-- Header -->
         <div class="rounded-xl p-6 bg-gradient-to-r from-blue-100 via-blue-200 to-blue-300 shadow-md mb-6">
-            <h2 class="text-2xl font-bold text-blue-700">🔎 Zoning Schedule Visitation </h2>
+            <h2 class="text-2xl font-bold text-blue-700">🔎 Sanitary Schedule Visitation </h2>
             <p class="text-gray-700 text-sm mt-1">
-                Review, approve, or request changes on zoning applications submitted by applicants.
+                Review, approve, or request changes on sanitary applications submitted by applicants.
             </p>
         </div>
 
@@ -321,7 +321,7 @@
                 <p class="text-gray-500">for <span class="font-medium text-gray-700" x-text="appTitle"></span></p>
             </div>
 
-            <form :action="`/obo/zoning/${appId}/${appPar}`" method="POST">
+            <form :action="`/sanitary_officer/sanitary/${appId}/${appPar}`" method="POST">
                 @csrf
 
                 <!-- Visit Date -->
@@ -331,7 +331,7 @@
 
                 <!-- Visit Time -->
                 <label class="block mb-2 font-medium">Visit Time</label>
-                <input type="time" name="visit_time" required
+                <input type="time" name="visit_time" required step="1800" value="08:00"
                     class="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-yellow-500 mb-4">
 
                 <!-- Notes / Purpose -->
@@ -368,265 +368,17 @@
         </script>
     @endif
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <!-- DataTable Script -->
-    <script>
-        function markStatus(id, status) {
+    @if (session('error'))
+        <script>
             Swal.fire({
-                title: 'Are you sure?',
-                text: "This visitation will be marked as " + status + ".",
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, confirm!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/visitations/${id}/status`, {
-                            method: 'PUT',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
-                                    'content'),
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                status: status
-                            })
-                        })
-                        .then(async response => {
-                            const contentType = response.headers.get('content-type');
-
-                            if (!response.ok) {
-                                // Try to parse JSON, or fallback to text if HTML
-                                if (contentType && contentType.includes('application/json')) {
-                                    const error = await response.json();
-                                    throw new Error(error.message || 'Server error');
-                                } else {
-                                    const text = await response.text();
-                                    throw new Error('Unexpected response from server: ' + text.slice(0,
-                                        100)); // First 100 chars
-                                }
-                            }
-
-                            return response.json();
-                        })
-                        .then(data => {
-                            Swal.fire('Updated!', data.message, 'success')
-                                .then(() => location.reload());
-                        })
-                        .catch(error => {
-                            Swal.fire('Error!', error.message, 'error');
-                        });
-
-                }
+                icon: 'error',
+                title: 'Oops!',
+                text: '{{ session('error') }}',
+                confirmButtonColor: '#d33',
             });
-        }
-    </script>
-
-
-    <script>
-        $(document).ready(function() {
-            let table = $('#example').DataTable({
-                dom: "<'hidden'f>rt<'flex flex-col sm:flex-row justify-between items-center mt-4 gap-3'<'w-full sm:w-1/2'i><'w-full sm:w-1/2'p>>",
-                language: {
-                    search: "",
-                    lengthMenu: "Show _MENU_ entries",
-                    emptyTable: "🚫 No applications found."
-                }
-            });
-
-            $('#customSearch').on('input', function() {
-                table.search(this.value).draw();
-            });
-
-            let selectedStatus = "all";
-            let selectedDate = "all";
-
-            // Button click handler for both status and date filters
-            $(".filter-btn").on("click", function() {
-                const type = $(this).data("type");
-                const value = $(this).data("value");
-
-                if (type === "status") {
-                    // Toggle filter selection
-                    selectedStatus = (selectedStatus === value) ? "all" : value;
-
-                    // Reset all status buttons to their base styles
-                    $(".status-btn").each(function() {
-                        const val = $(this).data("value");
-                        let baseClasses =
-                            "filter-btn status-btn p-2 rounded-xl font-medium ";
-                        switch (val) {
-                            case "all":
-                                baseClasses += "bg-gray-200 text-gray-800";
-                                break;
-                            case "scheduled":
-                                baseClasses += "bg-blue-100 text-blue-800";
-                                break;
-                            case "completed":
-                                baseClasses += "bg-green-100 text-green-800";
-                                break;
-                            case "absent":
-                                baseClasses += "bg-red-100 text-red-800";
-                                break;
-                            case "cancelled":
-                                baseClasses += "bg-yellow-100 text-yellow-800";
-                                break;
-                            default:
-                                baseClasses += "bg-gray-200 text-gray-800";
-                                break;
-                        }
-                        $(this).attr('class', baseClasses);
-                    });
-
-                    // Highlight active status button with dark bg
-                    if (selectedStatus !== "all") {
-                        let activeBtn = $(".status-btn").filter(`[data-value='${selectedStatus}']`);
-                        let activeClasses =
-                            "filter-btn status-btn p-2 rounded-xl font-medium text-white ";
-                        switch (selectedStatus) {
-                            case "scheduled":
-                                activeClasses += "bg-blue-800";
-                                break;
-                            case "completed":
-                                activeClasses += "bg-green-800";
-                                break;
-                            case "absent":
-                                activeClasses += "bg-red-800";
-                                break;
-                            case "cancelled":
-                                activeClasses += "bg-yellow-800";
-                                break;
-                            default:
-                                activeClasses += "bg-gray-800";
-                                break;
-                        }
-                        activeBtn.attr('class', activeClasses);
-                    }
-                }
-
-                if (type === "date") {
-                    selectedDate = (selectedDate === value) ? "all" : value;
-
-                    $(".date-btn").each(function() {
-                        const val = $(this).data("value");
-                        let baseClasses = "filter-btn date-btn p-2 rounded-xl font-medium ";
-                        switch (val) {
-                            case "all":
-                                baseClasses += "bg-gray-200 text-gray-800";
-                                break;
-                            case "today":
-                                baseClasses += "bg-blue-100 text-blue-800";
-                                break;
-                            case "last_week":
-                                baseClasses += "bg-green-100 text-green-800";
-                                break;
-                            case "last_month":
-                                baseClasses += "bg-yellow-100 text-yellow-800";
-                                break;
-                            default:
-                                baseClasses += "bg-gray-200 text-gray-800";
-                                break;
-                        }
-                        $(this).attr('class', baseClasses);
-                    });
-
-                    if (selectedDate !== "all") {
-                        let activeBtn = $(".date-btn").filter(`[data-value='${selectedDate}']`);
-                        let activeClasses =
-                            "filter-btn date-btn px-4 py-2 rounded-xl font-medium text-white ";
-                        switch (selectedDate) {
-                            case "today":
-                                activeClasses += "bg-blue-800";
-                                break;
-                            case "last_week":
-                                activeClasses += "bg-green-800";
-                                break;
-                            case "last_month":
-                                activeClasses += "bg-yellow-800";
-                                break;
-                            default:
-                                activeClasses += "bg-gray-800";
-                                break;
-                        }
-                        activeBtn.attr('class', activeClasses);
-                    }
-                }
-
-                table.draw();
-            });
-
-
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                let statusCell = data[4];
-                let dateStr = data[2];
-
-                let statusText = statusCell.trim().toLowerCase().replace(/\s+/g, "_");
-
-                console.log(statusText);
-                // Status filter check
-                let statusPass = (selectedStatus === "all") || (statusText === selectedStatus);
-
-                // Date filter check
-                let datePass = true;
-                if (selectedDate !== "all") {
-                    let recordDate = moment(dateStr, "MMM DD, YYYY");
-                    let today = moment();
-
-                    if (selectedDate === "today") {
-                        datePass = recordDate.isSame(today, "day");
-                    } else if (selectedDate === "last_week") {
-                        datePass = recordDate.isBetween(today.clone().subtract(7, 'days'), today, 'day',
-                            '[]');
-                    } else if (selectedDate === "last_month") {
-                        datePass = recordDate.isSame(today.clone().subtract(1, 'month'), 'month');
-                    }
-                }
-
-                return statusPass && datePass;
-            });
-        });
-    </script>
-
-    <!-- Custom Styles -->
-    <style>
-        /* input[type="search"]::-webkit-search-cancel-button {
-                                                                                                                                                                                                                                                                                                                                    -webkit-appearance: none;
-                                                                                                                                                                                                                                                                                                                                    appearance: none;
-                                                                                                                                                                                                                                                                                                                                    display: none;
-                                                                                                                                                                                                                                                                                                                                } */
-
-        [x-cloak] {
-            display: none !important;
-        }
-
-        .dataTable td {
-            padding: 1rem 1rem !important;
-        }
-
-        table.dataTable thead th {
-            text-align: left !important;
-        }
-
-        /* DataTable Pagination */
-        /* .dataTables_wrapper .dataTables_paginate .paginate_button {
-                                                                                                                                                                                                                                                                                                                                                                                                                        background: #f8f8f8;
-                                                                                                                                                                                                                                                                                                                                                                                                                        color: #333 !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                        border: 1px solid #ddd;
-                                                                                                                                                                                                                                                                                                                                                                                                                        border-radius: 6px;
-                                                                                                                                                                                                                                                                                                                                                                                                                        padding: 4px 12px;
-                                                                                                                                                                                                                                                                                                                                                                                                                        margin: 2px;
-                                                                                                                                                                                                                                                                                                                                                                                                                    }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-                                                                                                                                                                                                                                                                                                                                                                                                                        background: #dc2626 !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                        color: #fff !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                        border: 1px solid #dc2626;
-                                                                                                                                                                                                                                                                                                                                                                                                                    }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-                                                                                                                                                                                                                                                                                                                                                                                                                        background: #ef4444 !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                        color: #fff !important;
-                                                                                                                                                                                                                                                                                                                                                                                                                    } */
-    </style>
+        </script>
+    @endif
+    <script src="{{ asset('asset/js/sanitaryVisitationModal.js') }}"></script>
+    <script src="{{ asset('asset/js/sanitaryVisitationFilter.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
 @endsection

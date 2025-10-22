@@ -11,6 +11,7 @@
             <p class="text-gray-700 text-sm mt-1">Review all information for your submitted application.</p>
         </div>
 
+
         @php
             // Normalize status to lowercase
             $status = strtolower($application->status);
@@ -53,7 +54,7 @@
             <div class="flex justify-between items-center">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Application Info</h3>
                 <div class="flex justify-start">
-                    <a href="{{ route('obo.zoning_records') }}"
+                    <a href="{{ route('zoning_officer.zoning_records') }}"
                         class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-700 text-sm font-medium">
                         ← Back
                     </a>
@@ -315,13 +316,6 @@
             @else
                 <p class="text-gray-500">No documents submitted.</p>
             @endif
-
-
-
         </div>
     </div>
-
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 @endsection

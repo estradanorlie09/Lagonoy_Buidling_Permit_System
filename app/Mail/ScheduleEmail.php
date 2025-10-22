@@ -23,6 +23,6 @@ class ScheduleEmail extends Mailable
     public function build()
     {
         return $this->subject('Visitation Schedule')
-                    ->view('email.visitation');
+            ->view('email.visitation');
     }
 }

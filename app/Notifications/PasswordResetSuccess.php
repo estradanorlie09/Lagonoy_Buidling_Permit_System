@@ -15,7 +15,7 @@ class PasswordResetSuccess extends Notification
      * Create a new notification instance.
      */
 
-   
+
     public function __construct()
     {
         //
@@ -34,7 +34,7 @@ class PasswordResetSuccess extends Notification
     /**
      * Get the mail representation of the notification.
      */
-     public function toMail($notifiable)
+    public function toMail($notifiable)
     {
         return (new MailMessage)
             ->subject('Your Password Has Been Reset')

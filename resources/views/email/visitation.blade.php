@@ -31,11 +31,11 @@
             </tr>
             <tr>
                 <td style="padding: 8px 0;"><strong>Visit Date:</strong></td>
-                <td>{{ \Carbon\Carbon::parse($application->visit_date)->format('F j, Y') }}</td>
+                <td>{{ \Carbon\Carbon::parse($application->visitation->visit_date)->format('F j, Y') }}</td>
             </tr>
             <tr>
                 <td style="padding: 8px 0;"><strong>Visit Time:</strong></td>
-                <td>{{ \Carbon\Carbon::parse($application->visit_time)->format('g:i A') }}</td>
+                <td>{{ \Carbon\Carbon::parse($application->visitation->visit_time)->format('g:i A') }}</td>
             </tr>
             <tr>
                 <td style="padding: 8px 0;"><strong>Status:</strong></td>

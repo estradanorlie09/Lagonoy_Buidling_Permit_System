@@ -23,7 +23,6 @@ class ZoningApplicationSubmitted extends Mailable
     public function build()
     {
         return $this->subject('Zoning Application Submitted')
-                    ->view('email.zoning_submitted');
+            ->view('email.zoning_submitted');
     }
 }
-

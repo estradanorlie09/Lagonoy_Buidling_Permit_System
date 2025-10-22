@@ -3,36 +3,38 @@
 
 <head>
     <meta charset="UTF-8">
+
     <title>@yield('title', 'Dashboard')</title>
     <link rel="shortcut icon" href="{{ asset('asset/icon/images.ico') }}">
     {{-- alpine --}}
     <script src="//unpkg.com/alpinejs" defer></script>
-    
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     {{-- alert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-   
+
     {{-- calendar --}}
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar/index.global.min.js'></script>
-    
+
     {{-- jquery --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-   
+
     {{-- tailwind --}}
     @vite('resources/css/app.css')
     @vite(['resources/css/app.css', 'resources/js/app.js']) {{-- Adjust as needed --}}
-  
+
     {{-- data table --}}
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     {{-- for tooltip --}}
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/flowbite/dist/flowbite.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body x-data="{ sidebarOpen: false }" class="flex h-screen bg-gray-100">
+<body x-data="{ sidebarOpen: false }" class="flex h-auto bg-gray-100">
 
     {{-- Sidebar --}}
     @include('applicant.sidebar.sidebar')

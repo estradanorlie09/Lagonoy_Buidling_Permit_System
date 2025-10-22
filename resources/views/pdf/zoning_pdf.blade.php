@@ -50,9 +50,9 @@
         }
 
         .header .qr img {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 5px;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px
         }
 
         .header .text-center {

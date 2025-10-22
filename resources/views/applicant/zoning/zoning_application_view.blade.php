@@ -3,15 +3,41 @@
 @section('title', 'View Zoning Application')
 
 @section('content')
-    <div class="max-w-7xl mx-auto px-6 py-8">
+    <div class="bg-white rounded-xl max-w-10xl mx-auto px-6 py-8">
+        <div
+            class="relative rounded-2xl overflow-hidden bg-gradient-to-br from-red-50 via-rose-100 to-red-200 shadow-lg mb-6 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 border border-red-100">
 
-        <!-- Header -->
-        <div class="rounded-xl p-6 bg-gradient-to-r from-red-100 via-red-200 to-red-300 shadow-md mb-6">
-            <h2 class="text-2xl font-bold text-red-700">📄 Zoning Application Details</h2>
-            <p class="text-gray-700 text-sm mt-1">Review all information for your submitted application.</p>
+            <!-- Left Section -->
+            <div class="relative z-10">
+                <div class="flex items-center gap-3 mb-3">
+                    <div
+                        class="w-14 h-14 flex items-center justify-center bg-white/70 backdrop-blur-sm rounded-full shadow-md border border-red-200">
+                        <i class="fas fa-building text-red-600 text-2xl"></i>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-red-800 tracking-tight">
+                        Zoning Application Details
+                    </h2>
+                </div>
+                <p class="text-gray-700 text-sm md:text-base max-w-xl leading-relaxed">
+                    Review all submitted information, supporting documents, and monitor the current status of your zoning
+                    permit application.
+                </p>
+            </div>
+
+            <!-- Right Decorative Illustration -->
+            <div class="hidden md:block relative">
+                <img src="{{ asset('asset/img/location.png') }}" alt="Building Illustration"
+                    class="w-32 opacity-90 drop-shadow-md hover:scale-105 transition-transform duration-300">
+            </div>
+
+            <!-- Decorative Overlays -->
+            <div class="absolute inset-0 bg-gradient-to-br from-white/20 to-red-200/40 pointer-events-none"></div>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-red-300/20 rounded-full blur-3xl"></div>
+            <div class="absolute -top-10 -left-10 w-40 h-40 bg-rose-200/30 rounded-full blur-3xl"></div>
         </div>
+
         @if ($application->status == 'approved')
-            <a href="{{ route('obo.pdf', $application->id) }}"
+            <a href="{{ route('zoning.pdf', $application->id) }}"
                 class="flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 transition duration-200 mb-5">
                 <!-- Download Icon -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
@@ -62,31 +88,64 @@
 
         <!-- Application Info Card -->
         <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-semibold text-gray-800 mb-4">Application Info</h3>
-                <div class="flex justify-start">
-                    <a href="{{ route('applicant.zoning.zoning_page') }}"
-                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-gray-700 text-sm font-medium">
-                        ← Back
+            <div class="bg-white shadow-sm rounded-lg p-6 border border-gray-100">
+                <!-- Header -->
+                <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-file-alt text-red-600 text-lg"></i>
+                        <h3 class="text-xl font-semibold text-gray-800">Application Info</h3>
+                    </div>
+
+                    {{-- <a href="{{ route('applicant.zoning.zoning_page') }}"
+                        class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </a> --}}
+
+                    <a href="javascript:void(0);" onclick="window.history.back();"
+                        class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
                     </a>
+
+                </div>
+
+                <!-- Application Details -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex items-center gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <i class="fas fa-hashtag text-red-500 text-lg"></i>
+                        <div>
+                            <p class="text-gray-500 text-sm">Application No</p>
+                            <p class="font-semibold text-gray-800">{{ $application->application_no }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <i class="fas fa-calendar-alt text-red-500 text-lg"></i>
+                        <div>
+                            <p class="text-gray-500 text-sm">Submitted On</p>
+                            <p class="font-semibold text-gray-800">{{ $application->created_at->format('M d, Y') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <i class="fa fa-file-text text-red-500 text-lg"></i>
+                        <div>
+                            <p class="text-gray-500 text-sm">Status</p>
+                            <p class="font-semibold text-gray-800">{{ $application->status }}</p>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <p class="text-gray-500 text-sm">Application No:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->application_no }}</p>
-                </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Submitted On:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->created_at->format('M d, Y') }}</p>
-                </div>
-
-            </div>
 
             <!-- Status Tracker -->
             <div class="mt-6 bg-white shadow-md rounded-xl p-6">
-                <h4 class="text-sm font-semibold text-gray-600 mb-4">Application Progress</h4>
+                <h4 class="text-sm font-semibold text-gray-700 mb-6 flex items-center gap-2">
+                    <i class="fas fa-tasks text-red-600"></i>
+                    Application Progress
+                </h4>
 
                 <div class="flex justify-between items-center relative">
                     @foreach ($stages as $index => $stage)
@@ -158,36 +217,70 @@
                 </div>
             </div>
         </div>
-        <!-- Property Info Card -->
-        <div class="bg-white shadow-md rounded-xl p-6 mb-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Property Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <p class="text-gray-500 text-sm">Property Address:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
+        <div class="bg-white shadow-sm rounded-xl p-6 mb-6 border border-gray-100">
+            <!-- Header -->
+            <div class="flex items-center gap-2 mb-6">
+                <i class="fas fa-home text-red-600 text-lg"></i>
+                <h3 class="text-lg font-semibold text-gray-800">Property Information</h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Property Address -->
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-map-marker-alt text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Property Address</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Province:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
+
+                <!-- Province -->
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-flag text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Province</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Municipality/City:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
+
+                <!-- Municipality/City -->
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-city text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Municipality / City</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Barangay:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
+
+                <!-- Barangay -->
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-map-pin text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Barangay</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Lot Area (sq.m):</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->lot_area }}</p>
+
+                <!-- Lot Area -->
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-ruler-combined text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Lot Area (sq.m)</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->lot_area }}</p>
+                    </div>
                 </div>
-                <div>
-                    <p class="text-gray-500 text-sm">Tax Declaration No:</p>
-                    <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
+
+                <!-- Tax Declaration -->
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-file-invoice-dollar text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Tax Declaration No</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
+                    </div>
                 </div>
             </div>
         </div>
+
 
         <!-- Additional Notes -->
         @if ($application->property->comments)
@@ -263,10 +356,16 @@
     </div>
 
 
-
-
-
-
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Document Submitted!",
+                showConfirmButton: false,
+                timer: 2500
+            });
+            setTimeout(function() {}, 2500);
+        </script>
+    @endif
 @endsection

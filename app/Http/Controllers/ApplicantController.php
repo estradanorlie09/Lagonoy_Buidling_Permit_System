@@ -1,81 +1,148 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\BuildingApplication;
+use App\Models\SanitaryApplication;
 use App\Models\User;
-use App\Services\LocationService;
-use App\Models\ZoningApplication;
 use App\Models\Visitation;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use App\Models\ZoningApplication;
+use App\Services\LocationService;
 use App\Utils\StringHelper;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicantController extends Controller
 {
-    public function records()
-    {
-        return view('applicant.records');
-    }
-
     public function schedule()
     {
         return view('applicant.calendar.schedule');
     }
 
-   public function getVisitationEvents()
-{
-    $visitations = Visitation::whereHas('application', function($q) {
-        $q->where('user_id', auth()->id()); 
-    })->get();
+    public function search(Request $request)
+    {
+        $query = $request->get('query');
 
-    $events = $visitations->map(function ($visitation) {
-        return [
-            'id'    => $visitation->id,
-            'title' => 'Visitation - ' . $visitation->application->application_no,
-            'start' => $visitation->visit_date . 'T' . $visitation->visit_time,
-            'status' => $visitation->status,
-            'remarks' => $visitation->remarks,
-            'color' => match($visitation->status) {
+        // Search in the BuildingApplication model
+        $buildingResults = BuildingApplication::where('application_no', 'like', "%{$query}%")
+            ->select('id', 'application_no', 'status') // Adjust fields as per your model
+            ->limit(10);
+
+        // Search in the ZoningApplication model
+        $zoningResults = ZoningApplication::where('application_no', 'like', "%{$query}%")
+            ->select('id', 'application_no', 'status') // Adjust fields as per your model
+            ->limit(10);
+
+        // Search in the SanitaryApplication model
+        $sanitaryResults = SanitaryApplication::where('application_no', 'like', "%{$query}%")
+            ->select('id', 'application_no', 'status') // Adjust fields as per your model
+            ->limit(10);
+
+        // Combine the results using union
+        $results = $buildingResults
+            ->union($zoningResults)
+            ->union($sanitaryResults)
+            ->get();
+
+        return response()->json($results);
+    }
+
+    public function getVisitationEvents()
+    {
+        // Fetch all visitations for the authenticated user
+        $visitations = Visitation::where(function ($query) {
+            $query->whereHas('zoningApplication', function ($q) {
+                $q->where('user_id', auth()->id());
+            })->orWhereHas('sanitaryApplication', function ($q) {
+                $q->where('user_id', auth()->id());
+            });
+        })->get();
+
+        $events = $visitations->map(function ($visitation) {
+            // Determine application type and number
+            if ($visitation->zoningApplication) {
+                $applicationNo = $visitation->zoningApplication->application_no;
+                $role = 'Zoning';
+            } elseif ($visitation->sanitaryApplication) {
+                $applicationNo = $visitation->sanitaryApplication->application_no;
+                $role = 'Sanitary';
+            } else {
+                $applicationNo = 'N/A';
+                $role = 'Unknown';
+            }
+
+            // Set colors based on role and status
+            $roleColor = match ($role) {
+                'Zoning' => '#2563eb',   // blue
+                'Sanitary' => '#8b5cf6', // purple
+                default => '#6b7280',    // gray
+            };
+
+            $statusColor = match ($visitation->status) {
                 'completed' => '#16a34a',   // green
                 'cancelled' => '#dc2626',   // red
                 'rescheduled' => '#f59e0b', // yellow
                 'absent' => '#6b7280',      // gray
-                default => '#2563eb',       // blue
-            },
-        ];
-    });
+                default => $roleColor,      // fallback to role color
+            };
 
-    return response()->json($events);
-}
+            return [
+                'id' => $visitation->id,
+                'title' => "{$role} Visitation - {$applicationNo}",
+                'start' => $visitation->visit_date.'T'.$visitation->visit_time,
+                'status' => $visitation->status,
+                'role' => $role,
+                'remarks' => $visitation->remarks,
+                'color' => $statusColor,
+            ];
+        });
 
-
-    public function safety()
-    {
-        // $users = User::all();
-        return view('applicant.safety');
+        return response()->json($events);
     }
+
+    public function sanitary()
+    {
+        $applications = SanitaryApplication::with('property')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        //  dd($applications);
+        return view('applicant.sanitary', compact('applications'));
+    }
+
+    public function index()
+    {
+        $applications = BuildingApplication::where('user_id', auth()->id())->get();
+
+        return view('applicant.dashboard', compact('applications'));
+    }
+
     public function permit()
     {
         // $users = User::all();
         return view('applicant.permit');
     }
+
     public function setting()
     {
         // $users = User::all();
         return view('applicant.setting');
     }
-    
+
     public function zoning_page()
     {
-       $applications = ZoningApplication::with('property')
-        ->where('user_id', Auth::id())
-        ->orderBy('created_at', 'desc')
-        ->get();
+        $applications = ZoningApplication::with('property')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('applicant.zoning.zoning_page', compact('applications'));
     }
+
     public function update_profile()
     {
-        $locations = new LocationService();
+        $locations = new LocationService;
         $regionCode = '05';
 
         $user = auth()->user();
@@ -128,7 +195,7 @@ class ApplicantController extends Controller
 
     public function form()
     {
-        $locations = new LocationService();
+        $locations = new LocationService;
         $regionCode = '05'; // Region V - Bicol
 
         // Get provinces only from Region V
@@ -139,7 +206,7 @@ class ApplicantController extends Controller
 
     public function zoning_form()
     {
-        $locations = new LocationService();
+        $locations = new LocationService;
         $regionCode = '05'; // Region V - Bicol
 
         // Get provinces only from Region V
@@ -183,8 +250,7 @@ class ApplicantController extends Controller
             }
         }
 
-
-        return view('applicant.forms.zoning.zoning_form', compact('provinces', 'regionCode'),[
+        return view('applicant.forms.zoning.zoning_form', compact('provinces', 'regionCode'), [
             'municipalities' => $municipalitiesRaw,
             'barangays' => $barangays,
         ]);
@@ -193,11 +259,11 @@ class ApplicantController extends Controller
     public function getMunicipalities(Request $request)
     {
         $province = $request->province;
-        if (!$province) {
+        if (! $province) {
             return response()->json([], 400); // Bad request
         }
 
-        $locations = new LocationService();
+        $locations = new LocationService;
         $municipalities = $locations->getMunicipalities('05', $province);
 
         return response()->json($municipalities);
@@ -208,11 +274,11 @@ class ApplicantController extends Controller
         $province = $request->province;
         $municipality = $request->municipality;
 
-        if (!$province || !$municipality) {
+        if (! $province || ! $municipality) {
             return response()->json([], 400); // Bad request
         }
 
-        $locations = new LocationService();
+        $locations = new LocationService;
         $barangays = $locations->getBarangays('05', $province, $municipality);
 
         return response()->json($barangays);

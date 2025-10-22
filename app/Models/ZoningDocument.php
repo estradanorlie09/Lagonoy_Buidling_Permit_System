@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class ZoningDocument extends Model
 {
-     use HasFactory;
+    use HasFactory;
     //protected $table = 'zoning_document'; 
     protected $fillable = [
         'zoning_application_id',
@@ -31,7 +31,7 @@ class ZoningDocument extends Model
         });
     }
 
-     public function application()
+    public function application()
     {
         return $this->belongsTo(ZoningApplication::class, 'zoning_application_id');
     }

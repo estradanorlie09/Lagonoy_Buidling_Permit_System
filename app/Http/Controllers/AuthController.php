@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Auth\Events\Registered;
-use App\Models\User;
+
 class AuthController extends Controller
 {
     public function register(Request $request)
@@ -42,7 +43,8 @@ class AuthController extends Controller
 
         event(new Registered($user));
         Auth::login($user);
-        return redirect()->route('verification.notice')->with('success','Account Created');
+
+        return redirect()->route('verification.notice')->with('success', 'Account Created');
         // return redirect()->back()->with('success', 'User registered successfully!');
     }
 
@@ -50,12 +52,12 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'role' => 'required|in:applicant,obo,do,bfp',
+            'role' => 'required|in:applicant,obo,do,bfp,zoning_officer,sanitary_officer',
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (! Auth::attempt($credentials, $request->boolean('remember'))) {
             return back()->withErrors([
                 'email' => 'The provided credentials do not match our records.',
             ]);
@@ -63,21 +65,22 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        $user = Auth::user();   
+        $user = Auth::user();
 
         if ($user->isApplicant()) {
-            //dd($user);
-           // dd($request);
+            // dd($user);
+            // dd($request);
             return redirect()->intended(route('applicant.dashboard'));
+        } elseif ($user->isZoning()) {
+            return redirect()->intended(route('zoning_officer.dashboard'));
+        } elseif ($user->isSanitary()) {
+            return redirect()->intended(route('sanitary_officer.dashboard'));
         } elseif ($user->isObo()) {
             return redirect()->intended(route('obo.dashboard'));
-        } elseif ($user->isDo()) {
-            return redirect()->intended(route('do.dashboard'));
-        } elseif ($user->isBfp()) {
-            return redirect()->intended(route('bfp.dashboard'));
         } else {
             // fallback route if role doesn't match any
             Auth::logout();
+
             return redirect('/login')->withErrors(['role' => 'Your role is not authorized']);
         }
     }

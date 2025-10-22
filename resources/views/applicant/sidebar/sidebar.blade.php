@@ -28,15 +28,16 @@
                 </span>Overview
             </a>
 
-            <a href="{{ route('applicant.records') }}"
+            <a href="{{ route('applicant.buildingPermit') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
-   {{ request()->routeIs('applicant.records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+   {{ request()->routeIs('applicant.buildingPermit') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
                 <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 0 0-1.883 2.542l.857 6a2.25 2.25 0 0 0 2.227 1.932H19.05a2.25 2.25 0 0 0 2.227-1.932l.857-6a2.25 2.25 0 0 0-1.883-2.542m-16.5 0V6A2.25 2.25 0 0 1 6 3.75h3.879a1.5 1.5 0 0 1 1.06.44l2.122 2.12a1.5 1.5 0 0 0 1.06.44H18A2.25 2.25 0 0 1 20.25 9v.776" />
+                            d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
                     </svg>
-                </span>Projects
+
+                </span>Building Permit
             </a>
             <a href="{{ route('applicant.zoning.zoning_page') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
@@ -51,16 +52,16 @@
 
                 </span>Zoning
             </a>
-            <a href="{{ route('applicant.safety') }}"
+            <a href="{{ route('applicant.sanitary') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
-   {{ request()->routeIs('applicant.safety') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+   {{ request()->routeIs('applicant.sanitary') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
                 <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
                     </svg>
 
-                </span>Safety Clearance
+                </span>Sanitary Clearance
             </a>
             <a href="{{ route('applicant.calendar.schedule') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
@@ -84,6 +85,81 @@
 
                 </span>Settings
             </a>
+        @elseif (Auth::user()->role === 'sanitary_officer')
+            <a href="{{ route('sanitary_officer.dashboard') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('sanitary_officer.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z" />
+                    </svg>
+
+                </span>Overview
+            </a>
+
+            <a href="{{ route('sanitary_officer.sanitary_records') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('sanitary_officer.sanitary_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z" />
+                    </svg>
+
+
+                </span>Sanitary Records
+            </a>
+
+            <a href="{{ route('sanitary_officer.sanitary_schedule') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('sanitary_officer.sanitary_schedule') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+                    </svg>
+
+                </span> Schedule Visitation
+            </a>
+        @elseif (Auth::user()->role === 'zoning_officer')
+            <a href="{{ route('zoning_officer.dashboard') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('zoning_officer.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z" />
+                    </svg>
+
+                </span>Overview
+            </a>
+
+            <a href="{{ route('zoning_officer.zoning_records') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('zoning_officer.zoning_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                    </svg>
+
+                </span>Zoning Records
+            </a>
+
+            <a href="{{ route('zoning_officer.zoning_schedule') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('zoning_officer.zoning_schedule') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
+                    </svg>
+
+                </span> Schedule Visitation
+            </a>
         @elseif (Auth::user()->role === 'obo')
             <a href="{{ route('obo.dashboard') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
@@ -96,31 +172,18 @@
 
                 </span>Overview
             </a>
-
-            <a href="{{ route('obo.zoning_records') }}"
+            <a href="{{ route('sanitary_officer.sanitary_records') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
-   {{ request()->routeIs('obo.zoning_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+   {{ request()->routeIs('sanitary_officer.sanitary_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
                 <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
                     </svg>
 
-                </span>Zoning Records
-            </a>
 
-            <a href="{{ route('obo.zoning_schedule') }}"
-                class="block py-2 px-4 rounded transition duration-150 flex gap-3
-   {{ request()->routeIs('obo.zoning_schedule') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
-                <span> <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M6.75 2.994v2.25m10.5-2.25v2.25m-14.252 13.5V7.491a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v11.251m-18 0a2.25 2.25 0 0 0 2.25 2.25h13.5a2.25 2.25 0 0 0 2.25-2.25m-18 0v-7.5a2.25 2.25 0 0 1 2.25-2.25h13.5a2.25 2.25 0 0 1 2.25 2.25v7.5m-6.75-6h2.25m-9 2.25h4.5m.002-2.25h.005v.006H12v-.006Zm-.001 4.5h.006v.006h-.006v-.005Zm-2.25.001h.005v.006H9.75v-.006Zm-2.25 0h.005v.005h-.006v-.005Zm6.75-2.247h.005v.005h-.005v-.005Zm0 2.247h.006v.006h-.006v-.006Zm2.25-2.248h.006V15H16.5v-.005Z" />
-                    </svg>
 
-                </span> Schedule Visitation
+                </span>Permit Application
             </a>
         @endif
 
