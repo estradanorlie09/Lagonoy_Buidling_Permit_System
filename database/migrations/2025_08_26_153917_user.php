@@ -4,14 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->uuid('id')->primary(); // UUID primary key
+            $table->uuid('id')->primary(); // UUID primary key\
+            $table->enum('profession', [
+                'architect',
+                'civil_engineer',
+                'electrical_engineer',
+                'sanitary_engineer',
+                'master_plumber',
+                'geodetic_engineer',
+                'mechanical_engineer',
+            ])->nullable();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
@@ -25,7 +35,7 @@ return new class extends Migration {
             $table->string('municipality')->nullable();
             $table->string('barangay')->nullable();
             $table->string('street')->nullable();
-            $table->enum('role', ['applicant', 'obo','zoning_officer','sanitary_officer', 'do', 'bfp'])->default('applicant');
+            $table->enum('role', ['applicant', 'admin', 'obo', 'zoning_officer', 'sanitary_officer', 'do', 'bfp', 'professional'])->default('applicant');
             $table->rememberToken();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps(); // created_at and updated_at

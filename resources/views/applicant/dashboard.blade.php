@@ -6,9 +6,12 @@
     <div class="bg-white rounded-xl max-w-10xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 px-4 sm:px-8">
             <!-- Left Section: "Lagonoy System" Title -->
-            <div class="flex-shrink-0 text-center sm:text-left w-full sm:w-auto">
-                <h1 class="text-xl sm:text-2xl font-semibold text-gray-700">Lagonoy Building Permit System</h1>
+            <div
+                class="flex-shrink-0 text-center sm:text-left w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2">
+                <i class="fas fa-building text-red-600 text-2xl"></i>
+                <h1 class="text-xl sm:text-2xl font-semibold text-red-700">Lagonoy Building Permit System</h1>
             </div>
+
 
             <!-- Center Section: Search Bar -->
             <div x-data="searchApplications()" class="relative w-full sm:w-1/2 max-w-3xl mx-4 sm:mx-8">
@@ -23,8 +26,13 @@
                     class="absolute mt-1 w-full bg-white shadow-lg rounded-lg max-h-60 overflow-y-auto z-50">
                     <!-- Show "No record found" when there are no filtered results -->
                     <template x-if="filtered.length === 0">
-                        <p class="text-red-500 px-4 py-2">No record found</p>
+                        <div class="text-center py-6 text-gray-500">
+                            <i class="fas fa-folder-open text-4xl text-red-400 mb-2"></i>
+                            <p class="text-base font-medium">No records found</p>
+                            <p class="text-sm text-gray-400">Try adjusting your filters or adding a new record.</p>
+                        </div>
                     </template>
+
 
                     <!-- Results Loop -->
                     <template x-for="item in filtered" :key="item.id">
@@ -232,167 +240,84 @@
                         </div>
                     </div>
                 </div>
-
-
-
-
             </div>
-
-            {{-- <!-- Notification Center -->
-            <div
-                class="bg-gradient-to-br from-gray-50 via-white to-gray-100 border border-gray-200 rounded-2xl shadow-md p-6 flex flex-col justify-between min-h-[250px] sm:min-h-[300px] max-h-[400px]">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                        <i class="fas fa-bell text-yellow-500"></i>
-                        Notifications
-                    </h3>
-                    <button class="text-xs sm:text-sm text-blue-600 hover:text-blue-800 transition-all duration-200">
-                        Mark all as read
-                    </button>
-                </div>
-
-                <!-- Notification List (scrollable area) -->
-                <div
-                    class="overflow-y-auto flex-1 space-y-3 pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 hover:scrollbar-thumb-gray-400 transition-all duration-200">
-
-                    <!-- Notification Item 1 -->
-                    <div
-                        class="flex items-start gap-3 bg-white/80 hover:bg-gray-50 border border-gray-200 rounded-xl p-3 transition-all duration-200">
-                        <div
-                            class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-yellow-100 text-yellow-600 rounded-full">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-gray-700 text-sm leading-snug">
-                                <strong>System Maintenance</strong> scheduled for <strong>Oct 28, 2025</strong>.
-                            </p>
-                            <span class="text-xs text-gray-400 mt-1 block">5 mins ago</span>
-                        </div>
-                        <div class="w-3 h-3 bg-red-500 rounded-full mt-1"></div>
-                    </div>
-
-                    <!-- Notification Item 2 -->
-                    <div
-                        class="flex items-start gap-3 bg-white/80 hover:bg-gray-50 border border-gray-200 rounded-xl p-3 transition-all duration-200">
-                        <div
-                            class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-green-100 text-green-600 rounded-full">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-gray-700 text-sm leading-snug">
-                                Your <strong>Building Permit</strong> has been approved.
-                            </p>
-                            <span class="text-xs text-gray-400 mt-1 block">2 hours ago</span>
-                        </div>
-                    </div>
-
-                    <!-- Notification Item 3 -->
-                    <div
-                        class="flex items-start gap-3 bg-white/80 hover:bg-gray-50 border border-gray-200 rounded-xl p-3 transition-all duration-200">
-                        <div
-                            class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-gray-700 text-sm leading-snug">
-                                A new feature has been added to your applicant dashboard.
-                            </p>
-                            <span class="text-xs text-gray-400 mt-1 block">1 day ago</span>
-                        </div>
-                    </div>
-
-                    <!-- Example of many notifications -->
-                    @for ($i = 1; $i <= 10; $i++)
-                        <div
-                            class="flex items-start gap-3 bg-white/80 hover:bg-gray-50 border border-gray-200 rounded-xl p-3 transition-all duration-200">
-                            <div
-                                class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-red-100 text-red-600 rounded-full">
-                                <i class="fas fa-exclamation-circle"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-gray-700 text-sm leading-snug">
-                                    Sample notification #{{ $i }} — new message from LGU office.
-                                </p>
-                                <span class="text-xs text-gray-400 mt-1 block">{{ $i }} hours ago</span>
-                            </div>
-                        </div>
-                    @endfor
-                </div>
-            </div> --}}
-
         </div>
 
         <!-- Application Overview Section -->
         <div class="mt-10 bg-white rounded-2xl shadow-md border border-red-100 p-5 sm:p-6 lg:p-8">
+
             <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-red-700 mb-4 flex items-center gap-2">
                 <i class="fas fa-chart-line text-red-600 text-base sm:text-xl"></i>
                 Your Application Overview
             </h3>
 
             <p class="text-gray-600 text-sm sm:text-base mb-6">
-                Here’s a quick snapshot of your current applications and their progress. Stay updated on approvals,
-                pending actions, and new announcements.
+                Here’s a quick snapshot of your current applications and their progress.
             </p>
 
+            <!-- Dropdown -->
+            <div class="mb-6">
+                <label for="applicationFilter" class="block text-gray-700 font-semibold mb-2">Select Application
+                    Type:</label>
+                <select id="applicationFilter"
+                    class="w-full sm:w-64 p-2 rounded border border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    <option value="building">Building Applications</option>
+                    <option value="zoning">Zoning Applications</option>
+                    <option value="sanitary">Sanitary Applications</option>
+                </select>
+            </div>
+
+
             <!-- Stats Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                <!-- Total Applications -->
-                <div class="flex items-center gap-4 bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
-                    <div class="p-3 bg-red-100 text-red-600 rounded-lg">
-                        <i class="fas fa-folder-open text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Total Applications</p>
-                        <h3 class="text-lg font-semibold text-gray-800">{{ $applications->count() }}</h3>
-                    </div>
-                </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="statsGrid">
+                @foreach (['total', 'approved', 'disapproved', 'resubmit'] as $status)
+                    @php
+                        switch ($status) {
+                            case 'total':
+                                $cardBg = 'bg-red-50';
+                                $iconBg = 'bg-red-100 text-red-600';
+                                $icon = 'fas fa-folder-open';
+                                $label = 'Total Applications';
+                                break;
+                            case 'approved':
+                                $cardBg = 'bg-green-50';
+                                $iconBg = 'bg-green-100 text-green-600';
+                                $icon = 'fas fa-check-circle';
+                                $label = 'Approved';
+                                break;
+                            case 'disapproved':
+                                $cardBg = 'bg-red-50';
+                                $iconBg = 'bg-red-100 text-red-600';
+                                $icon = 'fas fa-times-circle';
+                                $label = 'Disapproved';
+                                break;
+                            case 'resubmit':
+                                $cardBg = 'bg-gray-50';
+                                $iconBg = 'bg-gray-200 text-gray-600';
+                                $icon = 'fas fa-redo';
+                                $label = 'Resubmit';
+                                break;
+                        }
+                    @endphp
 
-                <!-- Approved -->
-                <div class="flex items-center gap-4 bg-green-50 rounded-xl p-5 shadow-sm border border-green-100">
-                    <div class="p-3 bg-green-100 text-green-600 rounded-lg">
-                        <i class="fas fa-check-circle text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Approved</p>
-                        <h3 class="text-lg font-semibold text-gray-800">
-                            {{ $applications->where('status', 'approved')->count() }}</h3>
-                    </div>
-                </div>
+                    <div
+                        class="flex items-center gap-4 rounded-xl p-5 shadow-sm border border-gray-100 {{ $cardBg }}">
+                        <!-- Icon -->
+                        <div class="p-3 rounded-lg {{ $iconBg }}">
+                            <i class="{{ $icon }} text-lg"></i>
+                        </div>
 
-                <!-- Under Review -->
-                <div class="flex items-center gap-4 bg-blue-50 rounded-xl p-5 shadow-sm border border-blue-100">
-                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                        <i class="fas fa-search text-2xl"></i>
+                        <!-- Text -->
+                        <div>
+                            <p class="text-sm text-gray-600 font-medium">{{ $label }}</p>
+                            <h3 class="text-xl font-semibold text-gray-900" id="{{ $status }}Count">0</h3>
+                        </div>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Under Review</p>
-                        <h3 class="text-lg font-semibold text-gray-800">
-                            {{ $applications->where('status', 'under_review')->count() }}</h3>
-                    </div>
-                </div>
-
-                <!-- Disapproved -->
-                <div class="flex items-center gap-4 bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
-                    <div class="p-3 bg-red-200 text-red-700 rounded-lg">
-                        <i class="fas fa-times-circle text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Disapproved</p>
-                        <h3 class="text-lg font-semibold text-gray-800">
-                            {{ $applications->where('status', 'disapproved')->count() }}</h3>
-                    </div>
-                </div>
+                @endforeach
             </div>
 
-            <!-- Quick Tip -->
-            <div
-                class="mt-6 bg-red-50 border border-red-100 text-sm text-gray-600 p-4 rounded-lg flex flex-col sm:flex-row items-start sm:items-center gap-3">
-                <i class="fas fa-info-circle text-red-500 text-lg"></i>
-                <p class="leading-relaxed">
-                    Tip: You can click on each application in your dashboard to view detailed progress and upload additional
-                    documents if needed.
-                </p>
-            </div>
+
+
         </div>
     </div>
     <script>
@@ -402,11 +327,11 @@
                 filtered: [],
                 getApplicationTitle(item) {
                     if (item.application_no.startsWith('BLDGP')) {
-                        return 'Building Permit applications';
+                        return 'Building Permit Applications';
                     } else if (item.application_no.startsWith('ZN')) {
-                        return 'Zoning applications';
+                        return 'Zoning Applications';
                     } else if (item.application_no.startsWith('SNT')) {
-                        return 'Sanitary applications';
+                        return 'Sanitary Applications';
                     } else {
                         return item.title; // Default title if no prefix matches
                     }
@@ -456,5 +381,25 @@
 
             };
         }
+    </script>
+    <script>
+        const filterSelect = document.getElementById('applicationFilter');
+
+        // Summaries from PHP passed to JS
+        const summaries = @json($summaries);
+
+        const updateCards = (type) => {
+            document.getElementById('totalCount').innerText = summaries[type]['total'];
+            document.getElementById('approvedCount').innerText = summaries[type]['approved'];
+            document.getElementById('resubmitCount').innerText = summaries[type]['resubmit'];
+            document.getElementById('disapprovedCount').innerText = summaries[type]['disapproved'];
+        };
+
+        // Set initial view
+        updateCards(filterSelect.value);
+
+        filterSelect.addEventListener('change', function() {
+            updateCards(this.value);
+        });
     </script>
 @endsection

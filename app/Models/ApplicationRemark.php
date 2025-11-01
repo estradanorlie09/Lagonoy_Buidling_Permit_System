@@ -13,7 +13,7 @@ class ApplicationRemark extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['zoning_application_id', 'sanitary_application_id', 'officer_id', 'remark'];
+    protected $fillable = ['zoning_application_id', 'building_application_id', 'sanitary_application_id', 'officer_id', 'remark'];
 
     protected $table = 'application_remark';
 
@@ -46,5 +46,10 @@ class ApplicationRemark extends Model
     public function application_sanitary()
     {
         return $this->belongsTo(SanitaryApplication::class, 'sanitary_application_id');
+    }
+
+    public function application_building()
+    {
+        return $this->belongsTo(BuildingApplicagtion::class, 'building_application_id');
     }
 }

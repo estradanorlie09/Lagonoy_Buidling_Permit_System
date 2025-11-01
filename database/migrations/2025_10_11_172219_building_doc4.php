@@ -14,17 +14,24 @@ return new class extends Migration
         Schema::create('building_documents', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->uuid('building_application_id');
-
+            $table->uuid('approved_id')->nullable();
             $table->string('document_type');
             $table->string('file_path');
             $table->unsignedInteger('version')->default(1);
+            $table->string('status')->default('pending'); 
+            $table->text('remarks')->nullable();          
             $table->timestamps();
 
             $table->foreign('building_application_id')
                 ->references('id')
                 ->on('building_applications')
                 ->onDelete('cascade');
+
+            $table->foreign('approved_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
         });
+
     }
 
     /**

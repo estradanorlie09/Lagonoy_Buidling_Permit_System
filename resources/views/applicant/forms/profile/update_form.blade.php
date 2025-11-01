@@ -42,8 +42,9 @@
                 </div>
 
                 <!-- Name Section -->
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Personal Information</h2>
-
+                <h2 class="text-lg font-semibold text-red-700 mb-4 pb-2">
+                    <i class="fas fa-user mr-2"></i> Personal Information
+                </h2>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div>
                         <label class="text-sm font-medium text-gray-700">First Name</label>
@@ -98,7 +99,9 @@
                 </div>
 
                 <!-- Contact -->
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Contact Information</h2>
+                <h2 class="text-lg font-semibold text-red-700 mb-4 pb-2">
+                    <i class="fas fa-address-book mr-2"></i> Contact Information
+                </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
@@ -114,7 +117,10 @@
                 </div>
 
                 <!-- Address -->
-                <h2 class="text-lg font-semibold text-gray-700 mb-4 border-b pb-2">Address</h2>
+                <h2 class="text-lg font-semibold text-red-700 mb-4 pb-2">
+                    <i class="fas fa-map-marker-alt mr-2"></i> Address
+                </h2>
+
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="md:col-span-3">
@@ -124,7 +130,7 @@
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-700">Province</label>
-                        <select name="province"
+                        <select id="province" name="province"
                             class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
                             <option value="">Select Province</option>
                             @foreach ($provinces as $provinceName => $provinceData)
@@ -137,7 +143,7 @@
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-700">Municipality / City</label>
-                        <select name="municipality"
+                        <select id="municipality" name="municipality"
                             class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
                             @foreach ($municipalities as $key => $value)
                                 <option value="{{ $key }}"
@@ -149,7 +155,7 @@
                     </div>
                     <div>
                         <label class="text-sm font-medium text-gray-700">Barangay</label>
-                        <select name="barangay"
+                        <select id="barangay" name="barangay"
                             class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
                             @foreach ($barangays as $barangay)
                                 <option value="{{ $barangay }}"
@@ -186,4 +192,5 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="{{ asset('asset/js/profileLocation.js') }}"></script>
+
 @endsection

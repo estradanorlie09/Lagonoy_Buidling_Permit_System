@@ -25,7 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'first_name', 'middle_name', 'last_name', 'suffix', 'birth_date', 'email', 'password', 'phone', 'street', 'province', 'municipality', 'barangay', 'role'];
+    protected $fillable = ['id', 'profession', 'first_name', 'middle_name', 'last_name', 'gender', 'suffix', 'birth_date', 'email', 'password', 'phone', 'street', 'province', 'municipality', 'barangay', 'role'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -53,6 +53,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function isApplicant(): bool
     {
         return $this->role === 'applicant';
+    }
+
+    public function isProfessional(): bool
+    {
+        return $this->role === 'professional';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
     }
 
     public function isZoning(): bool

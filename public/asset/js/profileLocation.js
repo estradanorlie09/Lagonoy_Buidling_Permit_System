@@ -1,6 +1,7 @@
 const csrfToken = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
+
 $("#province").on("change", function () {
     let province = $(this).val();
 

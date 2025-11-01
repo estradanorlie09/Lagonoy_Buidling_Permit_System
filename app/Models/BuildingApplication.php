@@ -18,6 +18,7 @@ class BuildingApplication extends Model
         'user_id',
         'property_id',
         'application_no',
+        'approved_id',
         'status',
         'approved_by',
     ];
@@ -49,9 +50,15 @@ class BuildingApplication extends Model
         return $this->belongsTo(BuildingProperty::class, 'property_id');
     }
 
-    public function professional()
+    // public function professional()
+    // {
+    //     return $this->belongsTo(Professional::class, 'professional_id');
+    // }
+
+    // BuildingApplication.php
+    public function professionals()
     {
-        return $this->belongsTo(Professional::class, 'professional_id');
+        return $this->hasMany(Professional::class, 'building_application_id', 'id');
     }
 
     // public function user()

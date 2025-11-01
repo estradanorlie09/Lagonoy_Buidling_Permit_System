@@ -1,0 +1,259 @@
+@extends('layout.applicant.app')
+
+@section('title', 'Update Admin Account')
+
+@section('content')
+    <div class="flex flex-col md:flex-row justify-center items-center w-full min-h-screen p-6 bg-gray-50">
+        <div class="w-full max-w-6xl mx-auto bg-white shadow-xl rounded-2xl p-8 md:p-10">
+
+            <a href="{{ route('admin.admin_accounts') }}"
+                class="text-red-600 hover:text-red-800 flex items-center gap-2 mb-6">
+                <i class="fas fa-arrow-left text-sm"></i> Back to Settings
+            </a>
+
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 flex items-center justify-center bg-red-100 text-red-600 rounded-full shadow-sm">
+                        <i class="fas fa-user-edit text-3xl"></i>
+                    </div>
+                </div>
+
+                <h1 class="text-3xl md:text-4xl font-extrabold text-red-600 tracking-tight">
+                    Update Admin Account
+                </h1>
+                <p class="text-gray-500 mt-2 text-base">
+                    Update the information of this admin account.
+                </p>
+            </div>
+
+            <!-- Form -->
+            <form action="{{ route('admin.update_admin_submit', $user->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="role" id="role" value="admin">
+
+                <!-- Personal Info -->
+                <h2 class="text-lg font-semibold text-red-700 mt-5 mb-4 pb-2">
+                    <i class="fas fa-user mr-2"></i> Personal Information
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">First Name</label>
+                        <input type="text" name="first_name" value="{{ old('first_name', $user->first_name) }}"
+                            placeholder="Enter first name"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('first_name')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Middle Name</label>
+                        <input type="text" name="middle_name" value="{{ old('middle_name', $user->middle_name) }}"
+                            placeholder="Enter middle name"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('middle_name')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Last Name</label>
+                        <input type="text" name="last_name" value="{{ old('last_name', $user->last_name) }}"
+                            placeholder="Enter last name"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('last_name')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Suffix</label>
+                        <select name="suffix"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                            <option value="">-- Select suffix --</option>
+                            @foreach (['Jr', 'Sr', 'II', 'III', 'IV', 'V', 'MD', 'PhD', 'Esq'] as $suffix)
+                                <option value="{{ $suffix }}"
+                                    {{ old('suffix', $user->suffix) == $suffix ? 'selected' : '' }}>
+                                    {{ $suffix }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Gender & Birth -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Birth Date</label>
+                        <input type="date" name="birth_date" value="{{ old('birth_date', $user->birth_date) }}"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('birth_date')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Gender</label>
+                        <select name="gender"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                            <option value="">-- Select gender --</option>
+                            <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Male
+                            </option>
+                            <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Female
+                            </option>
+                        </select>
+                        @error('gender')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <h2 class="text-lg font-semibold text-red-700 mb-4 pb-2">
+                    <i class="fas fa-address-book mr-2"></i> Contact Information
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}"
+                            placeholder="Enter your email" disabled
+                            class="w-full border border-gray-300 text-gray-500 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('email')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Phone Number</label>
+                        <input type="text" name="phone" value="{{ old('phone', $user->phone) }}"
+                            placeholder="Enter phone number"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('phone')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Password Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" name="password"
+                            placeholder="Enter new password (leave blank to keep current)"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('password')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Confirm Password</label>
+                        <input type="password" name="password_confirmation" placeholder="Confirm new password"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                    </div>
+                </div>
+
+                <!-- Address -->
+                <h2 class="text-lg font-semibold text-red-700 mb-4 pb-2">
+                    <i class="fas fa-map-marker-alt mr-2"></i> Address
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Province</label>
+                        <select id="province" name="province"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                            <option value="">-- Select province --</option>
+                            @foreach ($provinces as $provinceName => $provinceData)
+                                <option value="{{ $provinceName }}"
+                                    {{ old('province', $user->province) == $provinceName ? 'selected' : '' }}>
+                                    {{ $provinceName }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('province')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Municipality / City</label>
+                        <select id="municipality" name="municipality"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                              <option value="{{ old('municipality', $user->municipality) }}">
+                                {{ old('municipality', $user->municipality) ?? '-- Select municipality --' }}
+                            </option>
+                        </select>
+                        @error('municipality')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="text-sm font-medium text-gray-700">Barangay</label>
+                        <select id="barangay" name="barangay"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                            <option value="{{ old('barangay', $user->barangay) }}">
+                                {{ old('barangay', $user->barangay) ?? '-- Select barangay --' }}
+                            </option>
+                        </select>
+                        @error('barangay')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="text-sm font-medium text-gray-700">Lot / Blk / Street</label>
+                        <input type="text" name="street" value="{{ old('street', $user->street) }}"
+                            placeholder="Enter lot, block, or street"
+                            class="w-full border border-gray-300 rounded-lg p-2.5 mt-1 focus:ring-2 focus:ring-red-500 focus:outline-none">
+                        @error('street')
+                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit"
+                    class="w-full mt-4 bg-red-600 text-white font-semibold py-3 rounded-lg hover:bg-red-700 transition-all duration-200">
+                    <i class="fas fa-save mr-2"></i> Update
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Admin account updated!",
+                showConfirmButton: false,
+                timer: 2500
+            });
+            setTimeout(function() {
+                window.location.href = "{{ route('admin.admin_accounts') }}";
+            }, 2500);
+        </script>
+    @endif
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="{{ asset('asset/js/profileLocation.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const roleSelect = document.getElementById("role");
+            const professionContainer = document.getElementById("profession-container");
+
+            function toggleProfessionDropdown() {
+                if (roleSelect && professionContainer) {
+                    if (roleSelect.value === "professional") {
+                        professionContainer.classList.remove("hidden");
+                    } else {
+                        professionContainer.classList.add("hidden");
+                    }
+                }
+            }
+
+            toggleProfessionDropdown();
+            roleSelect?.addEventListener("change", toggleProfessionDropdown);
+        });
+    </script>
+@endsection

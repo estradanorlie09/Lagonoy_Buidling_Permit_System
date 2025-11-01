@@ -13,6 +13,7 @@ use App\Mail\ZoningApproved;
 use App\Models\ApplicationRemark;
 use App\Models\Visitation;
 use App\Models\ZoningApplication;
+use App\Models\ZoningDocument;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -322,6 +323,7 @@ class OboController extends Controller
 
     public function show($id)
     {
+        $user = Auth::user();
         $application = ZoningApplication::where('id', $id)->firstOrFail();
 
         //  dd($application);
@@ -329,6 +331,21 @@ class OboController extends Controller
             $application->update(['status' => 'under_review']);
         }
 
-        return view('zoning_officer.zoning.zoning_view_record', compact('application'));
+        $roleResponsibilities = [
+            'zoning_officer' => ['vicinity_map', 'lot_plan', 'proof_of_ownership', 'CTC'],
+        ];
+
+        $role = $user->role ?? null;
+        $docTypes = $roleResponsibilities[$role] ?? [];
+
+        if (empty($docTypes)) {
+            return redirect()->back()->with('error', 'No assigned document type(s) for your role.');
+        }
+        $documents = ZoningDocument::with(['application', 'application.user'])
+            ->whereIn('document_type', $docTypes)
+            ->where('status', 'pending')
+            ->get();
+
+        return view('zoning_officer.zoning.zoning_view_record', compact('application', 'documents', 'user'));
     }
 }

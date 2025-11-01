@@ -1,10 +1,9 @@
 @extends('layout.applicant.app')
 
-@section('title', 'View Zoning Application')
+@section('title', 'View Building Application')
 
 @section('content')
     <div class="max-w-10xl bg-white rounded-xl mx-auto px-6 py-8">
-
 
         <div
             class="relative rounded-2xl overflow-hidden bg-gradient-to-br from-red-50 via-rose-100 to-red-200 shadow-lg mb-6 p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 border border-red-100">
@@ -14,10 +13,10 @@
                 <div class="flex items-center gap-3 mb-3">
                     <div
                         class="w-14 h-14 flex items-center justify-center bg-white/70 backdrop-blur-sm rounded-full shadow-md border border-red-200">
-                        <i class="fas fa-location text-red-600 text-2xl"></i>
+                        <i class="fas fa-building text-red-600 text-2xl"></i>
                     </div>
                     <h2 class="text-2xl md:text-3xl font-extrabold text-red-800 tracking-tight">
-                        Zoning Application Details
+                        Building Application Details
                     </h2>
                 </div>
                 <p class="text-gray-700 text-sm md:text-base max-w-xl leading-relaxed">
@@ -28,7 +27,7 @@
 
             <!-- Right Decorative Illustration -->
             <div class="hidden md:block relative">
-                <img src="{{ asset('asset/img/location.png') }}" alt="Building Illustration"
+                <img src="{{ asset('asset/img/architecture-and-city.png') }}" alt="Building Illustration"
                     class="w-32 opacity-90 drop-shadow-md hover:scale-105 transition-transform duration-300">
             </div>
 
@@ -38,6 +37,19 @@
             <div class="absolute -top-10 -left-10 w-40 h-40 bg-rose-200/30 rounded-full blur-3xl"></div>
         </div>
 
+
+        @if ($application->status == 'approved')
+            <a href="{{ route('sanitary.pdf', $application->id) }}"
+                class="flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 transition duration-200 mb-5">
+                <!-- Download Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" />
+                </svg>
+                Download Certificate
+            </a>
+        @endif
 
         @php
             // Normalize status to lowercase
@@ -84,7 +96,7 @@
                     <h3 class="text-xl font-semibold text-gray-800">Application Info</h3>
                 </div>
 
-                <a href="{{ route('zoning_officer.zoning_records') }}"
+                <a href="{{ route('obo.buildingApplicationRecord') }}"
                     class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
                     <i class="fas fa-arrow-left"></i>
                     Back
@@ -244,6 +256,15 @@
                         <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
                     </div>
                 </div>
+
+                {{-- Residence TYpe --}}
+                <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <i class="fas fa-building text-red-500 text-lg mt-1"></i>
+                    <div>
+                        <p class="text-gray-500 text-sm">Occupancy Type</p>
+                        <p class="font-semibold text-gray-800">{{ $application->property->occupancy_type }}</p>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="bg-white shadow-md rounded-xl p-6 mb-6">
@@ -315,7 +336,7 @@
             </div>
         </div>
 
-        <div x-data="{ openModal: false, selectedDoc: null }" class="bg-gray-50 p-6 rounded-xl">
+        <div x-data="{ openResubmit: false, selectedDoc: null }" class="bg-gray-50 p-6 rounded-xl">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-2xl font-bold text-gray-800">Submitted Documents</h3>
             </div>
@@ -338,8 +359,7 @@
                                 <th class="px-4 py-3 text-left">Remarks</th>
                                 <th class="px-4 py-3 text-left">Reviewed By</th>
                                 <th class="px-4 py-3 text-center">Date</th>
-                                <th class="px-4 py-3 text-center">Actions</th>
-
+                               
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -443,20 +463,6 @@
                                     <td class="px-4 py-3 text-center text-gray-600">
                                         {{ $doc->updated_at ? $doc->updated_at->format('M d, Y h:i A') : '—' }}
                                     </td>
-                                    @if ($doc->status === 'pending')
-                                        <td class="px-6 py-4 text-center">
-                                            <button @click='openModal = true; selectedDoc = @json($doc)'
-                                                class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-4 py-2 rounded-lg shadow transition">
-                                                <i class="fas fa-eye"></i>
-                                                Review
-                                            </button>
-                                        </td>
-                                    @else
-                                        <td class="px-6 py-4 text-center">
-                                            ----
-                                        </td>
-                                    @endif
-
 
                                 </tr>
                             @endforeach
@@ -467,136 +473,71 @@
                 <p class="text-gray-500 text-center">No documents submitted.</p>
             @endif
 
+            <!-- 🟡 Resubmit Modal -->
+            <div x-show="openResubmit" x-transition
+                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" x-cloak>
+                <div @click.away="openResubmit = false"
+                    class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative">
 
+                    <button @click="openResubmit = false" class="absolute top-3 right-3 text-gray-500 hover:text-red-600">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
 
-            <div x-show="openModal" x-transition
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" x-cloak>
-                <div @click.away="openModal = false"
-                    class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-6 relative overflow-hidden">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Resubmit Document</h2>
 
-                    <!-- Modal Header -->
-                    <div class="flex justify-between items-center mb-5 pb-3">
-                        <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                            <i class="fas fa-clipboard-check text-red-600"></i>
-                            Review Submitted Documents
-                        </h2>
-
-
-                        <button @click="openModal = false" class="text-gray-400 hover:text-red-600 transition">
-                            <i class="fas fa-times text-lg"></i>
-                        </button>
-                    </div>
-
-
-                    <!-- Modal Content -->
                     <template x-if="selectedDoc">
-                        <form method="POST" action="{{ route('zoning.review.single') }}" class="space-y-5">
+                        <form :action="`/applicant/building_permit/view_application/resubmit/${selectedDoc.id}`"
+                            method="POST" enctype="multipart/form-data" class="space-y-4">
                             @csrf
-
-                            <div class="overflow-x-auto border border-gray-100 shadow-inner">
-                                <table class="min-w-full text-sm text-gray-700">
-                                    <thead class="bg-gradient-to-r from-blue-50 to-blue-100 border-b border-gray-200">
-                                        <tr class="text-left text-gray-700 text-xs uppercase tracking-wider">
-                                            <th class="py-3 px-4 font-semibold">Document</th>
-                                            <th class="py-3 px-4 font-semibold">File</th>
-                                            <th class="py-3 px-4 font-semibold text-center">Action</th>
-                                            <th class="py-3 px-4 font-semibold">Remarks</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody class="divide-y divide-gray-100 bg-white">
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-150 ease-in-out">
-                                            <!-- Document Type -->
-                                            <td class="py-4 px-4 flex items-center gap-3">
-                                                <div class="bg-blue-100 text-red-600 p-2 rounded-lg">
-                                                    <i class="fas fa-file-alt"></i>
-                                                </div>
-                                                <span class="capitalize font-medium text-gray-800"
-                                                    x-text="selectedDoc.document_type.replaceAll('_', ' ')"></span>
-                                            </td>
-
-                                            <!-- File Link -->
-                                            <td class="py-4 px-4">
-                                                <a :href="`/storage/${selectedDoc.file_path}`" target="_blank"
-                                                    class="inline-flex items-center gap-2 text-red-600 hover:text-red-800 font-medium transition">
-                                                    <i class="fas fa-external-link-alt"></i> View File
-                                                </a>
-                                            </td>
-
-                                            <!-- Status Select -->
-                                            <td class="py-4 px-4 text-center">
-                                                <div class="relative">
-                                                    <select name="documents[0][status]"
-                                                        class="border-gray-300 rounded-lg border outline-none px-3 py-1.5 text-sm w-44 focus:ring-2 focus:ring-red-400 transition"
-                                                        required>
-                                                        <option value="">Select...</option>
-                                                        <option value="approved">Approve</option>
-                                                        <option value="rejected">Reject</option>
-                                                        <option value="resubmit">Resubmit</option>
-                                                    </select>
-                                                    <input type="hidden" name="documents[0][id]" :value="selectedDoc.id">
-                                                </div>
-                                            </td>
-
-                                            <!-- Remarks -->
-                                            <td class="py-4 px-4">
-                                                <div class="relative">
-                                                    <textarea name="documents[0][remarks]" rows="1"
-                                                        class="border-gray-300 rounded-lg p-3 border outline-none px-3 py-1.5 w-full text-sm focus:ring-2 focus:ring-red-400 transition resize-none"
-                                                        placeholder="Add reviewer remarks...">Document submitted is sufficient!</textarea>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    Document Type
+                                </label>
+                                <p class="text-gray-900 text-sm font-semibold capitalize"
+                                    x-text="selectedDoc.document_type"></p>
                             </div>
 
-                            <!-- Modal Footer -->
-                            <div
-                                class="sticky bottom-0 left-0 right-0 flex justify-between items-center px-6 py-4 border-t bg-gradient-to-r from-gray-50 to-white rounded-b-xl shadow-inner">
-                                <div class="text-sm text-gray-500 flex items-center gap-2">
-                                    <i class="fas fa-info-circle text-red-500"></i>
-                                    Review the document before submitting.
-                                </div>
+                            <div>
+                                <label for="file" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Upload New File
+                                </label>
+                                <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                    class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-yellow-200"
+                                    required>
+                            </div>
 
-                                <div class="flex gap-3">
-                                    <button type="button" @click="openModal = false"
-                                        class="px-4 py-2 text-gray-700 bg-gray-100">
-                                        <i class="fas fa-times mr-1"></i> Cancel
-                                    </button>
-                                    <button type="submit" class="px-5 py-2 text-white bg-red-500 rounded-md">
-                                        <i class="fas fa-paper-plane mr-1"></i> Submit Review
-                                    </button>
-                                </div>
+                            <div class="flex justify-end gap-2 mt-4">
+                                <button type="button" @click="openResubmit = false"
+                                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md">
+                                    Submit
+                                </button>
                             </div>
                         </form>
                     </template>
-
                 </div>
             </div>
-
-
         </div>
-        @if (session('success'))
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: "{{ session('success') }}",
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        toast: true,
-                        position: 'top-end',
-                        background: '#f0fdf4',
-                        color: '#166534'
-                    });
-                });
-            </script>
-        @endif
-
-        <script src="{{ asset('asset/js/backPageRefresher.js') }}"></script>
 
 
-    @endsection
+    </div>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Document Submitted!",
+                showConfirmButton: false,
+                timer: 2500
+            });
+            setTimeout(function() {}, 2500);
+        </script>
+    @endif
+
+    <script src="{{ asset('asset/js/backPageRefresher.js') }}"></script>
+
+
+@endsection

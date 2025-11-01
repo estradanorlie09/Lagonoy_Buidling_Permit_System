@@ -2,22 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class SanitaryDocument extends Model
 {
     use HasFactory;
-    //protected $table = 'zoning_document'; 
+
+    // protected $table = 'zoning_document';
     protected $fillable = [
         'sanitary_application_id',
+        'approved_id',
         'document_type',
         'version',
         'file_path',
+        'status',
+        'remarks',
     ];
 
     public $incrementing = false; // UUID not auto-increment
+
     protected $keyType = 'string';
 
     protected static function boot()

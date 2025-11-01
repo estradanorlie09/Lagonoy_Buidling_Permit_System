@@ -37,10 +37,9 @@
             <div class="absolute -top-10 -left-10 w-40 h-40 bg-rose-200/30 rounded-full blur-3xl"></div>
         </div>
 
-        <!-- Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <!-- Total -->
-            <div class="bg-white rounded-xl shadow-md p-7 border-t-2 border-red-300 flex items-center gap-4">
+            <div class="flex items-center gap-4 bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
                 <div class="p-3 bg-red-100 text-red-600 rounded-lg">
                     <i class="fas fa-folder-open text-2xl"></i>
                 </div>
@@ -51,7 +50,7 @@
             </div>
 
             <!-- Approved -->
-            <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+            <div class="flex items-center gap-4 bg-green-50 rounded-xl p-5 shadow-sm border border-green-100">
                 <div class="p-3 bg-green-100 text-green-600 rounded-lg">
                     <i class="fas fa-check-circle text-2xl"></i>
                 </div>
@@ -63,20 +62,20 @@
                 </div>
             </div>
 
-            <!-- Under Review -->
-            <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
-                <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                    <i class="fas fa-search text-2xl"></i>
-                </div>
-                <div>
-                    <p class="text-sm text-gray-500">Under Review</p>
-                    <h3 class="text-xl font-bold text-gray-800">
-                        {{ $applications->where('status', 'under_review')->count() }}</h3>
-                </div>
-            </div>
+            {{-- <!-- Under Review -->
+                <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
+                        <i class="fas fa-search text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Under Review</p>
+                        <h3 class="text-xl font-bold text-gray-800">
+                            {{ $applications->where('status', 'under_review')->count() }}</h3>
+                    </div>
+                </div> --}}
 
             <!-- Disapproved -->
-            <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+            <div class="flex items-center gap-4 bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
                 <div class="p-3 bg-red-200 text-red-700 rounded-lg">
                     <i class="fas fa-times-circle text-2xl"></i>
                 </div>
@@ -89,7 +88,7 @@
             </div>
 
             <!-- Resubmit -->
-            <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+            <div class="flex items-center gap-4 bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-100">
                 <div class="p-3 bg-gray-200 text-gray-500 rounded-lg">
                     <i class="fas fa-redo text-2xl"></i>
                 </div>
@@ -155,7 +154,7 @@
                                     <!-- Application ID -->
                                     <td class="px-6 py-4 text-center font-semibold text-gray-800">
                                         <div class="flex items-center justify-center gap-2">
-                                            <i class="fas fa-file-alt text-blue-600 bg-blue-100 p-1.5 rounded-md"></i>
+                                            <i class="fas fa-file-alt text-red-600 bg-blue-100 p-1.5 rounded-md"></i>
                                             <span class="text-gray-800">{{ $application->application_no }}</span>
                                         </div>
                                     </td>

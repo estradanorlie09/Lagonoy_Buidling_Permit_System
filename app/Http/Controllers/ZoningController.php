@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ZoningApplicationSubmitted;
+use App\Models\BuildingDocument;
 use App\Models\ZoningApplication;
 use App\Models\ZoningDocument;
 use App\Models\ZoningProperty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -173,5 +175,102 @@ class ZoningController extends Controller
             ->route('applicant.zoning.zoning_application_view', $application->id)
             ->with('success', 'Documents resubmitted successfully.');
 
+    }
+
+    // Zoning Documents Review
+    public function zoningApplicationDoc()
+    {
+        $user = Auth::user();
+
+        $roleResponsibilities = [
+            'zoning_officer' => ['zoning_clearance', 'land_use_certificate'],
+            'sanitary_officer' => ['environmental_clearance', 'sanitation_plan'],
+            'obo' => ['dos', 'crptx', 'SPA', 'bfp_certificate', 'optional'],
+        ];
+
+        $role = $user->role ?? null;
+        $docTypes = $roleResponsibilities[$role] ?? [];
+
+        if (empty($docTypes)) {
+            return redirect()->back()->with('error', 'No assigned document type(s) for your role.');
+        }
+        $documents = BuildingDocument::with(['application', 'application.user'])
+            ->whereIn('document_type', $docTypes)
+            ->where('status', 'pending')
+            ->get();
+
+        return view('zoning_officer.zoning_document', compact('documents', 'user'));
+    }
+
+    public function reviewMultiple(Request $request)
+    {
+        //dd($request);
+        $validated = $request->validate([
+            'documents' => 'required|array',
+            'documents.*.id' => 'required|uuid|exists:building_documents,id',
+            'documents.*.status' => 'required|string|in:approved,rejected,resubmit',
+            'documents.*.remarks' => 'nullable|string|max:500',
+        ]);
+
+        $user = Auth::user();
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($validated['documents'] as $docData) {
+                $document = BuildingDocument::find($docData['id']);
+
+                $document->status = $docData['status'];
+                $document->remarks = $docData['remarks'] ?? null;
+                $document->reviewed_by = $user->id;
+                // $document->reviewed_at = now();
+                $document->save();
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Documents reviewed successfully.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            report($e);
+
+            return back()->with('error', 'Something went wrong while reviewing documents.');
+        }
+    }
+
+    public function reviewZoningDoc(Request $request)
+    {
+        //dd($request);
+        $validated = $request->validate([
+            'documents' => 'required|array',
+            'documents.*.id' => 'required|uuid|exists:zoning_documents,id',
+            'documents.*.status' => 'required|string|in:approved,rejected,resubmit',
+            'documents.*.remarks' => 'nullable|string|max:500',
+        ]);
+
+        $user = Auth::user();
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($validated['documents'] as $docData) {
+                $document = ZoningDocument::find($docData['id']);
+
+                $document->status = $docData['status'];
+                $document->remarks = $docData['remarks'] ?? null;
+                $document->reviewed_by = $user->id;
+                // $document->reviewed_at = now();
+                $document->save();
+            }
+
+            DB::commit();
+
+            return back()->with('success', 'Documents reviewed successfully.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            report($e);
+
+            return back()->with('error', 'Something went wrong while reviewing documents.');
+        }
     }
 }

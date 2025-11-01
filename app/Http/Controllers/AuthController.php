@@ -52,7 +52,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'role' => 'required|in:applicant,obo,do,bfp,zoning_officer,sanitary_officer',
+            'role' => 'required|in:applicant,obo,do,bfp,zoning_officer,sanitary_officer,professional',
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
@@ -77,6 +77,8 @@ class AuthController extends Controller
             return redirect()->intended(route('sanitary_officer.dashboard'));
         } elseif ($user->isObo()) {
             return redirect()->intended(route('obo.dashboard'));
+        } elseif ($user->isProfessional()) {
+            return redirect()->intended(route('professional.dashboard'));
         } else {
             // fallback route if role doesn't match any
             Auth::logout();

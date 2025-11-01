@@ -1,4 +1,4 @@
-<aside :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }"
+{{-- <aside :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }"
     class="fixed inset-y-0 left-0 w-64 bg-black text-white transform transition-transform duration-300 ease-in-out z-100">
 
     <!-- Close Button -->
@@ -172,20 +172,72 @@
 
                 </span>Overview
             </a>
-            <a href="{{ route('sanitary_officer.sanitary_records') }}"
+            <a href="{{ route('obo.buildingApplicationRecord') }}"
                 class="block py-2 px-4 rounded transition duration-150 flex gap-3
-   {{ request()->routeIs('sanitary_officer.sanitary_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+   {{ request()->routeIs('obo.buildingApplicationRecord') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
                 <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205 3 1m1.5.5-1.5-.5M6.75 7.364V3h-3v18m3-13.636 10.5-3.819" />
                     </svg>
+                </span>Building Application
+            </a>
+        @elseif (Auth::user()->role === 'professional')
+            <a href="{{ route('professional.dashboard') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('professional.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z" />
+                    </svg>
+                </span>Overview
+            </a>
+            <a href="{{ route('professional.building_application') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('professional.building_application') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21" />
+                    </svg>
+                </span>Building Application
+            </a>
+        @elseif (Auth::user()->role === 'admin')
+            <a href="{{ route('admin.dashboard') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('admin.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z" />
+                    </svg>
+                </span>Overview
+            </a>
+
+            <a href="{{ route('admin.user_records') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('admin.user_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-6">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
+                    </svg>
 
 
+                </span>User
+            </a>
 
-                </span>Permit Application
+            <a href="{{ route('admin.admin_accounts') }}"
+                class="block py-2 px-4 rounded transition duration-150 flex gap-3
+   {{ request()->routeIs('admin.admin_accounts') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-white' }}">
+                <span> <i class="fas fa-user-shield text-xl"></i>
+
+
+                </span>Admin Accounts
             </a>
         @endif
+
 
     </nav>
 
@@ -195,6 +247,162 @@
             @csrf
             <button type="submit" class="w-full py-2 bg-gray-800 rounded hover:bg-gray-700">
                 Logout
+            </button>
+        </form>
+    </div>
+</aside> --}}
+<aside :class="{ 'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen }"
+    class="fixed inset-y-0 left-0 w-64 bg-black text-white transform transition-transform duration-300 ease-in-out z-100">
+
+    <!-- Close Button -->
+    <div class="flex justify-end p-4">
+        <button @click="sidebarOpen = false" class="text-white text-2xl">&times;</button>
+    </div>
+
+    <!-- Logo -->
+    <div class="flex items-center justify-center h-24 border-b border-gray-700">
+        <img class="w-16 h-16" src="{{ asset('asset/icon/logo.png') }}" alt="Logo">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-1 p-4 space-y-2">
+        @if (Auth::user()->role === 'applicant')
+            <a href="{{ route('applicant.dashboard') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-tachometer-alt"></i> Overview
+            </a>
+
+            <a href="{{ route('applicant.buildingPermit') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.buildingPermit') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-building"></i> Building Permit
+            </a>
+
+            <a href="{{ route('applicant.zoning.zoning_page') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.zoning.zoning_page') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-map-marked-alt"></i> Zoning Clearance
+            </a>
+
+            <a href="{{ route('applicant.sanitary') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.sanitary') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-shower"></i> Sanitary Clearance
+            </a>
+
+            <a href="{{ route('applicant.calendar.schedule') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.calendar.schedule') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-calendar-alt"></i> Schedules
+            </a>
+
+            <a href="{{ route('applicant.setting') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.setting') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        @elseif (Auth::user()->role === 'sanitary_officer')
+            <a href="{{ route('sanitary_officer.dashboard') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('sanitary_officer.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <a href="{{ route('sanitary_officer.sanitary_records') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('sanitary_officer.sanitary_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-file-medical"></i> Sanitary Records
+            </a>
+
+            <a href="{{ route('sanitary_officer.sanitary_schedule') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('sanitary_officer.sanitary_schedule') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-calendar-check"></i> Schedule Visits
+            </a>
+        @elseif (Auth::user()->role === 'zoning_officer')
+            <a href="{{ route('zoning_officer.dashboard') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('zoning_officer.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ route('zoning_officer.zoning_application_doc') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('zoning_officer.zoning_application_doc') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-clipboard-list"></i> Building Documents
+            </a>
+            <a href="{{ route('zoning_officer.zoning_records') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('zoning_officer.zoning_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-map"></i> Zoning Records
+            </a>
+
+            <a href="{{ route('zoning_officer.zoning_schedule') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('zoning_officer.zoning_schedule') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-calendar-day"></i> Schedule Visits
+            </a>
+        @elseif (Auth::user()->role === 'obo')
+            <a href="{{ route('obo.dashboard') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('obo.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a href="{{ route('obo.building_application_doc') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('obo.building_application_doc') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-clipboard-list"></i> Building Documents
+            </a>
+            <a href="{{ route('obo.buildingApplicationRecord') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('obo.buildingApplicationRecord') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-folder-open"></i> Building Applications
+            </a>
+            <a href="{{ route('applicant.setting') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('applicant.setting') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        @elseif (Auth::user()->role === 'professional')
+            <a href="{{ route('professional.dashboard') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('professional.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <a href="{{ route('professional.building_application') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('professional.building_application') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-clipboard-list"></i> Building Documents
+            </a>
+        @elseif (Auth::user()->role === 'admin')
+            <a href="{{ route('admin.dashboard') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('admin.dashboard') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+
+            <a href="{{ route('admin.user_records') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('admin.user_records') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-users"></i> Users
+            </a>
+
+            <a href="{{ route('admin.admin_accounts') }}"
+                class="block py-2.5 px-4 rounded flex items-center gap-3 transition duration-150
+                {{ request()->routeIs('admin.admin_accounts') ? 'bg-red-600 text-white' : 'hover:bg-gray-800 text-gray-200' }}">
+                <i class="fas fa-user-shield"></i> Admin Accounts
+            </a>
+        @endif
+    </nav>
+
+    <!-- Logout -->
+    <div class="p-4 border-t border-gray-800">
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit"
+                class="w-full py-2.5 bg-gray-800 hover:bg-gray-700 text-white rounded flex items-center justify-center gap-2 transition">
+                <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </form>
     </div>

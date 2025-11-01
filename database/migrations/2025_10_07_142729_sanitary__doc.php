@@ -11,30 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('application_remark', function (Blueprint $table) {
+        Schema::create('sanitary_documents', function (Blueprint $table) {
             $table->uuid('id')->primary();
-
-            $table->uuid('zoning_application_id')->nullable();
-            $table->uuid('sanitary_application_id')->nullable();
-            $table->uuid('officer_id');
-
-            $table->text('remark');
+            $table->uuid('sanitary_application_id');
+            $table->uuid('approved_id')->nullable();
+            $table->string('document_type');
+            $table->string('file_path');
+            $table->unsignedInteger('version')->default(1);
+            $table->string('status')->default('pending');
+            $table->text('remarks')->nullable();
             $table->timestamps();
 
-            // Foreign keys
-            $table->foreign('zoning_application_id')
-                ->references('id')->on('zoning_applications')
-                ->onDelete('cascade');
-
             $table->foreign('sanitary_application_id')
-                ->references('id')->on('sanitary_applications')
+                ->references('id')
+                ->on('sanitary_applications')
                 ->onDelete('cascade');
-
-            $table->foreign('officer_id')
+            $table->foreign('approved_id')
                 ->references('id')->on('users')
                 ->onDelete('cascade');
         });
-
     }
 
     /**
@@ -42,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('application_remarks');
+        //
     }
 };

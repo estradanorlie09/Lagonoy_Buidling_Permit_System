@@ -8,6 +8,7 @@ use App\Models\BuildingProperty;
 use App\Models\Professional;
 use App\Services\LocationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -16,7 +17,10 @@ class ApplicantBuildingPermitController extends Controller
 {
     public function buildingPermit()
     {
-        $applications = BuildingApplication::all();
+        $applications = BuildingApplication::with('property')
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('applicant.buildingPermitRecords', compact('applications'));
     }
@@ -242,7 +246,7 @@ class ApplicantBuildingPermitController extends Controller
 
                         BuildingDocument::create([
                             'id' => (string) Str::uuid(),
-                            'building_application_id' => $application->id, // ✅ valid UUID
+                            'building_application_id' => $application->id,
                             'document_type' => $type,
                             'file_path' => $path,
                             'version' => 1,
@@ -311,5 +315,33 @@ class ApplicantBuildingPermitController extends Controller
             ->firstOrFail();
 
         return view('applicant.obo.building_application_view', compact('application'));
+    }
+
+    public function resubmitDocument(Request $request, $docId)
+    {
+        $document = BuildingDocument::findOrFail($docId);
+        $application = $document->application;
+
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        ]);
+
+        $filePath = $request->file('file')->store('building_docs', 'public');
+
+        $latestVersion = BuildingDocument::where('building_application_id', $application->id)
+            ->where('document_type', $document->document_type)
+            ->max('version') ?? 1;
+
+        BuildingDocument::create([
+            'building_application_id' => $application->id,
+            'document_type' => $document->document_type,
+            'file_path' => $filePath,
+            'version' => $latestVersion + 1,
+            'status' => 'pending',
+        ]);
+
+        $application->update(['status' => 'under_review']);
+
+        return redirect()->back()->with('success', 'Document resubmitted successfully.');
     }
 }

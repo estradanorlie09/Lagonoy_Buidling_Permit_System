@@ -39,7 +39,7 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <!-- Total -->
-                <div class="bg-white rounded-xl shadow-md p-7 border-t-2 border-red-300 flex items-center gap-4">
+                <div class="flex items-center gap-4 bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
                     <div class="p-3 bg-red-100 text-red-600 rounded-lg">
                         <i class="fas fa-folder-open text-2xl"></i>
                     </div>
@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Approved -->
-                <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+                <div class="flex items-center gap-4 bg-green-50 rounded-xl p-5 shadow-sm border border-green-100">
                     <div class="p-3 bg-green-100 text-green-600 rounded-lg">
                         <i class="fas fa-check-circle text-2xl"></i>
                     </div>
@@ -62,20 +62,10 @@
                     </div>
                 </div>
 
-                <!-- Under Review -->
-                <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
-                    <div class="p-3 bg-blue-100 text-blue-600 rounded-lg">
-                        <i class="fas fa-search text-2xl"></i>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-500">Under Review</p>
-                        <h3 class="text-xl font-bold text-gray-800">
-                            {{ $applications->where('status', 'under_review')->count() }}</h3>
-                    </div>
-                </div>
+
 
                 <!-- Disapproved -->
-                <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+                <div class="flex items-center gap-4 bg-red-50 rounded-xl p-5 shadow-sm border border-red-100">
                     <div class="p-3 bg-red-200 text-red-700 rounded-lg">
                         <i class="fas fa-times-circle text-2xl"></i>
                     </div>
@@ -88,7 +78,7 @@
                 </div>
 
                 <!-- Resubmit -->
-                <div class="bg-white rounded-xl shadow-md border-t-2 border-red-300 p-7 flex items-center gap-4">
+                <div class="flex items-center gap-4 bg-gray-50 rounded-xl p-5 shadow-sm border border-gray-100">
                     <div class="p-3 bg-gray-200 text-gray-500 rounded-lg">
                         <i class="fas fa-redo text-2xl"></i>
                     </div>
@@ -108,7 +98,7 @@
                     <div
                         class="flex flex-col sm:flex-row justify-between items-center px-6 py-6 border-b border-gray-200 gap-4">
                         <div class="w-full sm:w-1/2">
-                            <h1 class="text-xl font-semibold text-gray-800">Building Applications</h1>
+                            <h1 class="text-xl font-semibold text-red-800">Building Applications</h1>
                             <p class="text-sm text-gray-500">Manage your building permit applications.</p>
                         </div>
 
@@ -121,11 +111,9 @@
                             </div>
 
                             <!-- Create Button -->
-                            <button @click="open = true"
-                                class="w-full sm:w-auto px-5 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm shadow-md flex items-center justify-center gap-2 transition">
-                                {{-- <i class="fas fa-plus"></i><span>New</span> --}}
-                                <span>Create</span>
-                            </button>
+                            <a href="{{ route('applicant.forms.obo.buidlingPermitForm') }}"
+                                onclick="event.preventDefault(); localStorage.clear(); window.location.href=this.href;"
+                                class="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md"> ADD </a>
                         </div>
                     </div>
 
@@ -156,7 +144,7 @@
                                         <!-- Application ID -->
                                         <td class="px-6 py-4 text-center font-semibold text-gray-800">
                                             <div class="flex items-center justify-center gap-2">
-                                                <i class="fas fa-file-alt text-blue-600 bg-blue-100 p-1.5 rounded-md"></i>
+                                                <i class="fas fa-file-alt text-red-600 bg-blue-100 p-1.5 rounded-md"></i>
                                                 <span class="text-gray-800">{{ $application->application_no }}</span>
                                             </div>
                                         </td>
@@ -235,28 +223,7 @@
                 </div>
             </div>
 
-            <div x-show="open" x-cloak
-                class="fixed inset-0 z-50 flex items-center justify-center bg-transparent bg-opacity-30 backdrop-blur-sm">
-                <div @click.away="open = false"
-                    class="bg-white rounded-lg m-5 shadow-xl max-w-lg w-full p-6 relative transform transition-all">
-                    <!-- Close Button --> <button @click="open = false"
-                        class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"> <i class="fas fa-times"></i>
-                    </button>
-                    <!-- Modal Content -->
-                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Data Privacy Notice</h2>
-                    <p class="text-sm text-gray-600a mb-6"> By creating a new application, you agree to the collection and
-                        processing of your personal data in compliance with the Data Privacy Act. Your information will only
-                        be
-                        used for bulding permit application purposes and will be kept strictly confidential. </p>
-                    <div class="flex justify-end gap-3"> <button @click="open = false"
-                            class="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md"> Cancel
-                        </button>
-                        <a href="{{ route('applicant.forms.obo.buidlingPermitForm') }}"
-                            onclick="event.preventDefault(); localStorage.clear(); window.location.href=this.href;"
-                            class="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md"> I Agree </a>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <script src="{{ asset('asset/js/datatable.js') }}"></script>
         <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">

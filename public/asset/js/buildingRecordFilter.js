@@ -27,11 +27,11 @@ $(document).ready(function () {
         table.draw();
     });
 
-   
+    // No color update functions needed anymore
 
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
         let statusCell = data[5];
-        let dateStr = data[3];
+        let dateStr = data[2];
 
         // Normalize status text
         let statusText = statusCell.trim().toLowerCase().replace(/\s+/g, "_");
@@ -46,12 +46,8 @@ $(document).ready(function () {
         // DATE filter
         let datePass = true;
         let today = moment();
-
-        console.log(today);
-
         if (selectedDate === "today") {
             datePass = recordDate.isSame(today, "day");
-            console.log(datePass);
         } else if (selectedDate === "last_week") {
             datePass = recordDate.isBetween(
                 today.clone().subtract(7, "days"),

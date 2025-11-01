@@ -295,7 +295,6 @@
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-semibold text-gray-800">Submitted Documents</h3>
 
-                {{-- ✅ FIX: case-insensitive check --}}
                 @if (strtolower($application->status) === 'resubmit')
                     <a href="{{ route('applicant.zoning.zoning_application_view.resubmit_doc', $application->id) }}"
                         class="px-5 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg shadow-md text-sm font-medium transition">
@@ -311,44 +310,43 @@
             @endphp
 
             @if ($latestDocs->count() > 0)
-                <ul class="space-y-4">
+                <!-- Grid layout for 2 columns -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @foreach ($latestDocs as $doc)
-                        <li>
-                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                                class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
+                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                            class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
 
-                                <!-- Document Icon -->
-                                <div class="flex-shrink-0">
-                                    @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
-                                        <img src="{{ asset('storage/' . $doc->file_path) }}" alt="{{ $doc->filename }}"
-                                            class="h-10 w-10 object-cover rounded">
-                                    @elseif(Str::endsWith($doc->file_path, 'pdf'))
-                                        <i class="fas fa-file-pdf text-red-600 text-2xl"></i>
-                                    @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
-                                        <i class="fas fa-file-word text-blue-600 text-2xl"></i>
-                                    @elseif(Str::endsWith($doc->file_path, 'txt'))
-                                        <i class="fas fa-file-alt text-gray-600 text-2xl"></i>
-                                    @else
-                                        <i class="fas fa-file text-gray-500 text-2xl"></i>
-                                    @endif
-                                </div>
+                            <!-- Document Icon -->
+                            <div class="flex-shrink-0">
+                                @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
+                                    <img src="{{ asset('storage/' . $doc->file_path) }}" alt="{{ $doc->filename }}"
+                                        class="h-12 w-12 object-cover rounded">
+                                @elseif(Str::endsWith($doc->file_path, 'pdf'))
+                                    <i class="fas fa-file-pdf text-red-600 text-3xl"></i>
+                                @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
+                                    <i class="fas fa-file-word text-blue-600 text-3xl"></i>
+                                @elseif(Str::endsWith($doc->file_path, 'txt'))
+                                    <i class="fas fa-file-alt text-gray-600 text-3xl"></i>
+                                @else
+                                    <i class="fas fa-file text-gray-500 text-3xl"></i>
+                                @endif
+                            </div>
 
-                                <!-- Document Details -->
-                                <div class="flex-1">
-                                    <span class="block text-lg font-medium text-gray-800">
-                                        {{ $doc->filename ?? 'Submitted Document' }}
+                            <!-- Document Details -->
+                            <div class="flex-1">
+                                <span class="block text-base font-medium text-gray-800">
+                                    {{ $doc->filename ?? 'Submitted Document' }}
+                                </span>
+
+                                @if ($doc->document_type)
+                                    <span class="text-sm text-gray-500">
+                                        {{ $doc->document_type }} (v{{ $doc->version }})
                                     </span>
-
-                                    @if ($doc->document_type)
-                                        <span class="text-sm text-gray-500">
-                                            {{ $doc->document_type }} (v{{ $doc->version }})
-                                        </span>
-                                    @endif
-                                </div>
-                            </a>
-                        </li>
+                                @endif
+                            </div>
+                        </a>
                     @endforeach
-                </ul>
+                </div>
             @else
                 <p class="text-gray-500">No documents submitted.</p>
             @endif

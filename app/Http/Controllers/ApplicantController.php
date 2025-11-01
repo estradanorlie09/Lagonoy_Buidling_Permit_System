@@ -21,20 +21,21 @@ class ApplicantController extends Controller
 
     public function search(Request $request)
     {
+        $user = auth()->user(); // Get logged-in user
         $query = $request->get('query');
 
         // Search in the BuildingApplication model
-        $buildingResults = BuildingApplication::where('application_no', 'like', "%{$query}%")
+        $buildingResults = BuildingApplication::where('user_id', $user->id)->where('application_no', 'like', "%{$query}%")
             ->select('id', 'application_no', 'status') // Adjust fields as per your model
             ->limit(10);
 
         // Search in the ZoningApplication model
-        $zoningResults = ZoningApplication::where('application_no', 'like', "%{$query}%")
+        $zoningResults = ZoningApplication::where('user_id', $user->id)->where('application_no', 'like', "%{$query}%")
             ->select('id', 'application_no', 'status') // Adjust fields as per your model
             ->limit(10);
 
         // Search in the SanitaryApplication model
-        $sanitaryResults = SanitaryApplication::where('application_no', 'like', "%{$query}%")
+        $sanitaryResults = SanitaryApplication::where('user_id', $user->id)->where('application_no', 'like', "%{$query}%")
             ->select('id', 'application_no', 'status') // Adjust fields as per your model
             ->limit(10);
 
@@ -113,16 +114,40 @@ class ApplicantController extends Controller
 
     public function index()
     {
-        $applications = BuildingApplication::where('user_id', auth()->id())->get();
+        $userId = auth()->id();
 
-        return view('applicant.dashboard', compact('applications'));
+        // Fetch only this user's building applications
+        $applications = BuildingApplication::where('user_id', $userId)->get();
+
+        $summaries = [
+            'building' => [
+                'total' => BuildingApplication::where('user_id', $userId)->count(),
+                'approved' => BuildingApplication::where('user_id', $userId)->where('status', 'approved')->count(),
+                'resubmit' => BuildingApplication::where('user_id', $userId)->where('status', 'resubmit')->count(),
+                'disapproved' => BuildingApplication::where('user_id', $userId)->where('status', 'disapproved')->count(),
+            ],
+            'zoning' => [
+                'total' => ZoningApplication::where('user_id', $userId)->count(),
+                'approved' => ZoningApplication::where('user_id', $userId)->where('status', 'approved')->count(),
+                'resubmit' => ZoningApplication::where('user_id', $userId)->where('status', 'resubmit')->count(),
+                'disapproved' => ZoningApplication::where('user_id', $userId)->where('status', 'disapproved')->count(),
+            ],
+            'sanitary' => [
+                'total' => SanitaryApplication::where('user_id', $userId)->count(),
+                'approved' => SanitaryApplication::where('user_id', $userId)->where('status', 'approved')->count(),
+                'resubmit' => SanitaryApplication::where('user_id', $userId)->where('status', 'resubmit')->count(),
+                'disapproved' => SanitaryApplication::where('user_id', $userId)->where('status', 'disapproved')->count(),
+            ],
+        ];
+
+        return view('applicant.dashboard', compact('applications', 'summaries'));
     }
 
-    public function permit()
-    {
-        // $users = User::all();
-        return view('applicant.permit');
-    }
+    // public function permit()
+    // {
+    //     // $users = User::all();
+    //     return view('applicant.permit');
+    // }
 
     public function setting()
     {

@@ -34,6 +34,8 @@
                         Officer</option>
                     <option value="obo" {{ old('role') == 'obo' ? 'selected' : '' }}>Office of the Building Official
                     </option>
+                    <option value="professional" {{ old('role') == 'professional' ? 'selected' : '' }}>Professional
+                    </option>
 
 
                     </option>

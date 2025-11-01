@@ -12,18 +12,24 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('zoning_documents', function (Blueprint $table) {
-            $table->uuid('id')->primary(); 
+            $table->uuid('id')->primary();
             $table->uuid('zoning_application_id');
-
-            $table->string('document_type'); 
-            $table->string('file_path');     
+            $table->uuid('approved_id')->nullable();
+            $table->string('document_type');
+            $table->string('file_path');
             $table->unsignedInteger('version')->default(1);
+            $table->string('status')->default('pending');
+            $table->text('remarks')->nullable();
             $table->timestamps();
 
             $table->foreign('zoning_application_id')
-                  ->references('id')
-                  ->on('zoning_applications')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('zoning_applications')
+                ->onDelete('cascade');
+
+            $table->foreign('approved_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
         });
     }
 
@@ -32,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-         Schema::dropIfExists('zoning_document');
+        Schema::dropIfExists('zoning_document');
     }
 };

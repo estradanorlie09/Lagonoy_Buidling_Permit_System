@@ -13,9 +13,12 @@ class BuildingDocument extends Model
     // protected $table = 'zoning_document';
     protected $fillable = [
         'building_application_id',
+        'reviewed_by',
         'document_type',
         'version',
         'file_path',
+        'status',
+        'remarks',
     ];
 
     public $incrementing = false; // UUID not auto-increment
@@ -36,5 +39,15 @@ class BuildingDocument extends Model
     public function application()
     {
         return $this->belongsTo(BuildingApplication::class, 'building_application_id');
+    }
+
+    public function approvedBy()
+    {
+        return $this->belongsTo(User::class, 'approved_id');
+    }
+
+    public function reviewer()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by'); // 'reviewed_by' stores the user ID
     }
 }

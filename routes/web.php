@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApplicantBuildingPermitController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\OboController;
+use App\Http\Controllers\OboOfficialController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\PdfController;
+use App\Http\Controllers\ProfessionalController;
 use App\Http\Controllers\SanitaryContoller;
 use App\Http\Controllers\ZoningController;
 use App\Notifications\PasswordResetSuccess;
@@ -20,9 +23,17 @@ use Illuminate\Support\Facades\Route;
 //     return Auth::check() ? Auth::user() : 'Not logged in';
 // });
 // page controller
+Route::post('/location/municipalities', [ApplicantController::class, 'getMunicipalities']);
+Route::post('/location/barangays', [ApplicantController::class, 'getBarangays']);
+
 Route::get('/', [PageController::class, 'homepage'])->name('homepage');
 Route::get('/login', [PageController::class, 'login'])->name('login');
 Route::get('/signup', [PageController::class, 'signup'])->name('signup');
+
+Route::get('/login_admin', [AdminController::class, 'login_admin'])->name('login_admin');
+Route::post('/login_admin', [AdminController::class, 'loginAdmin'])
+    ->middleware('throttle:5,1')
+    ->name('login.submit_admin');
 
 // Auth Controller
 Route::post('/register', [AuthController::class, 'register'])->name('register.store');
@@ -52,8 +63,6 @@ Route::middleware(['auth', 'verified', 'role:applicant'])->group(function () {
 
     Route::get('/applicant/update_profile', [ApplicantController::class, 'update_profile'])->name('applicant.forms.profile.update_form');
     Route::post('/update_user', [FormController::class, 'update_user_profile'])->name('update_user_profile');
-    Route::post('/location/municipalities', [ApplicantController::class, 'getMunicipalities']);
-    Route::post('/location/barangays', [ApplicantController::class, 'getBarangays']);
 
     Route::get('/applicant/zoning/view_application/resubmit/{id}', [ZoningController::class, 'resubmit'])->name('applicant.zoning.zoning_application_view.resubmit_doc');
     Route::post('/resubmit/{id}', [ZoningController::class, 'doc_resubmit'])->name('zoning.resubmit')->middleware('auth');
@@ -75,6 +84,9 @@ Route::middleware(['auth', 'verified', 'role:applicant'])->group(function () {
     Route::get('/applicant/building_permit/form', [ApplicantBuildingPermitController::class, 'buildingPermitForms'])->name('applicant.forms.obo.buidlingPermitForm');
     Route::post('/applicant/building_permit/store', [ApplicantBuildingPermitController::class, 'store'])->name('building_application.store')->middleware('auth');
     Route::get('/applicant/building_permit/view_application/{id}', [ApplicantBuildingPermitController::class, 'show'])->name('applicant.obo.building_application_view');
+
+    Route::post('/applicant/building_permit/view_application/resubmit/{id}', [ApplicantBuildingPermitController::class, 'resubmitDocument'])
+        ->name('applicant.resubmit.document');
 
     Route::get('/search-applications', [ApplicantController::class, 'search'])->name('applications.search');
 
@@ -101,6 +113,12 @@ Route::middleware(['auth', 'verified', 'role:zoning_officer'])->group(function (
     Route::post('/zoning_officer/zoning/{id}/reschedule', [OboController::class, 'reschedule'])->name('zoning_officer.zoning.reschedule');
     Route::put('/zoning_visitations/{id}/status', [OboController::class, 'updateStatus'])->name('visitations.updateStatus');
 
+    Route::get('/zoning_officer/zoning_application_doc', [ZoningController::class, 'zoningApplicationDoc'])->name('zoning_officer.zoning_application_doc');
+    Route::post('/zoning_officer/review-multiple', [ZoningController::class, 'reviewMultiple'])
+        ->name('zoning.review.multiple');
+    Route::post('/zoning_officer/review-single-doc', [ZoningController::class, 'reviewZoningDoc'])
+        ->name('zoning.review.single');
+
     // Route::put('/visitations/{id}/status', [OboController::class, 'cancel'])->name('schedules.cancel');
 });
 
@@ -121,11 +139,56 @@ Route::middleware(['auth', 'verified', 'role:sanitary_officer'])->group(function
     Route::put('/visitations/{id}/status', [SanitaryContoller::class, 'updateStatus'])->name('visitations.updateStatus');
 });
 
+// Building official
 Route::middleware(['auth', 'verified', 'role:obo'])->group(function () {
     Route::get('/obo/dashboard', function () {
         return view('obo.dashboard');
     })->name('obo.dashboard');
-    // Route::get('/sanitary_officer/sanitary_records', [SanitaryContoller::class, 'sanitary_records'])->name('sanitary_officer.sanitary_records');
+
+    Route::get('/obo/building_application_record', [OboOfficialController::class, 'BuildingApplicationRecord'])->name('obo.buildingApplicationRecord');
+    Route::get('/obo/building_application_record/view/{id}', [OboOfficialController::class, 'show'])->name('obo.obo.building_view');
+
+    Route::post('/obo/building_application_record/{id}/approve', [OboOfficialController::class, 'approve'])->name('obo.approved');
+    Route::post('/obo/building_application_record/{id}/disapprove', [OboOfficialController::class, 'disapprove'])->name('obo.disapprove');
+    Route::post('/obo/building_application_record/{id}/resubmit', [OboOfficialController::class, 'resubmit'])->name('obo.resubmit');
+
+    Route::get('/obo/building_application_doc', [OboOfficialController::class, 'buildingApplicationDoc'])->name('obo.building_application_doc');
+    Route::post('/obo/review-multiple', [OboOfficialController::class, 'reviewMultiple'])
+        ->name('obo.review.multiple');
+});
+
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])
+        ->name('admin.dashboard');
+
+    Route::get('/admin/user_records', [AdminController::class, 'user_record'])->name('admin.user_records');
+    Route::get('/admin/user_records/add_user', [AdminController::class, 'addUser'])->name('admin.addUser');
+    Route::get('/admin/user_records/show_user/{id}', [AdminController::class, 'show_user'])->name('admin.show_user');
+    Route::post('/admin/user_records/show_user', [AdminController::class, 'createUser'])->name('user_register.store');
+    Route::get('/admin/user_records/update_user/{id}', [AdminController::class, 'update_user'])->name('admin.updateUser');
+    Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('users.destroy');
+
+    Route::get('/admin/admin_account', [AdminController::class, 'admin_record'])->name('admin.admin_accounts');
+    Route::get('/admin/user_records/show_admin/{id}', [AdminController::class, 'show_admin'])->name('admin.show_admin');
+    Route::get('/admin/admin_account/add_admin', [AdminController::class, 'addAdmin'])->name('admin.addAdmin');
+    Route::post('/admin/admin_account/admin_register', [AdminController::class, 'createAdmin'])->name('admin_register.store');
+    Route::get('/admin/admin_account/update_admin/{id}', [AdminController::class, 'update_admin'])->name('admin.updateAdmin');
+
+    Route::put('/admin/update/{id}', [AdminController::class, 'update_userAdmin_submit'])
+        ->name('admin.update_admin_submit');
+
+    Route::put('/admin/update_user/{id}', [AdminController::class, 'update_user_submit'])
+        ->name('admin.update_user_submit');
+});
+
+Route::middleware(['auth', 'verified', 'role:professional'])->group(function () {
+    Route::get('/professional/dashboard', function () {
+        return view('professional.dashboard');
+    })->name('professional.dashboard');
+
+    Route::get('/professional/building_application_doc', [ProfessionalController::class, 'buildingApplication'])->name('professional.building_application');
+    Route::post('/professional/review-multiple', [ProfessionalController::class, 'reviewMultiple'])
+        ->name('professional.review.multiple');
 
 });
 
