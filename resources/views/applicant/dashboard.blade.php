@@ -1,6 +1,6 @@
 @extends('layout.applicant.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Applicant | Dashboard')
 
 @section('content')
     <div class="bg-white rounded-xl max-w-10xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
@@ -141,12 +141,6 @@
             </div>
         </div>
 
-
-
-
-
-
-        <!-- Top Section: Welcome + Announcement/Updates -->
         <div class="flex flex-col lg:flex-row gap-4 w-full">
 
             <div class="flex flex-col lg:flex-row gap-6 w-full">
@@ -172,16 +166,16 @@
                             </p>
 
                             <div class="mt-6 flex flex-wrap gap-3">
-                                <a href="{{ route('applicant.forms.obo.buidlingPermitForm') }}"
+                                <a href="{{ route('applicant.buildingPermit') }}"
                                     class="bg-red-600 text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow hover:bg-red-700 transition-all duration-200">
                                     <i class="fas fa-building mr-2"></i> Apply Building Permit
                                 </a>
 
-                                <a href="{{ route('applicant.forms.zoning.zoning_form') }}"
+                                <a href="{{ route('applicant.zoning.zoning_page') }}"
                                     class="bg-red-600 text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow hover:bg-red-700 transition-all duration-200">
                                     <i class="fas fa-location mr-2"></i> Apply Zoning Permit
                                 </a>
-                                <a href="{{ route('sanitary.forms.sanitary.sanitary_form') }}"
+                                <a href="{{ route('applicant.sanitary') }}"
                                     class="bg-red-600 text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow hover:bg-red-700 transition-all duration-200">
                                     <i class="fas fa-faucet mr-2"></i> Apply Sanitary Permit
                                 </a>

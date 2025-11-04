@@ -17,10 +17,13 @@ class BuildingApplication extends Model
     protected $fillable = [
         'user_id',
         'property_id',
+        'type_of_application',
         'application_no',
         'approved_id',
         'status',
         'approved_by',
+        'issued_date',
+        'expiration_date',
     ];
 
     protected static function boot()

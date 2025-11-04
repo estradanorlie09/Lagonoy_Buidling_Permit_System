@@ -25,7 +25,7 @@
                         permit application.
                     </p>
                 </div>
-
+             
                 <!-- Right Decorative Illustration -->
                 <div class="hidden md:block relative">
                     <img src="{{ asset('asset/img/architecture-and-city.png') }}" alt="Building Illustration"
@@ -40,7 +40,7 @@
 
 
             @if ($application->status == 'approved')
-                <a href="{{ route('sanitary.pdf', $application->id) }}"
+                <a href="{{ route('building.pdf', $application->id) }}"
                     class="flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 transition duration-200 mb-5">
                     <!-- Download Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
@@ -97,16 +97,12 @@
                         <h3 class="text-xl font-semibold text-gray-800">Application Info</h3>
                     </div>
 
-                    {{-- <a href="{{ route('applicant.buildingPermit') }}"
-                        class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
-                        <i class="fas fa-arrow-left"></i>
-                        Back
-                    </a> --}}
-                    <a href="javascript:void(0);" onclick="window.history.back();"
+                    <a href="{{ route('applicant.buildingPermit') }}"
                         class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
                         <i class="fas fa-arrow-left"></i>
                         Back
                     </a>
+
 
                 </div>
 
@@ -221,53 +217,119 @@
                     <h3 class="text-lg font-semibold text-gray-800">Property Information</h3>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Property Address Section -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-semibold text-red-700 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <i class="fas fa-map-marked-alt text-red-500"></i>
+                        Address Information
+                    </h4>
                     <!-- Property Address -->
-                    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                    <div class="flex items-start gap-3 mb-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
                         <i class="fas fa-map-marker-alt text-red-500 text-lg mt-1"></i>
                         <div>
                             <p class="text-gray-500 text-sm">Property Address</p>
                             <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
                         </div>
                     </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <!-- Province -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-flag text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Province</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
+                            </div>
+                        </div>
 
-                    <!-- Province -->
-                    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <i class="fas fa-flag text-red-500 text-lg mt-1"></i>
-                        <div>
-                            <p class="text-gray-500 text-sm">Province</p>
-                            <p class="font-semibold text-gray-800">{{ $application->property->province }}</p>
+                        <!-- Municipality/City -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-city text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Municipality / City</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Barangay -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-map-pin text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Barangay</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
+                            </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Municipality/City -->
-                    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <i class="fas fa-city text-red-500 text-lg mt-1"></i>
-                        <div>
-                            <p class="text-gray-500 text-sm">Municipality / City</p>
-                            <p class="font-semibold text-gray-800">{{ $application->property->municipality }}</p>
+                <!-- Specifications Section -->
+                <div>
+                    <h4 class="text-sm font-semibold text-red-700 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <i class="fas fa-clipboard-list text-red-500"></i>
+                        Building Specifications
+                    </h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <!-- Occupancy Type -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-building text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Occupancy Type & Classification As</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->occupancy_type }} |
+                                    {{ $application->property->classified_as }}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Barangay -->
-                    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <i class="fas fa-map-pin text-red-500 text-lg mt-1"></i>
-                        <div>
-                            <p class="text-gray-500 text-sm">Barangay</p>
-                            <p class="font-semibold text-gray-800">{{ $application->property->barangay }}</p>
+                        <!-- Estimated Cost -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-coins text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Estimated Cost</p>
+                                <p class="font-semibold text-gray-800">
+                                    ₱{{ number_format($application->property->estimated_cost, 2) }}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    {{-- Residence TYpe --}}
-                    <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
-                        <i class="fas fa-building text-red-500 text-lg mt-1"></i>
-                        <div>
-                            <p class="text-gray-500 text-sm">Occupancy Type</p>
-                            <p class="font-semibold text-gray-800">{{ $application->property->occupancy_type }}</p>
+                        <!-- Number of Floors -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-layer-group text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Number of Floors</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->number_of_floor }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Total Area -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-ruler-combined text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm"> Lot Area</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->lot_area }} m²</p>
+                            </div>
+                        </div>
+
+                        <!-- Total Floor Area -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-ruler text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm"> Floor Area</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->floor_area }} m²
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Total Floor Ratio -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-percent text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">Floor Area Ratio (FAR)</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->floor_area_ratio }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
             <div class="bg-white shadow-md rounded-xl p-6 mb-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                     <i class="fas fa-user-tie text-red-600"></i>
@@ -315,11 +377,39 @@
                     <p class="text-gray-700 mt-2">No professionals assigned.</p>
                 @endif
             </div>
+            <div x-data="{ open: {{ $application->property->scope_of_work ? 'true' : 'false' }} }" class="bg-white shadow-md rounded-xl p-6 mb-6">
+                <div @click="open = !open" class="flex justify-between items-center cursor-pointer select-none">
+                    <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                        <i class="fas fa-tools text-red-500"></i>
+                        Scope Of Work
+                    </h3>
+                    <button class="text-gray-500 hover:text-red-600 transition">
+                        <i :class="open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
+                    </button>
+                </div>
+
+                <div x-show="open" x-transition class="mt-4">
+                    @if (!empty($application->property->scope_of_work))
+                        <ul class="list-none space-y-2 text-gray-700">
+                            @foreach (explode("\n", $application->property->scope_of_work) as $item)
+                                <li class="flex items-start gap-2">
+
+                                    <span>{{ $item }}</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @else
+                        <p class="text-gray-500 italic">No data available.</p>
+                    @endif
+                </div>
+            </div>
+
 
             <div x-data="{ open: {{ $application->property->comments ? 'true' : 'false' }} }" class="bg-white shadow-md rounded-xl p-6 mb-6">
                 <div @click="open = !open" class="flex justify-between items-center cursor-pointer select-none">
                     <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                        🗒️ Additional Notes
+                        <i class="fas fa-sticky-note text-yellow-500"></i>
+                        Additional Notes
                     </h3>
                     <button class="text-gray-500 hover:text-red-600 transition">
                         <i :class="open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
@@ -338,8 +428,11 @@
             </div>
 
 
+
+
+
             <!-- Documents -->
-          
+
             <div x-data="{ openResubmit: false, selectedDoc: null }" class="bg-gray-50 p-6 rounded-xl">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-2xl font-bold text-gray-800">Submitted Documents</h3>
@@ -352,8 +445,8 @@
                 @endphp
 
                 @if ($latestDocs->count() > 0)
-                    <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
-                        <table class="min-w-full bg-white text-sm">
+                    <div class="overflow-x-auto rounded-sm p-3 border border-gray-200 shadow-sm">
+                        <table id="example" class="min-w-full bg-white text-sm">
                             <thead class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wide">
                                 <tr>
                                     <th class="px-4 py-3 text-left">#</th>
@@ -411,18 +504,11 @@
                                         <!-- File Icon -->
                                         <td class="px-4 py-3 text-center">
                                             <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                                                class="text-gray-800 hover:text-gray-600">
-                                                @if (Str::endsWith($doc->file_path, 'pdf'))
-                                                    <i class="fas fa-file-pdf text-red-600 text-2xl"></i>
-                                                @elseif (Str::endsWith($doc->file_path, ['doc', 'docx']))
-                                                    <i class="fas fa-file-word text-red-600 text-2xl"></i>
-                                                @elseif (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
-                                                    <i class="fas fa-file-image text-red-600 text-2xl"></i>
-                                                @else
-                                                    <i class="fas fa-file text-gray-500 text-2xl"></i>
-                                                @endif
+                                                class="text-red-800 hover:text-gray-600">
+                                                <i class="fas fa-file text-red-500 text-2xl"></i>
                                             </a>
                                         </td>
+
 
                                         <!-- Type -->
                                         <td class="px-4 py-3 capitalize">
@@ -472,7 +558,7 @@
                                         <td class="px-4 py-3 text-center">
                                             @if ($status === 'resubmit' || $status === 'rejected')
                                                 <button @click="openResubmit = true; selectedDoc = {{ $doc->toJson() }}"
-                                                    class="bg-yellow-500 hover:bg-yellow-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+                                                    class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
                                                     <i class="fas fa-upload mr-1"></i> Resubmit
                                                 </button>
                                             @else
@@ -488,47 +574,56 @@
                     <p class="text-gray-500 text-center">No documents submitted.</p>
                 @endif
 
-                <!-- 🟡 Resubmit Modal -->
-                <div x-show="openResubmit" x-transition
-                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" x-cloak>
-                    <div @click.away="openResubmit = false"
-                        class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative">
 
+                <div x-show="openResubmit" x-transition.opacity.duration.300ms
+                    class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak>
+                    <div @click.away="openResubmit = false" x-transition.scale.duration.300ms
+                        class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative border border-gray-100">
+                        <!-- Close Button -->
                         <button @click="openResubmit = false"
-                            class="absolute top-3 right-3 text-gray-500 hover:text-red-600">
+                            class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition" title="Close">
                             <i class="fas fa-times text-lg"></i>
                         </button>
 
-                        <h2 class="text-lg font-semibold text-gray-800 mb-4">Resubmit Document</h2>
+                        <!-- Header -->
+                        <h2 class="text-xl font-semibold text-gray-800 mb-5 text-center">
+                            <i class="fas fa-file-upload text-red-600 mr-2"></i>
+                            Resubmit Document
+                        </h2>
 
+                        <!-- Form -->
                         <template x-if="selectedDoc">
                             <form :action="`/applicant/building_permit/view_application/resubmit/${selectedDoc.id}`"
                                 method="POST" enctype="multipart/form-data" class="space-y-4">
                                 @csrf
+
+                                <!-- Document Type -->
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label class="block text-sm font-medium text-gray-600 mb-1">
                                         Document Type
                                     </label>
-                                    <p class="text-gray-900 text-sm font-semibold capitalize"
+                                    <p class="text-gray-900 text-base font-semibold capitalize border border-gray-200 rounded-md px-3 py-2 bg-gray-50"
                                         x-text="selectedDoc.document_type"></p>
                                 </div>
 
+                                <!-- File Upload -->
                                 <div>
-                                    <label for="file" class="block text-sm font-medium text-gray-700 mb-1">
+                                    <label for="file" class="block text-sm font-medium text-gray-600 mb-1">
                                         Upload New File
                                     </label>
                                     <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                        class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-yellow-200"
+                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition"
                                         required>
                                 </div>
 
-                                <div class="flex justify-end gap-2 mt-4">
+                                <!-- Buttons -->
+                                <div class="flex justify-end gap-3 mt-5">
                                     <button type="button" @click="openResubmit = false"
-                                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md">
+                                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition">
                                         Cancel
                                     </button>
                                     <button type="submit"
-                                        class="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-md">
+                                        class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition">
                                         Submit
                                     </button>
                                 </div>
@@ -536,12 +631,8 @@
                         </template>
                     </div>
                 </div>
+
             </div>
-
-
-
-
-
         </div>
         @if (session('success'))
             <script>
@@ -556,4 +647,6 @@
             </script>
         @endif
 
+        <script src="{{ asset('asset/js/datatable.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('asset/css/style.css') }}">
     @endsection

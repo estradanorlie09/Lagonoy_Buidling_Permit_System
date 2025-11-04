@@ -43,9 +43,6 @@ Route::post('/login', [AuthController::class, 'login'])
 
 // Applicant
 Route::middleware(['auth', 'verified', 'role:applicant'])->group(function () {
-    // Route::get('/applicant/dashboard', function () {
-    //     return view('applicant.dashboard');
-    // })->name('applicant.dashboard');
 
     Route::get('/applicant/dashboard', [ApplicantController::class, 'index'])
         ->name('applicant.dashboard');
@@ -93,6 +90,7 @@ Route::middleware(['auth', 'verified', 'role:applicant'])->group(function () {
     // pdf
     Route::get('/zoning_doc/pdf/{id}', [PdfController::class, 'applicationReport'])->name('zoning.pdf');
     Route::get('/sanitary/pdf/{id}', [PdfController::class, 'applicationReportSanitary'])->name('sanitary.pdf');
+    Route::get('/building/pdf/{id}', [PdfController::class, 'applicationReportBuilding'])->name('building.pdf');
 });
 
 // Zoning
@@ -262,3 +260,4 @@ Route::post('/reset-password', function (Request $request) {
 
 Route::get('/zoning_certificate/{id}/verify', [PdfController::class, 'verify'])->name('zoning_certificate.verify');
 Route::get('/sanitary_certificate/{id}/verify', [PdfController::class, 'verifySanitary'])->name('sanitary_certificate.verify');
+Route::get('/building_certificate/{id}/verify', [PdfController::class, 'verifyBuilding'])->name('building_certificate.verify');

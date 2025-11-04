@@ -39,11 +39,14 @@ class OboOfficialController extends Controller
         $application = BuildingApplication::findOrFail($id);
         $application->status = 'approved';
         $application->approved_by = Auth::id();
+        $application->issued_date = now();
+        $application->expiration_date = now()->addYear();
         $application->save();
 
         ApplicationRemark::create([
             'officer_id' => Auth::id(),
             'building_application_id' => $application->id,
+
             'remark' => $request->remarks,
         ]);
 

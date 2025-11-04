@@ -1,6 +1,6 @@
     @extends('layout.applicant.app')
 
-    @section('title', 'Building Clearance')
+    @section('title', 'Building Applications')
 
     @section('content')
         <div x-data="{ open: false }" class="max-w-10xl bg-white rounded-xl mx-auto px-6 py-8">
@@ -104,16 +104,21 @@
 
                         <div class="w-full sm:w-1/2 flex flex-col sm:flex-row justify-end items-center gap-3">
                             <!-- Search -->
-                            <div class="relative w-full sm:w-3/4"> <!-- ⬅ made wider here -->
+                            <div class="relative w-full sm:w-3/4">
                                 <input type="search" id="customSearch" placeholder="Search applications..."
                                     class="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-red-500 focus:outline-none transition">
                                 <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
                             </div>
 
                             <!-- Create Button -->
-                            <a href="{{ route('applicant.forms.obo.buidlingPermitForm') }}"
-                                onclick="event.preventDefault(); localStorage.clear(); window.location.href=this.href;"
-                                class="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md"> ADD </a>
+                            <button @click="open = true"
+                                class="inline-flex items-center gap-2 px-4 py-3 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                    stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Create Application
+                            </button>
                         </div>
                     </div>
 
@@ -201,8 +206,9 @@
                                             <span
                                                 class="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-full {{ $status['bg'] }} {{ $status['text'] }}">
                                                 <i class="{{ $status['icon'] }}"></i>
-                                                {{ ucfirst($application->status) }}
+                                                {{ ucfirst(str_replace('_', ' ', $application->status)) }}
                                             </span>
+
                                         </td>
 
                                         <!-- Action -->
@@ -222,7 +228,28 @@
                     </div>
                 </div>
             </div>
-
+            <div x-show="open" x-cloak
+                class="fixed inset-0 z-50 flex items-center justify-center bg-transparent bg-opacity-30 backdrop-blur-sm">
+                <div @click.away="open = false"
+                    class="bg-white rounded-lg m-5 shadow-xl max-w-lg w-full p-6 relative transform transition-all">
+                    <!-- Close Button --> <button @click="open = false"
+                        class="absolute top-3 right-3 text-gray-400 hover:text-gray-600"> <i class="fas fa-times"></i>
+                    </button>
+                    <!-- Modal Content -->
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Data Privacy Notice</h2>
+                    <p class="text-sm text-gray-600 mb-6"> By creating a new application, you agree to the collection and
+                        processing of your personal data in compliance with the Data Privacy Act. Your information will only
+                        be
+                        used for building application purposes and will be kept strictly confidential. </p>
+                    <div class="flex justify-end gap-3"> <button @click="open = false"
+                            class="px-4 py-2 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md"> Cancel
+                        </button>
+                        <a href="{{ route('applicant.forms.obo.buidlingPermitForm') }}"
+                            onclick="event.preventDefault(); localStorage.clear(); window.location.href=this.href;"
+                            class="px-4 py-2 text-sm bg-red-500 hover:bg-red-600 text-white rounded-md"> I Agree </a>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <script src="{{ asset('asset/js/datatable.js') }}"></script>
