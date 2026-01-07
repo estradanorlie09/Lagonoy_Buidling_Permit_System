@@ -153,7 +153,7 @@
                 <div class="form-group">
                     <label for="type_of_application" class="text-sm font-medium text-gray-700 mb-2">Type of Application
                         <span style="color:red">*</span></label><br>
-                    <select id="type_of_application" name="type_of_application" required
+                    <select id="type_of_application" name="type_of_application" 
                         class="w-full border border-gray-300 rounded-md mt-2 p-3 focus:outline-none focus:ring-2 focus:ring-red-500">
                         <option value="" disabled {{ old('type_of_application') ? '' : 'selected' }}>Select
                             application type</option>
@@ -173,7 +173,7 @@
                         <label for="occupancy_type" class="block mb-2 text-sm font-medium text-gray-700">
                             Type of Occupancy <span class="text-red-500">*</span>
                         </label>
-                        <select id="occupancy_type" name="occupancy_type" required
+                        <select id="occupancy_type" name="occupancy_type" 
                             class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-500">
                             <option value="" disabled {{ old('occupancy_type') ? '' : 'selected' }}>Select Type of
                                 Occupancy</option>
@@ -202,7 +202,7 @@
                         <label for="classified_as" class="block mb-2 text-sm font-medium text-gray-700">
                             Classified As <span class="text-red-500">*</span>
                         </label>
-                        <select id="classified_as" name="classified_as" required
+                        <select id="classified_as" name="classified_as" 
                             class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-500">
                             <option value="" disabled {{ old('classified_as') ? '' : 'selected' }}>Select
                                 Classification</option>
@@ -231,6 +231,7 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+
                 </div>
 
 
@@ -317,7 +318,41 @@
                         class="w-full border border-gray-300 rounded-md p-3 bg-gray-100 text-gray-700 mt-1 focus:outline-none">
                     <p class="text-xs text-gray-500 mt-1">Automatically computed as Total Floor Area ÷ Lot Area.</p>
                 </div>
-
+                <div>
+                    <label for="tct_no" class="block text-sm font-medium text-gray-700">
+                        TCT NO. <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="tct_no" name="tct_no" placeholder="TCT NO."
+                        value="{{ old('tct_no') }}"
+                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                    @error('tct_no')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+                <div class=" grid md:grid-cols-2 gap-5">
+                    <div>
+                        <label for="fsec_no" class="block text-sm font-medium text-gray-700">
+                            FSEC NO. <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="fsec_no" name="fsec_no" placeholder="FSEC NO."
+                            value="{{ old('fsec_no') }}"
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        @error('fsec_no')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="fsec_issued_date" class="block text-sm font-medium text-gray-700">
+                            FSEC No. Issued Date <span class="text-red-500">*</span>
+                        </label>
+                        <input type="date" id="fsec_issued_date" name="fsec_issued_date"
+                            value="{{ old('fsec_issued_date') }}"
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        @error('fsec_issued_date')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
                 <div class="mt-6">
                     <label for="scope_of_work" class="block text-sm font-medium text-gray-700">
                         Scope of Works<span class="text-red-500">*</span>
@@ -329,6 +364,11 @@
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
+
+
+
+
+
 
                 <!-- Location Section -->
                 <div class="mt-8">
@@ -540,12 +580,19 @@
             @if (session('success'))
                 <script>
                     Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Building Application Submitted!",
+                        toast: true, 
+                        position: 'top-end', 
+                        icon: 'success',
+                        title: 'Building Application Submitted!',
                         showConfirmButton: false,
-                        timer: 2500
+                        timer: 2500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
                     });
+
                     setTimeout(function() {
                         localStorage.clear();
                         sessionStorage.clear();
@@ -553,6 +600,7 @@
                     }, 2500);
                 </script>
             @endif
+
             @if (session('error'))
                 <script>
                     Swal.fire({

@@ -41,6 +41,9 @@ return new class extends Migration
             $table->decimal('lot_area', 10, 2);
             $table->decimal('estimated_cost', 15, 2);
             $table->decimal('floor_area_ratio', 6, 2);
+            $table->string('fsec_no');
+            $table->string('fsec_issued_date');
+            $table->string('tct_no');
             $table->string('scope_of_work');
             $table->string('property_address');
             $table->string('province');

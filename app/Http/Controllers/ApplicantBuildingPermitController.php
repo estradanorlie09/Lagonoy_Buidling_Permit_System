@@ -39,6 +39,7 @@ class ApplicantBuildingPermitController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request);
         // Clean numeric fields first
         $request->merge([
             'estimated_cost' => str_replace(',', '', $request->estimated_cost),
@@ -77,6 +78,9 @@ class ApplicantBuildingPermitController extends Controller
             'lot_area' => 'required|numeric|min:1',
             'estimated_cost' => ['required', 'numeric', 'min:1000', 'max:1000000000'],
             'scope_of_work' => 'required|string|max:255',
+            'tct_no' => 'required|string|max:100',
+            'fsec_no' => 'required|string|max:100',
+            'fsec_issued_date' => 'required|string|max:100',
             'property_address' => 'required|string|max:255',
             'province' => 'required|string',
             'municipality' => 'required|string',
@@ -124,7 +128,7 @@ class ApplicantBuildingPermitController extends Controller
 
         try {
             DB::transaction(function () use ($request, $far, &$application) {
-                // 🏠 Create property with computed FAR
+              
                 $property = BuildingProperty::create([
                     'id' => (string) Str::uuid(),
                     'occupancy_type' => $request->occupancy_type,
@@ -135,6 +139,11 @@ class ApplicantBuildingPermitController extends Controller
                     'lot_area' => $request->lot_area,
                     'estimated_cost' => $request->estimated_cost,
                     'scope_of_work' => $request->scope_of_work,
+
+                    'tct_no' => $request->tct_no,
+                    'fsec_no' => $request->fsec_no,
+                    'fsec_issued_date' => $request->fsec_issued_date,
+
                     'floor_area_ratio' => $far,
                     'property_address' => $request->property_address,
                     'province' => $request->province,
@@ -146,12 +155,13 @@ class ApplicantBuildingPermitController extends Controller
                     'id' => (string) Str::uuid(),
                     'user_id' => auth()->id(),
                     'property_id' => $property->id,
-                    'application_no' => 'BLDGP-'.strtoupper(Str::random(8)),
+                    'application_no' => 'APPB-'.strtoupper(Str::random(8)),
+                    // 'building_permit_no' => 'BLDGP-'.strtoupper(Str::random(8)),
                     'type_of_application' => $request->type_of_application,
                     'status' => 'submitted',
                 ]);
 
-                // 📎 Upload documents
+              
                 if ($request->hasFile('documents')) {
                     foreach ($request->file('documents') as $type => $file) {
                         $path = $file->store('building_permit_docs', 'public');

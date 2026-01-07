@@ -4,21 +4,42 @@
 
 @section('zoning_form')
     <div class="w-full mx-auto mt-10 p-6 bg-white rounded shadow" x-data="formTabs()">
-        <form method="POST" action="{{ route('zoning.store') }}" enctype="multipart/form-data">
+        <form id="zoningForm" method="POST" action="{{ route('zoning.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="flex justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-red-600 mb-4">Application for Zoning Permit</h1>
-                    <p class="mb-6">Please fill out the form!</p>
+            <div class="bg-red-50 border border-red-100 rounded-sm p-6 shadow-sm mb-8 relative">
+                <!-- Back Button (Top Right) -->
+                <a href="{{ route('applicant.zoning.zoning_page') }}"
+                    class="absolute top-4 right-4 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-md shadow-sm transition">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+
+                <!-- Header Content -->
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fa-solid fa-map-location-dot text-red-600 text-3xl"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold text-red-600">
+                        Application for Zoning Clearance / Permit
+                    </h1>
                 </div>
-                <div>
-                    <a href="javascript:void(0);" onclick="window.history.back();"
-                        class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
-                        <i class="fas fa-arrow-left"></i>
-                        Back
-                    </a>
+
+                <p class="text-gray-700 mb-3">
+                    Welcome! You are about to begin your application for a
+                    <span class="font-semibold">Zoning Clearance</span>.
+                    This process ensures that your property complies with all local zoning regulations and land use
+                    requirements.
+                </p>
+
+                <p class="text-sm text-gray-500 mb-2">
+                    Please provide accurate and complete information. Once submitted, your application will be reviewed
+                    by the <span class="font-semibold">Office of the Zoning Administrator (OZA)</span>.
+                </p>
+
+                <div class="flex items-center gap-2 text-sm text-gray-600 mt-4">
+                    <i class="fa-regular fa-circle-check text-red-500"></i>
+                    <span>Estimated processing time: 2–4 working days</span>
                 </div>
             </div>
+
             <input type="text" value="submitted" name="status" hidden>
             <!-- Tabs Header -->
             <div class="flex space-x-4 mb-6">
@@ -44,130 +65,122 @@
             <!-- Tab Content -->
             <!-- Personal Details -->
             <div x-show="currentTab === 0" class="space-y-4">
-                <div class="mb-8 bg-white border border-gray-200 rounded-lg shadow p-6">
-                    <h1 class="text-2xl font-bold text-red-600 mb-4">📖 Instructions for Applying for a Zoning Application
-                    </h1>
+                <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h2 class="text-xl font-bold mb-4 text-red-700">
+                        Instructions for Submitting Zoning Clearance Application
+                    </h2>
 
-                    <!-- Step 1 -->
-                    <div class="mb-5">
-                        <h2 class="font-semibold text-lg mb-2">Step 1: Fill Out Applicant and Property Information</h2>
-                        <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                            <li>Enter property details: address, province, municipality/city, barangay, lot area, and tax
-                                declaration number.</li>
-                            <li>Select the ownership type (Individual, Corporation, etc.).</li>
-                        </ul>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div class="mb-5">
-                        <h2 class="font-semibold text-lg mb-2">Step 2: Upload Required Documents</h2>
-                        <p class="text-sm text-gray-700 mb-2">
-                            You must attach the following <span class="text-red-500 font-semibold">4 required
-                                documents</span>:
-                        </p>
-                        <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                            <li>📂 Vicinity Map (signed by Engineer/Architect)</li>
-                            <li>📂 Lot Plan (signed by Geodetic Engineer)</li>
-                            <li>📂 Proof of Ownership / Tax Declaration</li>
-                            <li>📂 Community Tax Certificate (CTC)</li>
-                        </ul>
-                        <p class="text-sm text-gray-600 mt-2">
-                            Optional documents (upload if available): Other supporting documents.
-                        </p>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="mb-5">
-                        <h2 class="font-semibold text-lg mb-2">Step 3: Review Your Application</h2>
-                        <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                            <li>Check that all information is correct.</li>
-                            <li>Ensure uploaded documents are clear and complete.</li>
-                            <li>Add remarks in the "Comments" field (maximum of 100 characters).</li>
-                        </ul>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="mb-5">
-                        <h2 class="font-semibold text-lg mb-2">Step 4: Submit Application</h2>
-                        <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                            <li>Click <span class="font-semibold">Submit Application</span>.</li>
-                            <li>Your status will be set to <span class="text-red-500 font-semibold">Submitted</span>.</li>
-                            <li>A tracking number (e.g., <code class="bg-gray-100 px-1 py-0.5 rounded">ZN-XXXXXXXX</code>)
-                                will be generated.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Step 5 -->
-                    <div class="mb-5">
-                        <h2 class="font-semibold text-lg mb-2">Step 5: Application Review</h2>
-                        <p class="text-sm text-gray-700 mb-2">A Zoning Officer will review your documents and mark them as:
-                        </p>
-                        <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                            <li>✅ Approved</li>
-                            <li>❌ Disapproved (with remarks)</li>
-                            <li>🔄 Resubmit required</li>
-                        </ul>
-                    </div>
-
-                    <!-- Step 6 -->
-                    <div class="mb-3">
-                        <h2 class="font-semibold text-lg mb-2">Step 6: Decision and Next Steps</h2>
-                        <ul class="list-disc list-inside ml-4 text-gray-700 text-sm space-y-1">
-                            <li>If approved → proceed with the next step in the permitting process.</li>
-                            <li>If disapproved → you may reapply with corrections.</li>
-                            <li>If resubmit required → upload missing or corrected documents.</li>
-                        </ul>
-                    </div>
-
-                    <!-- Tip -->
-                    <p class="mt-4 text-sm text-gray-600 italic">
-                        ⚡ Tip: Keep your tracking/application number safe — you’ll use it for follow-ups.
+                    <p class="mb-4 text-gray-700">
+                        The <strong>Zoning Clearance</strong> ensures that any proposed construction, renovation, or
+                        land-use
+                        development conforms to the
+                        <em>Comprehensive Land Use Plan (CLUP)</em> and the <em>Zoning Ordinance</em> of the Municipality.
+                        This process verifies that the project’s location and intended use are consistent with local zoning
+                        regulations before the issuance of a Building Permit.
                     </p>
+
+                    <h3 class="text-lg font-semibold mb-2">Steps for Submission</h3>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <li>
+                            <strong>Prepare the Required Documents:</strong>
+                            <ul class="list-disc list-inside ml-5">
+                                <li>Duly accomplished Zoning Clearance Application Form</li>
+                                <li>Certified True Copy of Land Title / TCT or Contract of Lease (if not owned)</li>
+                                <li>Tax Declaration and latest Real Property Tax Receipt</li>
+                                <li>Vicinity Map / Location Plan</li>
+                                <li>Lot Plan with bearings and dimensions prepared by a Geodetic Engineer</li>
+                                <li>Building Plan or Site Development Plan (if applicable)</li>
+                                <li>Barangay Clearance for the proposed project</li>
+                                <li>Special Power of Attorney (SPA), if the applicant is not the property owner</li>
+                            </ul>
+                        </li>
+                        <li>Log in to the system and open your <strong>Zoning Clearance Application</strong> record.</li>
+                        <li>Go to the <strong>Zoning Documents</strong> section.</li>
+                        <li>Upload all required files in PDF or image format.</li>
+                        <li>Provide additional remarks or project details if necessary.</li>
+                        <li>Click <strong>Submit Zoning Application</strong> to send your documents for review and
+                            evaluation.</li>
+                    </ol>
+
+                    <div class="bg-red-50 border-l-4 border-red-500 rounded-r-xl p-5 mt-6 shadow-sm">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fa-solid fa-bell text-red-600 text-lg"></i>
+                            <h3 class="text-lg font-semibold text-red-700">Reminders</h3>
+                        </div>
+
+                        <ul class="text-gray-700 space-y-2">
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-map-location-dot text-red-500 mt-1"></i>
+                                <span>Ensure the project location complies with the zoning regulations and designated
+                                    land-use area.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-file-circle-check text-red-500 mt-1"></i>
+                                <span>All submitted documents must be clear, complete, and properly labeled.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                                <span>Incomplete or inaccurate submissions may delay the evaluation process.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i class="fa-solid fa-envelope-circle-check text-red-500 mt-1"></i>
+                                <span>Applicants will receive system or email notifications regarding the status or any
+                                    required corrections.</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-
-
             </div>
 
             <!-- Project Details -->
-            <div x-show="currentTab === 1" class="space-y-4">
-                <div class="mt-5">
-                    <h1 class="text-xl font-bold">Ownership</h1>
+            <div x-show="currentTab === 1" class="space-y-8">
+
+
+                <div>
+                    <h1 class="text-2xl font-bold text-red-700 flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-red-600"></i> Ownership Information
+                    </h1>
+                    <p class="text-gray-600 text-sm mt-1">Specify who owns the property or if you are applying as an
+                        authorized representative.</p>
                 </div>
+
                 <div class="w-full">
-                    <label for="property_address" class="block text-sm font-medium text-gray-700">
+                    <label for="ownership_type" class="block text-sm font-medium text-gray-700">
                         Ownership Type <span class="text-red-500">*</span>
                     </label>
-
                     <select name="ownership_type" id="ownership_type" value="{{ old('ownership_type') }}"
                         class="w-full border border-gray-300 text-sm rounded mt-1 px-3 py-2.5 focus:outline-none focus:ring-1 focus:ring-red-500">
-
-                        <option value="owner" {{ old('ownership_type') == 'owner' ? 'selected' : '' }}>Owner
-                        </option>
+                        <option value="owner" {{ old('ownership_type') == 'owner' ? 'selected' : '' }}>Owner</option>
                         <option value="authorized_representative"
-                            {{ old('ownership_type') == 'authorized_representative' ? 'selected' : '' }}>Authorized
-                            Representative</option>
-
+                            {{ old('ownership_type') == 'authorized_representative' ? 'selected' : '' }}>
+                            Authorized Representative
+                        </option>
                     </select>
                     @error('ownership_type')
                         <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mt-5">
-                    <h1 class="text-xl font-bold">Location of Property (House No.,Street)</h1>
+
+                <div>
+                    <h1 class="text-2xl font-bold text-red-700 flex items-center gap-2 mt-5">
+                        <i class="fa-solid fa-map-location-dot text-red-600"></i> Location of Property
+                    </h1>
+                    <p class="text-gray-600 text-sm mt-1">Provide the full address and location details of the property.</p>
                 </div>
+
                 <div class="w-full">
                     <label for="property_address" class="block text-sm font-medium text-gray-700">
-                        Propery Full Address <span class="text-red-500">*</span>
+                        Property Full Address <span class="text-red-500">*</span>
                     </label>
-                    <input type="text" id="property_address" name="property_address" placeholder="Property Full Address "
-                        value="{{ old('property_address') }}"
+                    <input type="text" id="property_address" name="property_address"
+                        placeholder="House No., Street, Barangay" value="{{ old('property_address') }}"
                         class="w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500">
-
+                    @error('property_address')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
-                @error('property_address')
-                    <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+
                 <div class="flex flex-col md:flex-row md:space-x-4 gap-5 mb-6">
                     <div class="w-full">
                         <label for="province" class="block text-sm font-medium text-gray-700">
@@ -182,7 +195,6 @@
                                     {{ $provinceName }}
                                 </option>
                             @endforeach
-
                         </select>
                         @error('province')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -216,16 +228,21 @@
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <h1 class="text-xl font-bold">Other Property Information</h1>
-                </div>
-                <div class="flex gap-5">
 
+                <div>
+                    <h1 class="text-2xl font-bold text-red-700 flex items-center gap-2 mt-5">
+                        <i class="fa-solid fa-house-chimney text-red-600"></i> Other Property Information
+                    </h1>
+                    <p class="text-gray-600 text-sm mt-1">Include key details about the property such as lot area and title
+                        number.</p>
+                </div>
+
+                <div class="flex gap-5">
                     <div class="w-full">
                         <label for="lot_area" class="block text-sm font-medium text-gray-700">
-                            Lot Area <span class="text-red-500">*</span>
+                            Lot Area (sq. meters) <span class="text-red-500">*</span>
                         </label>
-                        <input type="text" id="lot_area" name="lot_area" placeholder="Lot Area (sq. meters)"
+                        <input type="text" id="lot_area" name="lot_area" placeholder="e.g., 250"
                             value="{{ old('lot_area') }}"
                             class="w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500">
                         @error('lot_area')
@@ -233,219 +250,187 @@
                         @enderror
                     </div>
 
-
-                    <div class="w-full">
-                        <label for="tax_declaration" class="block text-sm font-medium text-gray-700">
-                            OCT/TCT/Tax Declaration No. <span class="text-red-500">*</span>
-                        </label>
-                        <input type="text" id="tax_declaration" name="tax_declaration"
-                            value="{{ old('tax_declaration') }}" placeholder="OCT/TCT/Tax Declaration No.:"
+                    <div class="w-full"> <label for="tax_declaration" class="block text-sm font-medium text-gray-700">
+                            OCT/TCT/Tax Declaration No. <span class="text-red-500">*</span> </label> <input type="text"
+                            id="tax_declaration" name="tax_declaration" value="{{ old('tax_declaration') }}"
+                            placeholder="OCT/TCT/Tax Declaration No."
                             class="w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500">
                         @error('tax_declaration')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
+
                 </div>
+
+
+                <div class="mt-5">
+                    <h1 class="text-xl font-bold text-red-700 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-red-600"></i> Additional Notes
+                    </h1>
+                    <p class="text-gray-600 text-sm mt-1">You may add remarks or clarifications related to the property.
+                    </p>
+                </div>
+
                 <div class="w-full">
-                    <label for="comments" class="block text-sm font-medium text-gray-700">Additional Notes</label>
-                    <textarea name="comments" id="comments" cols="30" rows="10"
+                    <textarea name="comments" id="comments" cols="30" rows="4" maxlength="100"
                         class="w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500"
                         placeholder="Additional Notes (Maximum of 100 Characters)">{{ old('comments') }}</textarea>
                 </div>
-
             </div>
 
-            <div x-show="currentTab === 2" class="space-y-4">
-                <div class="mt-5">
-                    <h1 class="text-xl font-bold">Attached Requirements 📂</h1>
+
+            <div x-show="currentTab === 2" class="space-y-8">
+                <!-- Section Header -->
+                <div class="bg-red-50 border border-red-100 rounded-lg p-6 shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <i class="fa-solid fa-file-circle-check text-red-600 text-2xl"></i>
+                        <h1 class="text-2xl font-bold text-red-700">Attached Requirements</h1>
+                    </div>
+                    <p class="text-gray-700">
+                        Please upload all required documents below. Make sure each file is clear, signed, and sealed by the
+                        licensed professional.
+                        Accepted formats: <strong>PDF, JPG, PNG</strong> (max 5MB each).
+                    </p>
                 </div>
-                <div class="flex flex-col md:flex-row md:space-x-5">
-                    <!-- Left side: Form fields -->
-                    <div class="w-full md:w-1/2 mt-6 md:mt-0 flex flex-col">
-                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                            <!-- File icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4a1 1 0 011-1h6a1 1 0 011 1v12M7 16h10M7 16l-2 4h14l-2-4" />
-                            </svg>
-                            Upload Documents (Vicinity Map (signed by Engineer/Architect))<span
-                                class="text-red-500">*</span>
-                        </label>
 
-                        <!-- Hidden file input -->
-                        <input type="file" id="documents-2" class="hidden" name="documents[vicinity_map]" multiple
-                            onchange="handleFiles(this, 'file-info-2','vicinity_map')" />
+                <!-- Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full border border-gray-200 text-sm">
+                        <thead class="bg-red-100 text-red-700">
+                            <tr>
+                                <th class="py-3 px-4 text-left w-1/12">#</th>
+                                <th class="py-3 px-4 text-left">Document Type</th>
+                                <th class="py-3 px-4 text-left">Upload File</th>
+                                <th class="py-3 px-4 text-left">Status / Notes</th>
+                            </tr>
+                        </thead>
 
-                        <!-- Styled label acting as button -->
-                        <label for="documents-2"
-                            class="cursor-pointer inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Choose Files
-                        </label>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="py-2 px-4 text-gray-600">1</td>
+                                <td class="py-2 px-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-map-location-dot text-red-500"></i>
+                                    Vicinity Map (signed by Engineer/Architect)
+                                    <span class="text-red-500">*</span>
+                                </td>
+                                <td class="py-2 px-4">
+                                    <input type="file" id="documents-2" class="hidden" name="documents[vicinity_map]"
+                                        multiple onchange="handleFiles(this, 'file-info-2','vicinity_map')" />
+                                    <label for="documents-2"
+                                        class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                    </label>
+                                </td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    <div id="file-info-2" class="text-xs text-gray-500"></div>
+                                </td>
+                            </tr>
 
-                        <!-- File names list and preview button container -->
-                        <div id="file-info-2" class="mt-3 text-sm text-gray-600 flex flex-col gap-2"></div>
-                    </div>
+                            <tr>
+                                <td class="py-2 px-4 text-gray-600">2</td>
+                                <td class="py-2 px-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-map text-red-500"></i>
+                                    Lot Plan (signed by Geodetic Engineer)
+                                    <span class="text-red-500">*</span>
+                                </td>
+                                <td class="py-2 px-4">
+                                    <input type="file" id="documents-3" class="hidden" name="documents[lot_plan]"
+                                        multiple onchange="handleFiles(this, 'file-info-3','lot_plan')" />
+                                    <label for="documents-3"
+                                        class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                    </label>
+                                </td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    <div id="file-info-3" class="text-xs text-gray-500"></div>
+                                </td>
+                            </tr>
 
-                    <!-- Right side: File upload -->
-                    <div class="w-full md:w-1/2 mt-6 md:mt-0 flex flex-col">
-                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                            <!-- File icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4a1 1 0 011-1h6a1 1 0 011 1v12M7 16h10M7 16l-2 4h14l-2-4" />
-                            </svg>
-                            Upload Documents (Lot Plan (signed by Geodetic Engineer))<span class="text-red-500">*</span>
+                            <tr>
+                                <td class="py-2 px-4 text-gray-600">3</td>
+                                <td class="py-2 px-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice text-red-500"></i>
+                                    Proof of Ownership / Tax Declaration
+                                    <span class="text-red-500">*</span>
+                                </td>
+                                <td class="py-2 px-4">
+                                    <input type="file" id="documents-4" class="hidden"
+                                        name="documents[proof_of_ownership]" multiple
+                                        onchange="handleFiles(this, 'file-info-4','proof_of_ownership')" />
+                                    <label for="documents-4"
+                                        class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                    </label>
+                                </td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    <div id="file-info-4" class="text-xs text-gray-500"></div>
+                                </td>
+                            </tr>
 
-                        </label>
+                            <tr>
+                                <td class="py-2 px-4 text-gray-600">4</td>
+                                <td class="py-2 px-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-id-card text-red-500"></i>
+                                    Community Tax Certificate (CTC)
+                                    <span class="text-red-500">*</span>
+                                </td>
+                                <td class="py-2 px-4">
+                                    <input type="file" id="documents-5" class="hidden" name="documents[ctc]" multiple
+                                        onchange="handleFiles(this, 'file-info-5','CTC')" />
+                                    <label for="documents-5"
+                                        class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                    </label>
+                                </td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    <div id="file-info-5" class="text-xs text-gray-500"></div>
+                                </td>
+                            </tr>
 
-                        <!-- Hidden file input -->
-                        <input type="file" id="documents-3" class="hidden" name="documents[lot_plan]" multiple
-                            onchange="handleFiles(this, 'file-info-3','lot_plan')" />
+                            <tr>
+                                <td class="py-2 px-4 text-gray-600">5</td>
+                                <td class="py-2 px-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-signature text-red-500"></i>
+                                    Authorization Letter (optional)
+                                </td>
+                                <td class="py-2 px-4">
+                                    <input type="file" id="documents-6" class="hidden"
+                                        name="documents[authorization_letter]" multiple
+                                        onchange="handleFiles(this, 'file-info-6','authorization_letter')" />
+                                    <label for="documents-6"
+                                        class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                    </label>
+                                </td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    <div id="file-info-6" class="text-xs text-gray-500"></div>
+                                </td>
+                            </tr>
 
-                        <!-- Styled label acting as button -->
-                        <label for="documents-3"
-                            class="cursor-pointer inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Choose Files
-                        </label>
-
-                        <!-- File names list and preview button container -->
-                        <div id="file-info-3" class="mt-3 text-sm text-gray-600 flex flex-col gap-2"></div>
-                    </div>
+                            <tr>
+                                <td class="py-2 px-4 text-gray-600">6</td>
+                                <td class="py-2 px-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-folder-open text-red-500"></i>
+                                    Other Supporting Documents (optional)
+                                </td>
+                                <td class="py-2 px-4">
+                                    <input type="file" id="documents-7" class="hidden" name="documents[other_doc]"
+                                        multiple onchange="handleFiles(this, 'file-info-7','other_doc')" />
+                                    <label for="documents-7"
+                                        class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                    </label>
+                                </td>
+                                <td class="py-2 px-4 text-gray-600">
+                                    <div id="file-info-7" class="text-xs text-gray-500"></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="flex flex-col md:flex-row md:space-x-5">
-                    <!-- Left side: Form fields -->
-                    <div class="w-full md:w-1/2 mt-6 md:mt-0 flex flex-col">
-                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                            <!-- File icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4a1 1 0 011-1h6a1 1 0 011 1v12M7 16h10M7 16l-2 4h14l-2-4" />
-                            </svg>
-                            Upload Documents (Proof of Ownership / Tax Declaration)<span class="text-red-500">*</span>
-                        </label>
 
-                        <!-- Hidden file input -->
-                        <input type="file" id="documents-4" class="hidden" name="documents[proof_of_ownership]"
-                            multiple onchange="handleFiles(this, 'file-info-4','proof_of_ownership')" />
-
-                        <!-- Styled label acting as button -->
-                        <label for="documents-4"
-                            class="cursor-pointer inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Choose Files
-                        </label>
-
-                        <!-- File names list and preview button container -->
-                        <div id="file-info-4" class="mt-3 text-sm text-gray-600 flex flex-col gap-2"></div>
-                    </div>
-
-                    <!-- Right side: File upload -->
-                    <div class="w-full md:w-1/2 mt-6 md:mt-0 flex flex-col">
-                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                            <!-- File icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4a1 1 0 011-1h6a1 1 0 011 1v12M7 16h10M7 16l-2 4h14l-2-4" />
-                            </svg>
-                            Upload Documents (Community Tax Certificate (CTC))<span class="text-red-500">*</span>
-                        </label>
-
-                        <!-- Hidden file input -->
-                        <input type="file" id="documents-5" class="hidden" name="documents[ctc]" multiple
-                            onchange="handleFiles(this, 'file-info-5','CTC')" />
-                        <!-- Styled label acting as button -->
-                        <label for="documents-5"
-                            class="cursor-pointer inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Choose Files
-                        </label>
-
-                        <!-- File names list and preview button container -->
-                        <div id="file-info-5" class="mt-3 text-sm text-gray-600 flex flex-col gap-2"></div>
-                    </div>
-                </div>
-                <div class="flex flex-col md:flex-row md:space-x-5">
-                    <!-- Left side: Form fields -->
-                    <div class="w-full md:w-1/2 mt-6 md:mt-0 flex flex-col">
-                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                            <!-- File icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4a1 1 0 011-1h6a1 1 0 011 1v12M7 16h10M7 16l-2 4h14l-2-4" />
-                            </svg>
-                            Upload Documents (Authorization Letter (optional))
-                        </label>
-
-                        <!-- Hidden file input -->
-                        <input type="file" id="documents-6" class="hidden" name="documents[authorization_letter]"
-                            multiple onchange="handleFiles(this, 'file-info-6')" />
-
-                        <!-- Styled label acting as button -->
-                        <label for="documents-6"
-                            class="cursor-pointer inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Choose Files
-                        </label>
-
-                        <!-- File names list and preview button container -->
-                        <div id="file-info-6" class="mt-3 text-sm text-gray-600 flex flex-col gap-2"></div>
-                    </div>
-
-                    <!-- Right side: File upload -->
-                    <div class="w-full md:w-1/2 mt-6 md:mt-0 flex flex-col">
-                        <label class="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                            <!-- File icon SVG -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M7 16V4a1 1 0 011-1h6a1 1 0 011 1v12M7 16h10M7 16l-2 4h14l-2-4" />
-                            </svg>
-                            Upload Documents (Other Supporting Documents (optional))
-                        </label>
-
-                        <!-- Hidden file input -->
-                        <input type="file" id="documents-7" class="hidden"name="documents[other_doc]" multiple
-                            onchange="handleFiles(this, 'file-info-7')" />
-
-                        <!-- Styled label acting as button -->
-                        <label for="documents-7"
-                            class="cursor-pointer inline-flex items-center justify-center rounded border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-red-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Choose Files
-                        </label>
-
-                        <!-- File names list and preview button container -->
-                        <div id="file-info-7" class="mt-3 text-sm text-gray-600 flex flex-col gap-2"></div>
-                    </div>
-                </div>
                 <div id="docsMessage" class="mt-6 text-sm text-gray-600"></div>
-
             </div>
 
             <!-- Navigation Buttons -->
@@ -467,17 +452,26 @@
             @if (session('success'))
                 <script>
                     Swal.fire({
-                        position: "center",
-                        icon: "success",
-                        title: "Zoning Application Created!",
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Zoning Application Created!',
                         showConfirmButton: false,
-                        timer: 2500
+                        timer: 2500,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
                     });
+
+
                     setTimeout(function() {
                         window.location.href = "{{ route('applicant.zoning.zoning_page') }}";
                     }, 2500);
                 </script>
             @endif
+
             @if (session('error'))
                 <script>
                     Swal.fire({
@@ -494,9 +488,55 @@
             @endif
         </form>
     </div>
+    <script>
+        window.oldProvince = "{{ old('province') }}";
+        window.oldMunicipality = "{{ old('municipality') }}";
+        window.oldBarangay = "{{ old('barangay') }}";
 
+        window.oldProjectProvince = "{{ old('project_province') }}";
+        window.oldProjectMunicipality = "{{ old('project_municipality') }}";
+        window.oldProjectBarangay = "{{ old('project_barangay') }}";
+
+        function formatTaxDeclaration(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (!value) {
+                input.value = '';
+                return;
+            }
+            if (!value.startsWith('05')) {
+                value = '05' + value.slice(2);
+            }
+            value = value.slice(0, 11);
+            if (value.length > 2 && value.length <= 6) {
+                value = value.slice(0, 2) + '-' + value.slice(2);
+            } else if (value.length > 6) {
+                value = value.slice(0, 2) + '-' + value.slice(2, 6) + '-' + value.slice(6);
+            }
+
+            input.value = value;
+        }
+
+        // Usage:
+        const taxInput = document.getElementById('tax_declaration');
+        taxInput.addEventListener('input', () => formatTaxDeclaration(taxInput));
+    </script>
+    <script>
+        document.getElementById('zoningForm').addEventListener('submit', function(e) {
+            Swal.fire({
+                title: 'Submitting Application...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+        });
+    </script>
     <script src="{{ asset('asset/js/zoningDocumentChecker.js') }}"></script>
     <script src="{{ asset('asset/js/location.js') }}"></script>
     <script src="{{ asset('asset/js/zoningFormTabs.js') }}"></script>
+
+
 
 @endsection

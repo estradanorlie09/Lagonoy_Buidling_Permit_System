@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Building Permit Form</title>
+    <title>Building Permit</title>
     <style>
         /* Reset & Base */
         * {
@@ -13,8 +13,23 @@
 
         body {
             font-family: "Times New Roman", Times, serif;
-            background: #fff;
+            background: url("{{ public_path('asset/bg/building-bg.png') }}") no-repeat center center fixed;
+            background-size: cover;
             color: #000;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("{{ public_path('asset/icon/logo.png') }}") no-repeat center center;
+            background-size: cover;
+            opacity: 0.1;
+            z-index: -1;
+
         }
 
         .container {
@@ -24,6 +39,8 @@
             margin: 1.5rem auto;
             padding-bottom: 2rem;
             position: relative;
+
+
         }
 
         /* Header Text */
@@ -112,7 +129,7 @@
         .left-subhead div,
         .right-subhead div {
             margin-bottom: 0.4rem;
-            margin-left: 5rem;
+            margin-left: 4rem;
             font-size: 14px;
         }
 
@@ -123,7 +140,7 @@
         }
 
         .details {
-            margin: 5rem;
+            margin: 3rem 0 0 5rem;
         }
     </style>
 </head>
@@ -159,27 +176,31 @@
         <div class="subhead">
             <div class="left-subhead">
                 <div>
-                    <label for="building_permit_no">BUILDING PERMIT NO. : </label>
+                    <label for="building_permit_no">BUILDING PERMIT NO. : <span style="text-decoration: underline;">
+                            {{ $application->building_permit_no }}</span></label>
                 </div>
                 <div>
                     <label for="date_issued">DATE ISSUED : <span
                             style="text-decoration:underline">{{ $application->issued_date }}</span></label>
                 </div>
                 <div>
-                    <label for="Fsec_no">FSEC NO :</label>
+                    <label for="Fsec_no">FSEC NO : <span
+                            style="text-decoration:underline">{{ $application->property->fsec_no }}</span></label>
                 </div>
                 <div>
-                    <label for="date_issued">DATE ISSUED :
+                    <label for="date_issued">DATE ISSUED : <span style="text-decoration:underline">
+                            {{ $application->property->fsec_issued_date }}</span>
                     </label>
                 </div>
             </div>
 
             <div class="right-subhead">
                 <div>
-                    <label for="or">OFFICIAL RECIEPT NO. : </label>
+                    <label for="or">OFFICIAL RECIEPT NO. : <span
+                            style="text-decoration:underline">923453123</span></label>
                 </div>
                 <div>
-                    <label for="date_paid">DATE PAID : </label>
+                    <label for="date_paid">DATE PAID : <span style="text-decoration:underline">2025-11-05</span></label>
                 </div>
 
             </div>
@@ -194,41 +215,64 @@
 
         <div class="details">
             <div style="padding: 1rem;">
-                <label for="Owner"> Owner / Permittee : <span
-                        style="margin-left: 2rem; text-decoration: underline;">{{ $application->user->first_name }}
+                <label for="Owner"> Owner / Permittee
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                    <span style="margin-left: 0.8rem; text-decoration: underline;">{{ $application->user->first_name }}
                         {{ $application->user->middle_name }}
                         {{ $application->user->last_name }}</span></label>
             </div>
             <div style="padding: 0 0 0 1rem;">
-                <label for="project_title"> Project Title : <span
-                        style="margin-left: 4.5rem; text-decoration:underline;">{{ $application->property->project_title }}</span>
+                <label for="project_title"> Project
+                    Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                    <span
+                        style="margin-left: 0.8rem; text-decoration:underline;">{{ $application->property->project_title }}</span>
 
             </div>
             <div style="padding: 1rem;">
-                <label for="location"> Location of Construction : Lot :
-                    <span style="text-decoration: underline;">{{ $application->property->property_address }}</span> TCT
-                    No. : 456345<span></span> Brgy. :
-                    {{ $application->property->barangay }} City/Municipality :
-                    {{ $application->property->municipality }} ZIP Code : <span>4425</span>
+                <label for="location" style="padding: 1rem 0 0 0;"> Location of
+                    Construction&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;
+                    Street&nbsp;
+                    :&nbsp;
+                    <span style="text-decoration: underline;">{{ $application->property->property_address }}</span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TCT
+                    No. :<span style="text-decoration:underline">{{ $application->property->tct_no }}</span> <br>
+                    <label
+                        for="barangay">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        Barangay&nbsp;&nbsp;&nbsp;&nbsp;
+                        :</label> &nbsp;&nbsp;&nbsp;<span
+                        style="text-decoration: underline;">{{ $application->property->barangay }}</span>&nbsp;&nbsp;&nbsp;City
+                    / Municipality : <span
+                        style="text-decoration: underline;">{{ $application->property->municipality }}</span>
+                    <br><label
+                        for="zipcode">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ZIP
+                        Code &nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;<span
+                            style="text-decoration: underline;">4405</span></label>
             </div>
-            <div>
-                <label for="occupancy"> User or Character of Occupancy :
-                    <span>{{ $application->property->occupancy_type }}</span>
-                    Classified As : <span>{{ $application->property->classified_as }}</span>
+            <div style="padding: 0 0 0 1rem;"">
+                <label for="occupancy">Character of Occupancy &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                    &nbsp;&nbsp;<span
+                        style="text-decoration: underline;">{{ ucfirst($application->property->occupancy_type) }}</span>
+                    &nbsp;&nbsp;Classified As : <span
+                        style="text-decoration: underline;">{{ ucfirst($application->property->classified_as) }}</span>
             </div>
-            <div>
-                <label for="scope"> Scope of Work :
-                    <span>{{ $application->property->scope_of_work }}</span>
+
+            <div style="padding: 1rem 0 0 1rem;">
+                <label for="scope"> Scope of Work
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                    &nbsp;&nbsp;<span
+                        style="text-decoration: underline;">{{ $application->property->scope_of_work }}</span>
 
             </div>
-            <div>
-                <label for="cost"> Total Project Cost :
-                    <span>{{ $application->property->estimated_cost }}</span>
+            <div style="padding: 1rem 0 0 1rem;">
+                <label for="cost"> Total Project Cost
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
+                    &nbsp;&nbsp;<span style="text-decoration: underline;">{{ $application->property->estimated_cost }}
+                        Pesos</span>
 
             </div>
-            <div>
+            <div style="padding: 1rem 0 0 1rem;">
                 <label>Professional in Charge of Construction:</label>
-                <ul style="list-style-type:none; padding-left:0; margin:0;">
+                <ul style="list-style-type:none; padding-left:0; margin-left: 1rem;">
                     @forelse ($application->professionals as $pro)
                         <li>
                             @php
@@ -257,6 +301,31 @@
 
 
         </div>
+        <div style="margin-top: 1rem; text-align:center;">
+            <h3 style="margin-top:1rem;">PERMIT ISSUED BY:</h3>
+
+            <div style="margin-top: 0.5rem; position: relative; display: inline-block;">
+                {{-- Signature image --}}
+                <img src="{{ public_path('storage/signature/images-removebg-preview.png') }}"
+                    alt="Building Official Signature"
+                    style="width: 180px; height: 50px; display:block; margin: 0 auto;">
+
+                {{-- Printed name --}}
+                <h4 style="font-weight:600;">
+                    {{ $application->approver->first_name }} {{ $application->approver->last_name }}
+                </h4>
+
+                <hr style="width: 100%; margin: 0.3rem auto;">
+                <h4 style="text-align: center;">BUILDING OFFICIAL</h4>
+                <p style="text-align:center; font-size: 13px;">(Signature Over Printed Name)</p>
+            </div>
+        </div>
+
+
+        <footer style="text-align: center;margin-top: 1rem; font:800;">
+            <p>THIS PERMIT MAY BE CANCELLED OR REVOKED PURSUANT TO SECTIONS 207, 305, AND 306 OF THE NATIONAL BUILDING
+                CODE OF THE PHILIPPINES (PD 1096) AND ITS REVISED IRR</p>
+        </footer>
 
     </div>
 </body>

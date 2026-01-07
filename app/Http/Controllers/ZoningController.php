@@ -23,7 +23,13 @@ class ZoningController extends Controller
             'municipality' => 'required|string|max:255',
             'barangay' => 'required|string|max:255',
             'lot_area' => 'required|numeric|min:1',
-            'tax_declaration' => 'required|string|max:255',
+            'tax_declaration' => [
+                'required',
+                'string',
+                'regex:/^(TD-)?05-\d{4}-\d{3,5}(-[A-Z])?$/',
+                'max:20', 
+            ],
+
             'comments' => 'nullable|string',
             'status' => 'required|in:submitted,approved,disapproved,resubmit,under_review',
 
@@ -34,6 +40,11 @@ class ZoningController extends Controller
 
             'documents.authorization_letter' => 'nullable|file|mimes:pdf,jpg,png|max:40000',
             'documents.other_doc' => 'nullable|file|mimes:pdf,jpg,png|max:40000',
+        ], [
+            'tax_declaration.required' => 'The Tax Declaration Number is required.',
+            'tax_declaration.string' => 'The Tax Declaration Number must be a valid string.',
+            'tax_declaration.max' => 'The Tax Declaration Number may not exceed 25 characters.',
+            'tax_declaration.regex' => 'The Tax Declaration Number must follow this format: 05-1718-XXXXX (e.g. 05-1718-00123).',
         ]);
 
         try {
@@ -204,7 +215,7 @@ class ZoningController extends Controller
 
     public function reviewMultiple(Request $request)
     {
-        //dd($request);
+        // dd($request);
         $validated = $request->validate([
             'documents' => 'required|array',
             'documents.*.id' => 'required|uuid|exists:building_documents,id',
@@ -240,7 +251,7 @@ class ZoningController extends Controller
 
     public function reviewZoningDoc(Request $request)
     {
-        //dd($request);
+        // dd($request);
         $validated = $request->validate([
             'documents' => 'required|array',
             'documents.*.id' => 'required|uuid|exists:zoning_documents,id',

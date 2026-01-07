@@ -6,19 +6,40 @@
     <div class="w-full mx-auto mt-10 p-6 bg-white rounded shadow" x-data="formTabs()">
         <form method="POST" action="{{ route('sanitary.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="flex justify-between">
-                <div>
-                    <h1 class="text-3xl font-bold text-red-600 mb-4">Application for Sanitary / Plumbing Permit</h1>
-                    <p class="mb-6">Please fill out the form!</p>
+            <div class="bg-green-50 border border-green-100 rounded-sm p-6 shadow-sm mb-8 relative">
+                <!-- Back Button (Top Right) -->
+                <a href="{{ route('applicant.sanitary') }}"
+                    class="absolute top-4 right-4 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-md shadow-sm transition">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+
+                <!-- Header Content -->
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fa-solid fa-toilet-paper text-green-600 text-3xl"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold text-green-600">
+                        Application for Sanitary Clearance / Permit
+                    </h1>
                 </div>
-                <div>
-                    <a href="javascript:void(0);" onclick="window.history.back();"
-                        class="flex items-center gap-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-gray-700 text-sm font-medium transition">
-                        <i class="fas fa-arrow-left"></i>
-                        Back
-                    </a>
+
+                <p class="text-gray-700 mb-3">
+                    Welcome! You are about to begin your application for a
+                    <span class="font-semibold">Sanitary Clearance</span>.
+                    This process ensures that your property or business complies with all local sanitation and health
+                    regulations.
+                </p>
+
+                <p class="text-sm text-gray-500 mb-2">
+                    Please provide accurate and complete information. Once submitted, your application will be reviewed
+                    by the <span class="font-semibold">Office of the Sanitary Inspector (OSI)</span>.
+                </p>
+
+                <div class="flex items-center gap-2 text-sm text-gray-600 mt-4">
+                    <i class="fa-regular fa-circle-check text-green-500"></i>
+                    <span>Estimated processing time: 2–3 working days</span>
                 </div>
             </div>
+
             <input type="text" value="submitted" name="status" hidden>
             <!-- Tabs Header -->
             <div class="flex space-x-4 mb-6">

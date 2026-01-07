@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class OboOfficialController extends Controller
 {
@@ -39,6 +40,7 @@ class OboOfficialController extends Controller
         $application = BuildingApplication::findOrFail($id);
         $application->status = 'approved';
         $application->approved_by = Auth::id();
+        $application->building_permit_no = 'BLDGP-'.strtoupper(Str::random(8));
         $application->issued_date = now();
         $application->expiration_date = now()->addYear();
         $application->save();

@@ -19,6 +19,7 @@ class BuildingApplication extends Model
         'property_id',
         'type_of_application',
         'application_no',
+        'building_permit_no',
         'approved_id',
         'status',
         'approved_by',

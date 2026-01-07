@@ -25,7 +25,7 @@
                         permit application.
                     </p>
                 </div>
-             
+
                 <!-- Right Decorative Illustration -->
                 <div class="hidden md:block relative">
                     <img src="{{ asset('asset/img/architecture-and-city.png') }}" alt="Building Illustration"
@@ -129,7 +129,7 @@
                         <i class="fa fa-file-text text-red-500 text-lg"></i>
                         <div>
                             <p class="text-gray-500 text-sm">Status</p>
-                            <p class="font-semibold text-gray-800">{{ $application->status }}</p>
+                            <p class="font-semibold text-gray-800">{{ ucwords($application->status) }}</p>
                         </div>
                     </div>
 
@@ -231,6 +231,7 @@
                             <p class="font-semibold text-gray-800">{{ $application->property->property_address }}</p>
                         </div>
                     </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                         <!-- Province -->
                         <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
@@ -274,8 +275,11 @@
                             <i class="fas fa-building text-red-500 text-lg mt-1"></i>
                             <div>
                                 <p class="text-gray-500 text-sm">Occupancy Type & Classification As</p>
-                                <p class="font-semibold text-gray-800">{{ $application->property->occupancy_type }} |
-                                    {{ $application->property->classified_as }}</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ ucwords($application->property->occupancy_type) }} |
+                                    {{ ucwords(str_replace('_', ' ', $application->property->classified_as)) }}
+
+                                </p>
                             </div>
                         </div>
 
@@ -285,7 +289,8 @@
                             <div>
                                 <p class="text-gray-500 text-sm">Estimated Cost</p>
                                 <p class="font-semibold text-gray-800">
-                                    ₱{{ number_format($application->property->estimated_cost, 2) }}</p>
+                                    ₱{{ number_format($application->property->estimated_cost, 2) }}
+                                </p>
                             </div>
                         </div>
 
@@ -298,31 +303,59 @@
                             </div>
                         </div>
 
-                        <!-- Total Area -->
+                        <!-- Lot Area -->
                         <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
                             <i class="fas fa-ruler-combined text-red-500 text-lg mt-1"></i>
                             <div>
-                                <p class="text-gray-500 text-sm"> Lot Area</p>
+                                <p class="text-gray-500 text-sm">Lot Area</p>
                                 <p class="font-semibold text-gray-800">{{ $application->property->lot_area }} m²</p>
                             </div>
                         </div>
 
-                        <!-- Total Floor Area -->
+                        <!-- Floor Area -->
                         <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
                             <i class="fas fa-ruler text-red-500 text-lg mt-1"></i>
                             <div>
-                                <p class="text-gray-500 text-sm"> Floor Area</p>
-                                <p class="font-semibold text-gray-800">{{ $application->property->floor_area }} m²
-                                </p>
+                                <p class="text-gray-500 text-sm">Floor Area</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->floor_area }} m²</p>
                             </div>
                         </div>
 
-                        <!-- Total Floor Ratio -->
+                        <!-- Floor Area Ratio -->
                         <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
                             <i class="fas fa-percent text-red-500 text-lg mt-1"></i>
                             <div>
                                 <p class="text-gray-500 text-sm">Floor Area Ratio (FAR)</p>
                                 <p class="font-semibold text-gray-800">{{ $application->property->floor_area_ratio }}</p>
+                            </div>
+                        </div>
+
+                        <!-- TCT No -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-file-contract text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">TCT No.</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->tct_no }}</p>
+                            </div>
+                        </div>
+
+                        <!-- FSEC No -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-file-shield text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">FSEC No.</p>
+                                <p class="font-semibold text-gray-800">{{ $application->property->fsec_no }}</p>
+                            </div>
+                        </div>
+
+                        <!-- FSEC Date Issued -->
+                        <div class="flex items-start gap-3 bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <i class="fas fa-calendar-check text-red-500 text-lg mt-1"></i>
+                            <div>
+                                <p class="text-gray-500 text-sm">FSEC Date Issued</p>
+                                <p class="font-semibold text-gray-800">
+                                    {{ \Carbon\Carbon::parse($application->property->fsec_issued_date)->format('F d, Y') }}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -511,8 +544,25 @@
 
 
                                         <!-- Type -->
-                                        <td class="px-4 py-3 capitalize">
-                                            {{ str_replace('_', ' ', $doc->document_type) }} (v{{ $doc->version }})
+                                        @php
+                                            $documentNames = [
+                                                'dos' => 'Deed of Sale',
+                                                'tct' => 'Transfer Certificate of Title',
+                                                'fsec' => 'Fire Safety Evaluation Clearance',
+                                                'bldg_plan' => 'Building Plan',
+                                                'bp_form' => 'Building Permit Form',
+                                                'zoning' => 'Zoning Clearance',
+                                                'crptx' => 'Current Real Property Tax Reciept',
+                                                'SPA' => 'Special Power of Attorney'
+                                            ];
+
+                                            $docName =
+                                                $documentNames[$doc->document_type] ??
+                                                ucwords(str_replace('_', ' ', $doc->document_type));
+                                        @endphp
+
+                                        <td class="px-4 py-3">
+                                            {{ $docName }} (v{{ $doc->version }})
                                         </td>
 
                                         <!-- Status -->

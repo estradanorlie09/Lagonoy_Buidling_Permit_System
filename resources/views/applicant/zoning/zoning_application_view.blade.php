@@ -132,7 +132,7 @@
                         <i class="fa fa-file-text text-red-500 text-lg"></i>
                         <div>
                             <p class="text-gray-500 text-sm">Status</p>
-                            <p class="font-semibold text-gray-800">{{ $application->status }}</p>
+                            <p class="font-semibold text-gray-800">{{ ucwords($application->status) }}</p>
                         </div>
                     </div>
 
@@ -275,9 +275,20 @@
                     <i class="fas fa-file-invoice-dollar text-red-500 text-lg mt-1"></i>
                     <div>
                         <p class="text-gray-500 text-sm">Tax Declaration No</p>
-                        <p class="font-semibold text-gray-800">{{ $application->property->tax_declaration }}</p>
+                        <p class="font-semibold text-gray-800">
+                            @php
+                                $tax = preg_replace('/[^\d]/', '', $application->property->tax_declaration);
+                                if (strlen($tax) >= 7) {
+                                    $formatted = substr($tax, 0, 2) . '-' . substr($tax, 2, 4) . '-' . substr($tax, 6);
+                                } else {
+                                    $formatted = $tax;
+                                }
+                            @endphp
+                            {{ $formatted }}
+                        </p>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -290,17 +301,9 @@
             </div>
         @endif
 
-        <!-- Documents -->
-        <div class="bg-white shadow-lg rounded-xl p-6 mb-6">
+        <div x-data="{ openResubmit: false, selectedDoc: null }" class="bg-gray-50 p-6 rounded-xl">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold text-gray-800">Submitted Documents</h3>
-
-                @if (strtolower($application->status) === 'resubmit')
-                    <a href="{{ route('applicant.zoning.zoning_application_view.resubmit_doc', $application->id) }}"
-                        class="px-5 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg shadow-md text-sm font-medium transition">
-                        <i class="fas fa-redo mr-2"></i> Resubmit Documents
-                    </a>
-                @endif
+                <h3 class="text-2xl font-bold text-gray-800">Submitted Documents</h3>
             </div>
 
             @php
@@ -310,60 +313,231 @@
             @endphp
 
             @if ($latestDocs->count() > 0)
-                <!-- Grid layout for 2 columns -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    @foreach ($latestDocs as $doc)
-                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                            class="flex items-center space-x-4 p-4 border border-gray-300 rounded-lg hover:shadow-lg hover:border-blue-500 transition duration-300 ease-in-out">
+                <div class="overflow-x-auto rounded-sm p-3 border border-gray-200 shadow-sm">
+                    <table id="example" class="min-w-full bg-white text-sm">
+                        <thead class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wide">
+                            <tr>
+                                <th class="px-4 py-3 text-left">#</th>
+                                <th class="px-4 py-3 text-center">File</th>
+                                <th class="px-4 py-3 text-left">Type</th>
+                                <th class="px-4 py-3 text-center">Status</th>
+                                <th class="px-4 py-3 text-left">Remarks</th>
+                                <th class="px-4 py-3 text-left">Reviewed By</th>
+                                <th class="px-4 py-3 text-center">Date</th>
+                                <th class="px-4 py-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($latestDocs as $index => $doc)
+                                @php
+                                    $status = strtolower($doc->status ?? 'pending');
+                                    $statusStyles = match ($status) {
+                                        'approved' => [
+                                            'bg' => 'bg-green-100',
+                                            'text' => 'text-green-800',
+                                            'icon' => 'fas fa-check-circle',
+                                        ],
+                                        'rejected' => [
+                                            'bg' => 'bg-red-100',
+                                            'text' => 'text-red-800',
+                                            'icon' => 'fas fa-times-circle',
+                                        ],
+                                        'resubmit' => [
+                                            'bg' => 'bg-yellow-100',
+                                            'text' => 'text-yellow-800',
+                                            'icon' => 'fas fa-redo',
+                                        ],
+                                        'under_review' => [
+                                            'bg' => 'bg-blue-100',
+                                            'text' => 'text-blue-800',
+                                            'icon' => 'fas fa-search',
+                                        ],
+                                        default => [
+                                            'bg' => 'bg-gray-100',
+                                            'text' => 'text-gray-700',
+                                            'icon' => 'fas fa-hourglass-half',
+                                        ],
+                                    };
 
-                            <!-- Document Icon -->
-                            <div class="flex-shrink-0">
-                                @if (Str::endsWith($doc->file_path, ['jpg', 'jpeg', 'png', 'gif']))
-                                    <img src="{{ asset('storage/' . $doc->file_path) }}" alt="{{ $doc->filename }}"
-                                        class="h-12 w-12 object-cover rounded">
-                                @elseif(Str::endsWith($doc->file_path, 'pdf'))
-                                    <i class="fas fa-file-pdf text-red-600 text-3xl"></i>
-                                @elseif(Str::endsWith($doc->file_path, ['doc', 'docx']))
-                                    <i class="fas fa-file-word text-blue-600 text-3xl"></i>
-                                @elseif(Str::endsWith($doc->file_path, 'txt'))
-                                    <i class="fas fa-file-alt text-gray-600 text-3xl"></i>
-                                @else
-                                    <i class="fas fa-file text-gray-500 text-3xl"></i>
-                                @endif
-                            </div>
+                                    $role = optional($doc->reviewer)->role;
+                                    if ($role === 'obo') {
+                                        $role = 'Office of Building Official';
+                                    }
+                                @endphp
 
-                            <!-- Document Details -->
-                            <div class="flex-1">
-                                <span class="block text-base font-medium text-gray-800">
-                                    {{ $doc->filename ?? 'Submitted Document' }}
-                                </span>
+                                <tr class="hover:bg-gray-50 transition">
+                                    <!-- Index -->
+                                    <td class="px-4 py-3 text-gray-600 text-center">{{ $loop->iteration }}</td>
 
-                                @if ($doc->document_type)
-                                    <span class="text-sm text-gray-500">
-                                        {{ $doc->document_type }} (v{{ $doc->version }})
-                                    </span>
-                                @endif
-                            </div>
-                        </a>
-                    @endforeach
+                                    <!-- File Icon -->
+                                    <td class="px-4 py-3 text-center">
+                                        <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
+                                            class="text-red-800 hover:text-gray-600">
+                                            <i class="fas fa-file text-red-500 text-2xl"></i>
+                                        </a>
+                                    </td>
+
+
+                                    <!-- Type -->
+                                    @php
+                                        $documentNames = [
+                                            'dos' => 'Deed of Sale',
+                                            'tct' => 'Transfer Certificate of Title',
+                                            'fsec' => 'Fire Safety Evaluation Clearance',
+                                            'bldg_plan' => 'Building Plan',
+                                            'bp_form' => 'Building Permit Form',
+                                            'zoning' => 'Zoning Clearance',
+                                            'crptx' => 'Current Real Property Tax Reciept',
+                                            'SPA' => 'Special Power of Attorney',
+                                        ];
+
+                                        $docName =
+                                            $documentNames[$doc->document_type] ??
+                                            ucwords(str_replace('_', ' ', $doc->document_type));
+                                    @endphp
+
+                                    <td class="px-4 py-3">
+                                        {{ $docName }} (v{{ $doc->version }})
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center justify-center">
+                                            <span
+                                                class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold {{ $statusStyles['bg'] }} {{ $statusStyles['text'] }}">
+                                                <i class="{{ $statusStyles['icon'] }}"></i>
+                                                {{ ucfirst($status) }}
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Remarks -->
+                                    <td class="px-4 py-3 text-gray-700">
+                                        {{ $doc->remarks ?? '—' }}
+                                    </td>
+
+                                    <!-- Reviewer -->
+                                    <td class="px-4 py-3 text-gray-700">
+                                        @if ($doc->reviewed_by)
+                                            {{ optional($doc->reviewer)->first_name }}
+                                            {{ optional($doc->reviewer)->last_name }}
+                                            @if (optional($doc->reviewer)->profession || $role)
+                                                (@if (optional($doc->reviewer)->profession)
+                                                    {{ optional($doc->reviewer)->profession }}
+                                                @endif
+                                                @if ($role)
+                                                    {{ optional($doc->reviewer)->profession ? ' / ' : '' }}{{ $role }}
+                                                @endif)
+                                            @endif
+                                        @else
+                                            <span class="text-gray-400">Pending</span>
+                                        @endif
+                                    </td>
+
+                                    <!-- Date -->
+                                    <td class="px-4 py-3 text-center text-gray-600">
+                                        {{ $doc->updated_at ? $doc->updated_at->format('M d, Y h:i A') : '—' }}
+                                    </td>
+
+                                    <!-- Action -->
+                                    <td class="px-4 py-3 text-center">
+                                        @if ($status === 'resubmit' || $status === 'rejected')
+                                            <button @click="openResubmit = true; selectedDoc = {{ $doc->toJson() }}"
+                                                class="bg-red-500 hover:bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
+                                                <i class="fas fa-upload mr-1"></i> Resubmit
+                                            </button>
+                                        @else
+                                            <span class="text-gray-400 text-xs">—</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             @else
-                <p class="text-gray-500">No documents submitted.</p>
+                <p class="text-gray-500 text-center">No documents submitted.</p>
             @endif
+
+
+            <div x-show="openResubmit" x-transition.opacity.duration.300ms
+                class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak>
+                <div @click.away="openResubmit = false" x-transition.scale.duration.300ms
+                    class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative border border-gray-100">
+                    <!-- Close Button -->
+                    <button @click="openResubmit = false"
+                        class="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition" title="Close">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+
+                    <!-- Header -->
+                    <h2 class="text-xl font-semibold text-gray-800 mb-5 text-center">
+                        <i class="fas fa-file-upload text-red-600 mr-2"></i>
+                        Resubmit Document
+                    </h2>
+
+                    <!-- Form -->
+                    <template x-if="selectedDoc">
+                        <form :action="`/applicant/building_permit/view_application/resubmit/${selectedDoc.id}`"
+                            method="POST" enctype="multipart/form-data" class="space-y-4">
+                            @csrf
+
+                            <!-- Document Type -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-600 mb-1">
+                                    Document Type
+                                </label>
+                                <p class="text-gray-900 text-base font-semibold capitalize border border-gray-200 rounded-md px-3 py-2 bg-gray-50"
+                                    x-text="selectedDoc.document_type"></p>
+                            </div>
+
+                            <!-- File Upload -->
+                            <div>
+                                <label for="file" class="block text-sm font-medium text-gray-600 mb-1">
+                                    Upload New File
+                                </label>
+                                <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-300 focus:border-red-400 transition"
+                                    required>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex justify-end gap-3 mt-5">
+                                <button type="button" @click="openResubmit = false"
+                                    class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                    class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow-md transition">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+                    </template>
+                </div>
+            </div>
+
         </div>
+
     </div>
 
 
     @if (session('success'))
         <script>
             Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Document Submitted!",
+                toast: true,
+                position: 'top-end', // floating top-right
+                icon: 'success',
+                title: 'Document Submitted!',
                 showConfirmButton: false,
-                timer: 2500
+                timer: 2500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
             });
-            setTimeout(function() {}, 2500);
         </script>
     @endif
+
 @endsection

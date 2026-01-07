@@ -123,8 +123,11 @@
                         <!-- Create Button -->
                         <button @click="open = true"
                             class="w-full sm:w-auto px-5 py-3 border border-red-500 bg-red-500 text-white rounded-lg text-sm shadow-md flex items-center justify-center gap-2 transition">
-                            {{-- <i class="fas fa-plus text-white"></i><span class="text-white">Create</span> --}}
-                            <span class="text-white">Create</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Create Application
                         </button>
                     </div>
                 </div>

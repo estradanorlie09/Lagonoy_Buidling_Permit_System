@@ -320,11 +320,11 @@
                 query: '',
                 filtered: [],
                 getApplicationTitle(item) {
-                    if (item.application_no.startsWith('BLDGP')) {
+                    if (item.application_no.startsWith('APPB')) {
                         return 'Building Permit Applications';
-                    } else if (item.application_no.startsWith('ZN')) {
+                    } else if (item.application_no.startsWith('APP')) {
                         return 'Zoning Applications';
-                    } else if (item.application_no.startsWith('SNT')) {
+                    } else if (item.application_no.startsWith('APP')) {
                         return 'Sanitary Applications';
                     } else {
                         return item.title; // Default title if no prefix matches
@@ -358,7 +358,7 @@
                 // This function handles the selection of an application
                 selectApplication(item) {
                     // Example condition based on application_no prefix
-                    if (item.application_no.startsWith('BLDGP')) {
+                    if (item.application_no.startsWith('APPB')) {
                         // Redirect to Building Permit application details page
                         window.location.href = `/applicant/building_permit/view_application/${item.id}`;
                     } else if (item.application_no.startsWith('ZN')) {
