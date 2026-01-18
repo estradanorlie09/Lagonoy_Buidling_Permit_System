@@ -9,6 +9,7 @@ use App\Models\Visitation;
 use App\Models\ZoningApplication;
 use App\Services\LocationService;
 use App\Utils\StringHelper;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -115,7 +116,6 @@ class ApplicantController extends Controller
     public function index()
     {
         $userId = auth()->id();
-
         // Fetch only this user's building applications
         $applications = BuildingApplication::where('user_id', $userId)->get();
 
@@ -140,7 +140,34 @@ class ApplicantController extends Controller
             ],
         ];
 
-        return view('applicant.dashboard', compact('applications', 'summaries'));
+        // 🔵 QUICK STATS (FOR DASHBOARD CARDS)
+        $activeApplications = BuildingApplication::where('user_id', $userId)
+            ->whereIn('status', ['submitted', 'pending'])
+            ->count();
+
+        $approvedThisMonth = BuildingApplication::where('user_id', $userId)
+            ->where('status', 'approved')
+            ->whereMonth('updated_at', Carbon::now()->month)
+            ->whereYear('updated_at', Carbon::now()->year)
+            ->count();
+
+        // $upcomingAppointments = Visitation::where('user_id', $userId)
+        //     ->whereNotNull('visit_date')
+        //     ->whereDate('visit_date', '>=', Carbon::today())
+        //     ->count();
+
+        $pendingReviews = BuildingApplication::where('user_id', $userId)
+            ->where('status', 'pending')
+            ->count();
+
+        return view('applicant.dashboard', compact(
+            'applications',
+            'summaries',
+            'activeApplications',
+            'approvedThisMonth',
+            // 'upcomingAppointments',
+            'pendingReviews'
+        ));
     }
 
     // public function permit()

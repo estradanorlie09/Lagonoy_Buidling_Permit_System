@@ -30,7 +30,10 @@ class ApplicantBuildingPermitController extends Controller
     {
         $locations = new LocationService;
         $regionCode = '05'; // Region V - Bicol
-
+        $user = auth()->user();
+        if ($user->pre_registration_status !== 'approved') {
+            abort(403, 'Your account is still under review. You cannot access this page.');
+        }
         // Get provinces only from Region V
         $provinces = $locations->getProvincesByRegion($regionCode);
 
@@ -121,14 +124,25 @@ class ApplicantBuildingPermitController extends Controller
             'documents.bfp_certificate' => 'required|file|mimes:pdf,jpg,png|max:40000',
             'documents.Environmental_clearance' => 'required|file|mimes:pdf,jpg,png|max:40000',
             'documents.optional' => 'nullable|file|mimes:pdf,jpg,png|max:40000',
-        ], $messages);
+        ],
+            [
+                // Human-readable field names
+                'prof_type.*' => 'professional type',
+                'prof_name.*' => 'professional name',
+                'prc_no.*' => 'PRC number',
+                'ptr_no.*' => 'PTR number',
+                'birthday.*' => 'birthday',
+                'email.*' => 'email address',
+                'phone_number.*' => 'phone number',
+                'prof_address.*' => 'address',
+            ], $messages);
         $floorArea = (float) $request->floor_area;
         $lotArea = (float) $request->lot_area;
         $far = $lotArea > 0 ? round($floorArea / $lotArea, 2) : null;
 
         try {
             DB::transaction(function () use ($request, $far, &$application) {
-              
+
                 $property = BuildingProperty::create([
                     'id' => (string) Str::uuid(),
                     'occupancy_type' => $request->occupancy_type,
@@ -161,7 +175,6 @@ class ApplicantBuildingPermitController extends Controller
                     'status' => 'submitted',
                 ]);
 
-              
                 if ($request->hasFile('documents')) {
                     foreach ($request->file('documents') as $type => $file) {
                         $path = $file->store('building_permit_docs', 'public');

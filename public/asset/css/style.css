@@ -24,7 +24,7 @@
 /* Pagination Number Buttons */
 .dataTables_wrapper .dataTables_paginate .paginate_button {
     background-color: #ffffff;
-    color: #b91c1c !important;
+    color: #1A58FF !important;
     border: 1px solid #e5e7eb;
     border-radius: 6px;
     padding: 6px 12px;
@@ -36,14 +36,14 @@
 
 /* Hover — Number Buttons */
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.current):not(.disabled) {
-    background-color: #fee2e2 !important;
-    border-color: #fca5a5 !important;
-    color: #dc2626 !important;
+    background-color: #1A58FF !important;
+    border-color: #1A58FF !important;
+    color: #1A58FF !important;
 }
 
 /* Active Page */
 .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background: linear-gradient(90deg, #dc2626, #b91c1c) !important;
+    background: linear-gradient(90deg, #1A58FF, #1A58FF) !important;
     color: #ffffff !important;
     border-color: transparent !important;
     font-weight: 600;
@@ -81,7 +81,7 @@
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     font-size: 0.875rem;
-    color: #dc2626;
+    color: #1A58FF;
     text-indent: 0;
 }
 
@@ -90,12 +90,12 @@
     font-family: "Font Awesome 5 Free";
     font-weight: 900;
     font-size: 0.875rem;
-    color: #dc2626;
+    color: #1A58FF;
     text-indent: 0;
 }
 
 /* Hover effect for arrows */
 .dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover::before,
 .dataTables_wrapper .dataTables_paginate .paginate_button.next:hover::before {
-    color: #b91c1c;
+    color: #1A58FF;
 }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('user_id');     // FK to users
             $table->uuid('property_id'); // UUID foreign key
             $table->string('application_no')->unique(); // Business ID
-            $table->string('building_permit_no')->unique(); // Business ID
+            $table->string('building_permit_no')->unique()->nullable(); // Business ID
             $table->enum('type_of_application', ['new', 'renewal', 'amendatory'])->default('new');
             $table->enum('status', ['submitted', 'approved', 'disapproved', 'resubmit', 'under_review'])->default('submitted');
             $table->uuid('approved_by')->nullable();

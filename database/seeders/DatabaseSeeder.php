@@ -9,13 +9,12 @@ use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-       
-        User::insert([
+        $now = now();
+
+        $users = [
+            // ADMIN
             [
                 'id' => Str::uuid(),
                 'profession' => null,
@@ -25,70 +24,207 @@ class DatabaseSeeder extends Seeder
                 'suffix' => null,
                 'birth_date' => '1990-01-01',
                 'gender' => 'male',
-                'email' => 'admin@example.com',
+                'email' => 'admin@gov.com',
+                'email_verified_at' => $now,
                 'password' => Hash::make('admin123'),
-                'phone' => '09171234567',
+                'phone' => '09170000001',
                 'province' => 'Camarines Sur',
                 'municipality' => 'Lagonoy',
                 'barangay' => 'San Rafael',
                 'street' => 'Municipal Hall',
                 'role' => 'admin',
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
-        ]);
 
-        $faker = \Faker\Factory::create();
-
-        $roles = [
-            'applicant',
-            'zoning_officer',
-            'sanitary_officer',
-            'obo',
-            'do',
-            'bfp',
-            'professional',
-        ];
-
-        $professions = [
-            'architect',
-            'civil_engineer',
-            'electrical_engineer',
-            'sanitary_engineer',
-            'master_plumber',
-            'geodetic_engineer',
-        ];
-
-        $users = [];
-
-        for ($i = 1; $i <= 20; $i++) {
-            $role = $faker->randomElement($roles);
-
-            $users[] = [
+            // OBO
+            [
                 'id' => Str::uuid(),
-                'profession' => $role === 'professional' ? $faker->randomElement($professions) : null,
-                'first_name' => $faker->firstName(),
-                'middle_name' => $faker->optional()->firstName(),
-                'last_name' => $faker->lastName(),
-                'suffix' => $faker->optional()->randomElement(['Jr', 'Sr', 'II', 'III', null]),
-                'birth_date' => $faker->date('Y-m-d', '2002-01-01'),
-                'gender' => $faker->randomElement(['male', 'female']),
-                'email' => "user{$i}@example.com",
+                'profession' => null,
+                'first_name' => 'Building',
+                'middle_name' => null,
+                'last_name' => 'Official',
+                'suffix' => null,
+                'birth_date' => '1985-01-01',
+                'gender' => 'male',
+                'email' => 'buildingOfficial@gov.com',
+                'email_verified_at' => $now,
                 'password' => Hash::make('password123'),
-                'phone' => $faker->phoneNumber(),
+                'phone' => '09170000002',
                 'province' => 'Camarines Sur',
                 'municipality' => 'Lagonoy',
-                'barangay' => $faker->word(),
-                'street' => $faker->streetAddress(),
-                'role' => $role,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+                'barangay' => 'San Rafael',
+                'street' => 'Municipal Hall',
+                'role' => 'obo',
+            ],
+
+            // ZONING OFFICER
+            [
+                'id' => Str::uuid(),
+                'profession' => null,
+                'first_name' => 'Zoning',
+                'middle_name' => null,
+                'last_name' => 'Officer',
+                'suffix' => null,
+                'birth_date' => '1986-01-01',
+                'gender' => 'female',
+                'email' => 'zoningOfficer@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000003',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Municipal Hall',
+                'role' => 'zoning_officer',
+            ],
+
+            // SANITARY OFFICER
+            [
+                'id' => Str::uuid(),
+                'profession' => null,
+                'first_name' => 'Sanitary',
+                'middle_name' => null,
+                'last_name' => 'Officer',
+                'suffix' => null,
+                'birth_date' => '1987-01-01',
+                'gender' => 'female',
+                'email' => 'sanitaryOfficial@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000004',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Municipal Hall',
+                'role' => 'sanitary_officer',
+            ],
+
+            // PROFESSIONALS
+            [
+                'id' => Str::uuid(),
+                'profession' => 'architect',
+                'first_name' => 'Professional',
+                'middle_name' => null,
+                'last_name' => 'Architect',
+                'suffix' => null,
+                'birth_date' => '1980-01-01',
+                'gender' => 'male',
+                'email' => 'professionalArchi@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000005',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Private Office',
+                'role' => 'professional',
+            ],
+            [
+                'id' => Str::uuid(),
+                'profession' => 'civil_engineer',
+                'first_name' => 'Professional',
+                'middle_name' => null,
+                'last_name' => 'Civil',
+                'suffix' => null,
+                'birth_date' => '1980-01-01',
+                'gender' => 'male',
+                'email' => 'professionalCivil@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000006',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Private Office',
+                'role' => 'professional',
+            ],
+            [
+                'id' => Str::uuid(),
+                'profession' => 'electrical_engineer',
+                'first_name' => 'Professional',
+                'middle_name' => null,
+                'last_name' => 'Electrical',
+                'suffix' => null,
+                'birth_date' => '1980-01-01',
+                'gender' => 'male',
+                'email' => 'professionalElectrical@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000007',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Private Office',
+                'role' => 'professional',
+            ],
+            [
+                'id' => Str::uuid(),
+                'profession' => 'sanitary_engineer',
+                'first_name' => 'Professional',
+                'middle_name' => null,
+                'last_name' => 'Sanitary',
+                'suffix' => null,
+                'birth_date' => '1980-01-01',
+                'gender' => 'female',
+                'email' => 'professionalSanitary@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000008',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Private Office',
+                'role' => 'professional',
+            ],
+            [
+                'id' => Str::uuid(),
+                'profession' => 'master_plumber',
+                'first_name' => 'Professional',
+                'middle_name' => null,
+                'last_name' => 'Plumber',
+                'suffix' => null,
+                'birth_date' => '1980-01-01',
+                'gender' => 'male',
+                'email' => 'professionalMasterPlumber@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000009',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Private Office',
+                'role' => 'professional',
+            ],
+            [
+                'id' => Str::uuid(),
+                'profession' => 'geodetic_engineer',
+                'first_name' => 'Professional',
+                'middle_name' => null,
+                'last_name' => 'Geodetic',
+                'suffix' => null,
+                'birth_date' => '1980-01-01',
+                'gender' => 'male',
+                'email' => 'professionalGeodetic@gov.com',
+                'email_verified_at' => $now,
+                'password' => Hash::make('password123'),
+                'phone' => '09170000010',
+                'province' => 'Camarines Sur',
+                'municipality' => 'Lagonoy',
+                'barangay' => 'San Rafael',
+                'street' => 'Private Office',
+                'role' => 'professional',
+            ],
+        ];
+
+        foreach ($users as $user) {
+            User::updateOrCreate(
+                ['email' => $user['email']],
+                array_merge($user, [
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ])
+            );
         }
 
-        User::insert($users);
-
-       
-        $this->command->info('✅ Database seeded successfully with 1 admin + 20 users.');
+        $this->command->info('✅ System users seeded and email verified.');
     }
 }

@@ -2,11 +2,11 @@
 
 @section('title', 'Building Permit Form')
 
-@section('zoning_form')
+@section('content')
     <div class="w-full mx-auto p-6 bg-white rounded shadow" x-data="formTabs()">
         <form id="buildingForm" method="POST" action="{{ route('building_application.store') }}" enctype="multipart/form-data">
             @csrf
-            <div class="bg-red-50 border border-red-100 rounded-sm p-6 shadow-sm mb-8 relative">
+            <div class="bg-blue-50 border border-blue-100 rounded-sm p-6 shadow-sm mb-8 relative">
                 <!-- Back Button (Top Right) -->
                 <a href="{{ route('applicant.buildingPermit') }}"
                     class="absolute top-4 right-4 inline-flex items-center gap-2 px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-700 text-sm font-medium rounded-md shadow-sm transition">
@@ -16,8 +16,8 @@
 
                 <!-- Header Content -->
                 <div class="flex items-center gap-3 mb-3">
-                    <i class="fa-solid fa-building text-red-600 text-3xl"></i>
-                    <h1 class="text-2xl md:text-3xl font-bold text-red-600">
+                    <i class="fa-solid fa-building text-blue-600 text-3xl"></i>
+                    <h1 class="text-2xl md:text-3xl font-bold text-blue-600">
                         Application for Building Permit / Clearance
                     </h1>
                 </div>
@@ -35,7 +35,7 @@
                 </p>
 
                 <div class="flex items-center gap-2 text-sm text-gray-600 mt-4">
-                    <i class="fa-regular fa-circle-check text-red-500"></i>
+                    <i class="fa-regular fa-circle-check text-blue-500"></i>
                     <span>Estimated processing time: 3–5 working days</span>
                 </div>
             </div>
@@ -46,7 +46,7 @@
             <div class="flex space-x-4 mb-6">
                 <template x-for="(tabName, index) in tabs" :key="index">
                     <button type="button" @click="setTab(index)" class="pb-2"
-                        :class="currentTab === index ? 'border-b-2 border-red-500 text-red-600' : 'text-gray-600'"
+                        :class="currentTab === index ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600'"
                         x-text="tabName.label">
                     </button>
                 </template>
@@ -54,7 +54,7 @@
 
             <hr class="mb-5 border border-gray-300">
             @if ($errors->any())
-                <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                <div class="mb-4 p-4 bg-blue-100 text-red-700 rounded-lg">
                     <strong>Whoops!</strong> Please fix the following:
                     <ul class="mt-2 list-disc list-inside text-sm">
                         @foreach ($errors->all() as $error)
@@ -68,7 +68,7 @@
             <!-- Personal Details -->
             <div x-show="currentTab === 0" class="space-y-4">
                 <div class="bg-white shadow-md rounded-lg p-6 mb-6">
-                    <h2 class="text-xl font-bold mb-4 text-red-700">
+                    <h2 class="text-xl font-bold mb-4 text-blue-700">
                         Instructions for Submitting Building Permit Application
                     </h2>
 
@@ -84,7 +84,7 @@
                     <h3 class="text-lg font-semibold mb-2">Steps for Submission</h3>
                     <ol class="list-decimal list-inside text-gray-700 space-y-2">
                         <li>
-                            <strong>Prepare the Required Documents:</strong>
+                            <strong>Prepare the Requiblue Documents:</strong>
                             <ul class="list-disc list-inside ml-5">
                                 <li>Duly accomplished and notarized Building Permit Application Form</li>
                                 <li>Proof of Ownership (e.g., land title, tax declaration, or contract of lease)</li>
@@ -99,34 +99,34 @@
                         </li>
                         <li>Log in to the system and open your <strong>Building Permit Application</strong> record.</li>
                         <li>Go to the <strong>Building Permit Documents</strong> section.</li>
-                        <li>Upload all required files in PDF or image format.</li>
+                        <li>Upload all requiblue files in PDF or image format.</li>
                         <li>Add remarks or additional information if needed (optional).</li>
                         <li>Click <strong>Submit Building Application</strong> to send your documents for evaluation.</li>
                     </ol>
 
-                    <div class="bg-red-50 border-l-4 border-red-500 rounded-r-xl p-5 mt-6 shadow-sm">
+                    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-r-xl p-5 mt-6 shadow-sm">
                         <div class="flex items-center gap-2 mb-3">
-                            <i class="fa-solid fa-bell text-red-600 text-lg"></i>
-                            <h3 class="text-lg font-semibold text-red-700">Reminders</h3>
+                            <i class="fa-solid fa-bell text-blue-600 text-lg"></i>
+                            <h3 class="text-lg font-semibold text-blue-700">Reminders</h3>
                         </div>
 
                         <ul class="text-gray-700 space-y-2">
                             <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-pen-ruler text-red-500 mt-1"></i>
+                                <i class="fa-solid fa-pen-ruler text-blue-500 mt-1"></i>
                                 <span>All technical plans must be signed and sealed by duly licensed professionals.</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-file-circle-check text-red-500 mt-1"></i>
+                                <i class="fa-solid fa-file-circle-check text-blue-500 mt-1"></i>
                                 <span>Ensure that documents are complete, clear, and properly labeled before
                                     submission.</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-circle-exclamation text-red-500 mt-1"></i>
+                                <i class="fa-solid fa-circle-exclamation text-blue-500 mt-1"></i>
                                 <span>Incomplete or unsigned submissions may cause processing delays.</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <i class="fa-solid fa-envelope-circle-check text-red-500 mt-1"></i>
-                                <span>You will receive system or email notifications regarding the review status or required
+                                <i class="fa-solid fa-envelope-circle-check text-blue-500 mt-1"></i>
+                                <span>You will receive system or email notifications regarding the review status or requiblue
                                     revisions.</span>
                             </li>
                         </ul>
@@ -140,21 +140,21 @@
             <div x-show="currentTab === 1" class="space-y-6">
 
                 <!-- Section Header -->
-                <div class="bg-red-50 border border-red-100 rounded-lg p-6 shadow-sm">
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-6 shadow-sm">
                     <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-clipboard-list text-red-600 text-2xl"></i>
-                        <h1 class="text-2xl font-bold text-red-700">Project Information</h1>
+                        <i class="fa-solid fa-clipboard-list text-blue-600 text-2xl"></i>
+                        <h1 class="text-2xl font-bold text-blue-700">Project Information</h1>
                     </div>
                     <p class="text-gray-700 text-sm">
-                        Please fill out all required project details accurately. Fields marked with
-                        <span class="text-red-500">*</span> are mandatory.
+                        Please fill out all requiblue project details accurately. Fields marked with
+                        <span class="text-blue-500">*</span> are mandatory.
                     </p>
                 </div>
                 <div class="form-group">
                     <label for="type_of_application" class="text-sm font-medium text-gray-700 mb-2">Type of Application
-                        <span style="color:red">*</span></label><br>
+                        <span style="color:blue">*</span></label><br>
                     <select id="type_of_application" name="type_of_application" 
-                        class="w-full border border-gray-300 rounded-md mt-2 p-3 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        class="w-full border border-gray-300 rounded-md mt-2 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         <option value="" disabled {{ old('type_of_application') ? '' : 'selected' }}>Select
                             application type</option>
                         <option value="new" {{ old('type_of_application') == 'new' ? 'selected' : '' }}>New</option>
@@ -171,10 +171,10 @@
                     <!-- Type of Occupancy -->
                     <div>
                         <label for="occupancy_type" class="block mb-2 text-sm font-medium text-gray-700">
-                            Type of Occupancy <span class="text-red-500">*</span>
+                            Type of Occupancy <span class="text-blue-500">*</span>
                         </label>
                         <select id="occupancy_type" name="occupancy_type" 
-                            class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled {{ old('occupancy_type') ? '' : 'selected' }}>Select Type of
                                 Occupancy</option>
                             <option value="residential" {{ old('occupancy_type') == 'residential' ? 'selected' : '' }}>
@@ -193,17 +193,17 @@
                                 Use</option>
                         </select>
                         @error('occupancy_type')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Classified As -->
                     <div>
                         <label for="classified_as" class="block mb-2 text-sm font-medium text-gray-700">
-                            Classified As <span class="text-red-500">*</span>
+                            Classified As <span class="text-blue-500">*</span>
                         </label>
                         <select id="classified_as" name="classified_as" 
-                            class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled {{ old('classified_as') ? '' : 'selected' }}>Select
                                 Classification</option>
                             <option value="group_a" {{ old('classified_as') == 'group_a' ? 'selected' : '' }}>Group A –
@@ -228,7 +228,7 @@
                                 Accessory Structures</option>
                         </select>
                         @error('classified_as')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -240,43 +240,43 @@
                     <!-- Project Title -->
                     <div>
                         <label for="project_title" class="block text-sm font-medium text-gray-700">
-                            Project Title / Description <span class="text-red-500">*</span>
+                            Project Title / Description <span class="text-blue-500">*</span>
                         </label>
                         <input type="text" id="project_title" name="project_title"
                             placeholder="e.g., Two-Storey Residential House" value="{{ old('project_title') }}"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('project_title')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Number of Floors -->
                     <div>
                         <label for="number_of_floor" class="block text-sm font-medium text-gray-700">
-                            Number of Floors <span class="text-red-500">*</span>
+                            Number of Floors <span class="text-blue-500">*</span>
                         </label>
                         <input type="number" id="number_of_floor" name="number_of_floor" placeholder="e.g., 2"
                             value="{{ old('number_of_floor') }}"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('number_of_floor')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <!-- Estimated Cost -->
                     <div class="relative">
                         <label for="estimated_cost" class="block text-sm font-medium text-gray-700 mb-1">
-                            Estimated Cost <span class="text-red-500">*</span>
+                            Estimated Cost <span class="text-blue-500">*</span>
                         </label>
                         <div class="relative">
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500 text-lg">₱</span>
                             <input type="text" id="estimated_cost" name="estimated_cost"
                                 placeholder="e.g., 1,200,000" value="{{ old('estimated_cost') }}"
                                 oninput="formatCurrency(this)"
-                                class="w-full pl-8 pr-3 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-red-500 text-gray-700 font-medium">
+                                class="w-full pl-8 pr-3 border border-gray-300 rounded-md p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 font-medium">
                         </div>
                         @error('estimated_cost')
-                            <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-600 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -285,25 +285,25 @@
                 <div class="grid md:grid-cols-2 gap-5">
                     <div>
                         <label for="floor_area" class="block text-sm font-medium text-gray-700">
-                            Total Floor Area (sq.m.) <span class="text-red-500">*</span>
+                            Total Floor Area (sq.m.) <span class="text-blue-500">*</span>
                         </label>
                         <input type="text" id="floor_area" name="floor_area" placeholder="e.g., 150"
                             value="{{ old('floor_area') }}" oninput="formatCurrency(this); computeFAR();"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('floor_area')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div>
                         <label for="lot_area" class="block text-sm font-medium text-gray-700">
-                            Lot Area (sq.m.) <span class="text-red-500">*</span>
+                            Lot Area (sq.m.) <span class="text-blue-500">*</span>
                         </label>
                         <input type="text" id="lot_area" name="lot_area" placeholder="e.g., 200"
                             value="{{ old('lot_area') }}" oninput="formatCurrency(this); computeFAR();"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('lot_area')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
@@ -320,48 +320,48 @@
                 </div>
                 <div>
                     <label for="tct_no" class="block text-sm font-medium text-gray-700">
-                        TCT NO. <span class="text-red-500">*</span>
+                        TCT NO. <span class="text-blue-500">*</span>
                     </label>
                     <input type="text" id="tct_no" name="tct_no" placeholder="TCT NO."
                         value="{{ old('tct_no') }}"
-                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                     @error('tct_no')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class=" grid md:grid-cols-2 gap-5">
                     <div>
                         <label for="fsec_no" class="block text-sm font-medium text-gray-700">
-                            FSEC NO. <span class="text-red-500">*</span>
+                            FSEC NO. <span class="text-blue-500">*</span>
                         </label>
                         <input type="text" id="fsec_no" name="fsec_no" placeholder="FSEC NO."
                             value="{{ old('fsec_no') }}"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('fsec_no')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                     <div>
                         <label for="fsec_issued_date" class="block text-sm font-medium text-gray-700">
-                            FSEC No. Issued Date <span class="text-red-500">*</span>
+                            FSEC No. Issued Date <span class="text-blue-500">*</span>
                         </label>
                         <input type="date" id="fsec_issued_date" name="fsec_issued_date"
                             value="{{ old('fsec_issued_date') }}"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('fsec_issued_date')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
                 <div class="mt-6">
                     <label for="scope_of_work" class="block text-sm font-medium text-gray-700">
-                        Scope of Works<span class="text-red-500">*</span>
+                        Scope of Works<span class="text-blue-500">*</span>
                     </label>
                     <textarea name="scope_of_work" id="scope_of_work" rows="5" maxlength="100"
                         placeholder="Describe the specific work to be done"
-                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">{{ old('scope_of_work') }}</textarea>
+                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('scope_of_work') }}</textarea>
                     @error('scope_of_work')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
@@ -372,8 +372,8 @@
 
                 <!-- Location Section -->
                 <div class="mt-8">
-                    <h2 class="text-xl font-semibold text-red-700 mb-2 flex items-center gap-2">
-                        <i class="fa-solid fa-map-location-dot text-red-600"></i> Location of Property
+                    <h2 class="text-xl font-semibold text-blue-700 mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-blue-600"></i> Location of Property
                     </h2>
                     <p class="text-sm text-gray-600 mb-4">
                         Provide the complete property address and select the corresponding province, city/municipality, and
@@ -382,23 +382,23 @@
 
                     <div class="mb-4">
                         <label for="property_address" class="block text-sm font-medium text-gray-700">
-                            Property Full Address <span class="text-red-500">*</span>
+                            Property Full Address <span class="text-blue-500">*</span>
                         </label>
                         <input type="text" id="property_address" name="property_address"
                             placeholder="House No., Street, Subdivision" value="{{ old('property_address') }}"
-                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         @error('property_address')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="grid md:grid-cols-3 gap-5">
                         <div>
                             <label for="province" class="block text-sm font-medium text-gray-700">
-                                Province <span class="text-red-500">*</span>
+                                Province <span class="text-blue-500">*</span>
                             </label>
                             <select id="project_province" name="province"
-                                class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Select Province</option>
                                 @foreach ($provinces as $provinceName => $provinceData)
                                     <option value="{{ $provinceName }}"
@@ -408,33 +408,33 @@
                                 @endforeach
                             </select>
                             @error('province')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div>
                             <label for="municipality" class="block text-sm font-medium text-gray-700">
-                                Municipality / City <span class="text-red-500">*</span>
+                                Municipality / City <span class="text-blue-500">*</span>
                             </label>
                             <select id="project_municipality" name="municipality"
-                                class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Select Municipality / City</option>
                             </select>
                             @error('municipality')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div>
                             <label for="barangay" class="block text-sm font-medium text-gray-700">
-                                Barangay <span class="text-red-500">*</span>
+                                Barangay <span class="text-blue-500">*</span>
                             </label>
                             <select id="project_barangay" name="barangay"
-                                class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">Select Barangay</option>
                             </select>
                             @error('barangay')
-                                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                                <p class="text-blue-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>
@@ -447,21 +447,21 @@
                     </label>
                     <textarea name="comments" id="comments" rows="5" maxlength="100"
                         placeholder="You may include remarks or special considerations (Max 100 characters)."
-                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">{{ old('comments') }}</textarea>
+                        class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('comments') }}</textarea>
                 </div>
             </div>
 
             <div x-show="currentTab === 2" class="space-y-6">
 
                 <!-- Header -->
-                <div class="bg-red-50 border border-red-100 rounded-lg p-6 shadow-sm">
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-6 shadow-sm">
                     <div class="flex items-center gap-3 mb-2">
-                        <i class="fa-solid fa-user-tie text-red-600 text-2xl"></i>
-                        <h1 class="text-2xl font-bold text-red-700">Project Professionals</h1>
+                        <i class="fa-solid fa-user-tie text-blue-600 text-2xl"></i>
+                        <h1 class="text-2xl font-bold text-blue-700">Project Professionals</h1>
                     </div>
                     <p class="text-gray-700 text-sm">
                         List all licensed professionals involved in your project. Each professional must have a valid
-                        <strong>PRC and PTR number</strong> and be duly accredited for the specific work discipline.
+                        <strong>PRC and PTR number</strong> and be duly accblueited for the specific work discipline.
                     </p>
                 </div>
 
@@ -473,15 +473,15 @@
                         class="professional-entry border border-gray-300 rounded-xl bg-gray-50 p-6 shadow-sm relative transition hover:shadow-md">
                         <!-- Remove Button -->
                         <button type="button" onclick="removeProfessional(this)"
-                            class="hidden absolute top-2 right-2 text-red-500 hover:text-red-700 font-bold text-lg">✖</button>
+                            class="hidden absolute top-2 right-2 text-blue-500 hover:text-blue-700 font-bold text-lg">✖</button>
 
                         <!-- Professional Type -->
                         <div>
                             <label for="prof_type_1" class="block text-sm font-medium text-gray-700">
-                                Professional Type <span class="text-red-500">*</span>
+                                Professional Type <span class="text-blue-500">*</span>
                             </label>
                             <select id="prof_type_1" name="prof_type[]"
-                                class="prof-type w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                class="prof-type w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="">-- Select --</option>
                                 <option>Architect</option>
                                 <option>Civil/Structural Engineer</option>
@@ -496,23 +496,23 @@
                         <div class="grid md:grid-cols-3 gap-5 mt-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Full Name <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-blue-500">*</span></label>
                                 <input type="text" name="prof_name[]" placeholder="Full Name"
-                                    class="prof-name w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    class="prof-name w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">PRC Number <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-blue-500">*</span></label>
                                 <input type="text" name="prc_no[]" placeholder="e.g., 0123456"
-                                    class="prof-prc w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    class="prof-prc w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">PTR Number <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-blue-500">*</span></label>
                                 <input type="text" name="ptr_no[]" placeholder="e.g., PTR-2025-001"
-                                    class="prof-ptr w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    class="prof-ptr w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
 
@@ -520,32 +520,32 @@
                         <div class="grid md:grid-cols-3 gap-5 mt-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Birthday <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-blue-500">*</span></label>
                                 <input type="date" name="birthday[]"
-                                    class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Email <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-blue-500">*</span></label>
                                 <input type="email" name="email[]" placeholder="e.g., name@email.com"
-                                    class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
 
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Phone Number <span
-                                        class="text-red-500">*</span></label>
+                                        class="text-blue-500">*</span></label>
                                 <input type="text" name="phone_number[]" placeholder="e.g., 09171234567"
-                                    class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                    class="w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             </div>
                         </div>
 
                         <!-- Address -->
                         <div class="mt-4">
                             <label class="block text-sm font-medium text-gray-700">Address <span
-                                    class="text-red-500">*</span></label>
+                                    class="text-blue-500">*</span></label>
                             <input type="text" name="prof_address[]" placeholder="Office or Home Address"
-                                class="prof-address w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-red-500">
+                                class="prof-address w-full border border-gray-300 rounded-md p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                 </fieldset>
@@ -553,7 +553,7 @@
                 <!-- Add Professional Button -->
                 <div class="flex justify-start">
                     <button type="button" onclick="addProfessional()"
-                        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg shadow-sm transition">
+                        class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg shadow-sm transition">
                         <i class="fa-solid fa-user-plus"></i>
                         Add Another Professional
                     </button>
@@ -569,7 +569,7 @@
                     Previous</button>
 
                 <div class="ml-auto">
-                    <button type="button" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                    <button type="button" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                         @click="nextTab" x-show="currentTab < tabs.length - 1">Next →</button>
 
                     <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"

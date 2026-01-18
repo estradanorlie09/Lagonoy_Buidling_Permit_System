@@ -38,7 +38,7 @@
         </div>
 
 
-        @if ($application->status == 'approved')
+        {{-- @if ($application->status == 'approved')
             <a href="{{ route('sanitary.pdf', $application->id) }}"
                 class="flex items-center justify-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow hover:bg-green-700 transition duration-200 mb-5">
                 <!-- Download Icon -->
@@ -49,7 +49,7 @@
                 </svg>
                 Download Certificate
             </a>
-        @endif
+        @endif --}}
 
         @php
             // Normalize status to lowercase

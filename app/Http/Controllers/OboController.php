@@ -22,6 +22,8 @@ use Illuminate\Support\Facades\Mail;
 
 class OboController extends Controller
 {
+   
+
     public function zoning_records()
     {
         $applications = ZoningApplication::all();

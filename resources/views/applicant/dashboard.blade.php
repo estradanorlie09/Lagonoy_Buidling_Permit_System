@@ -3,317 +3,517 @@
 @section('title', 'Applicant | Dashboard')
 
 @section('content')
-    <div class="bg-white rounded-xl max-w-10xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 px-4 sm:px-8">
-            <!-- Left Section: "Lagonoy System" Title -->
-            <div
-                class="flex-shrink-0 text-center sm:text-left w-full sm:w-auto flex items-center justify-center sm:justify-start gap-2">
-                <i class="fas fa-building text-red-600 text-2xl"></i>
-                <h1 class="text-xl sm:text-2xl font-semibold text-red-700">Lagonoy Building Permit System</h1>
-            </div>
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+        <div class="w-full px-6 lg:px-8 xl:px-12 py-6 sm:py-8">
 
+            <!-- Header Section -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 mb-6">
+                <div class="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
 
-            <!-- Center Section: Search Bar -->
-            <div x-data="searchApplications()" class="relative w-full sm:w-1/2 max-w-3xl mx-4 sm:mx-8">
-                <!-- Search Input -->
-                <input type="text" placeholder="Search applications..." x-model="query"
-                    @input.debounce.300ms="filterApplications"
-                    class="w-full pl-10 pr-4 py-2.5 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-1 text-sm sm:text-base placeholder-gray-400" />
-                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-
-                <!-- Dropdown Results -->
-                <div x-show="query.length > 0" x-transition
-                    class="absolute mt-1 w-full bg-white shadow-lg rounded-lg max-h-60 overflow-y-auto z-50">
-                    <!-- Show "No record found" when there are no filtered results -->
-                    <template x-if="filtered.length === 0">
-                        <div class="text-center py-6 text-gray-500">
-                            <i class="fas fa-folder-open text-4xl text-red-400 mb-2"></i>
-                            <p class="text-base font-medium">No records found</p>
-                            <p class="text-sm text-gray-400">Try adjusting your filters or adding a new record.</p>
-                        </div>
-                    </template>
-
-
-                    <!-- Results Loop -->
-                    <template x-for="item in filtered" :key="item.id">
-                        <div class="px-4 py-2 hover:bg-red-50 cursor-pointer rounded-lg" @click="selectApplication(item)">
-                            <p class="text-sm font-semibold text-red-700" x-text="getApplicationTitle(item)">
-                            </p>
-                            <p class="text-xs text-gray-500" x-text="item.application_no"></p>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <!-- Right Section: Notifications + Profile -->
-            <div class="flex items-center gap-4 w-full sm:w-auto mt-4 sm:mt-0">
-                <!-- Notification Bell -->
-                <div x-data="{ open: false }" class="relative w-max">
-                    <!-- Bell Icon -->
-                    <button @click="open = !open"
-                        class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow hover:bg-gray-50 transition duration-200 relative">
-                        <i class="fas fa-bell text-gray-600 text-lg"></i>
-                        <span
-                            class="absolute top-1 right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                            3
-                        </span>
-                    </button>
-
-                    <!-- Notification Dropdown -->
-                    <div x-show="open" @click.away="open = false" x-transition:enter="transition ease-out duration-200"
-                        x-transition:enter-start="opacity-0 transform scale-95"
-                        x-transition:enter-end="opacity-100 transform scale-100"
-                        x-transition:leave="transition ease-in duration-150"
-                        x-transition:leave-start="opacity-100 transform scale-100"
-                        x-transition:leave-end="opacity-0 transform scale-95"
-                        class="absolute top-full right-0 mt-2 w-[90vw] sm:w-80 bg-white rounded-xl shadow-2xl z-50">
-
-                        <!-- Header -->
-                        <div class="flex justify-between items-center px-4 py-3 bg-red-50 rounded-t-xl">
-                            <h3 class="text-sm font-semibold text-red-700">Notifications</h3>
-                            <button class="text-xs text-red-500 hover:underline">Mark all as read</button>
+                    <!-- System Title -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center shadow-lg overflow-hidden">
+                            <img src="{{ asset('asset/icon/logo.png') }}" alt="Building Icon" class="w-12 h-12 object-contain">
                         </div>
 
-                        <!-- Scrollable List -->
-                        <div
-                            class="max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-red-300 scrollbar-track-red-100 hover:scrollbar-thumb-red-400 transition-all duration-200">
-                            @for ($i = 1; $i <= 5; $i++)
-                                <div
-                                    class="flex items-start gap-3 p-3 hover:bg-red-50 transition-all duration-200 rounded-lg cursor-pointer">
-                                    <div
-                                        class="w-10 h-10 flex items-center justify-center bg-red-100 text-red-600 rounded-full flex-shrink-0 mt-0.5">
-                                        <i class="fas fa-bell text-base"></i>
-                                    </div>
-                                    <div class="flex-1 text-left">
-                                        <p class="text-sm text-gray-700 leading-snug">
-                                            <span class="font-semibold">Admin</span> posted a new announcement about system
-                                            updates.
-                                        </p>
-                                        <span class="text-xs text-gray-400 mt-1 block">5 mins ago</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex items-start gap-3 p-3 hover:bg-yellow-50 transition-all duration-200 rounded-lg cursor-pointer">
-                                    <div
-                                        class="w-10 h-10 flex items-center justify-center bg-yellow-100 text-yellow-600 rounded-full flex-shrink-0 mt-0.5">
-                                        <i class="fas fa-exclamation-triangle text-base"></i>
-                                    </div>
-                                    <div class="flex-1 text-left">
-                                        <p class="text-sm text-gray-700 leading-snug">
-                                            <span class="font-semibold">System</span> warning: maintenance scheduled for
-                                            tonight.
-                                        </p>
-                                        <span class="text-xs text-gray-400 mt-1 block">1 hour ago</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="flex items-start gap-3 p-3 hover:bg-green-50 transition-all duration-200 rounded-lg cursor-pointer">
-                                    <div
-                                        class="w-10 h-10 flex items-center justify-center bg-green-100 text-green-600 rounded-full flex-shrink-0 mt-0.5">
-                                        <i class="fas fa-check-circle text-base"></i>
-                                    </div>
-                                    <div class="flex-1 text-left">
-                                        <p class="text-sm text-gray-700 leading-snug">
-                                            <span class="font-semibold">System</span> update completed successfully.
-                                        </p>
-                                        <span class="text-xs text-gray-400 mt-1 block">2 hours ago</span>
-                                    </div>
-                                </div>
-                            @endfor
-                        </div>
-
-                        <!-- Footer -->
-                        <div class="text-center py-2">
-                            <a href="#" class="text-sm text-red-600 hover:underline font-medium">View all
-                                notifications</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Profile Icon -->
-                <div
-                    class="flex items-center gap-2 bg-white rounded-full px-3 py-1.5 shadow-sm hover:bg-gray-50 transition duration-200">
-                    <i class="fas fa-user-circle text-red-600 text-xl"></i>
-                    <span class="text-sm font-semibold text-gray-700 hidden sm:block">
-                        {{ ucwords(Auth::user()->first_name) }}
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex flex-col lg:flex-row gap-4 w-full">
-
-            <div class="flex flex-col lg:flex-row gap-6 w-full">
-                <div class="flex flex-col lg:flex-row gap-6 w-full items-stretch">
-                    <!-- LEFT: Welcome Card -->
-                    <div
-                        class="relative lg:w-2/3 w-full rounded-2xl overflow-hidden bg-gradient-to-br from-red-50 via-pink-100 to-red-200 shadow-lg p-6 sm:p-8 lg:p-10 flex flex-col lg:flex-row items-center justify-between gap-6 border border-red-100">
-
-                        <div class="relative z-10 flex-1">
-                            <div class="flex items-center gap-3 mb-3">
-                                <div
-                                    class="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center bg-white/70 backdrop-blur-sm rounded-full shadow-md border border-red-200">
-                                    <i class="fas fa-user-circle text-red-600 text-2xl sm:text-3xl"></i>
-                                </div>
-                                <h2 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-red-800 tracking-tight">
-                                    Welcome, {{ ucwords(Auth::user()->first_name) }}!
-                                </h2>
-                            </div>
-
-                            <p class="text-gray-700 text-sm sm:text-base max-w-xl leading-relaxed">
-                                We’re glad to have you back! You can now continue managing your applications, check their
-                                statuses, or explore new services available to you.
-                            </p>
-
-                            <div class="mt-6 flex flex-wrap gap-3">
-                                <a href="{{ route('applicant.buildingPermit') }}"
-                                    class="bg-red-600 text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow hover:bg-red-700 transition-all duration-200">
-                                    <i class="fas fa-building mr-2"></i> Apply Building Permit
-                                </a>
-
-                                <a href="{{ route('applicant.zoning.zoning_page') }}"
-                                    class="bg-red-600 text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow hover:bg-red-700 transition-all duration-200">
-                                    <i class="fas fa-location mr-2"></i> Apply Zoning Permit
-                                </a>
-                                <a href="{{ route('applicant.sanitary') }}"
-                                    class="bg-red-600 text-white text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow hover:bg-red-700 transition-all duration-200">
-                                    <i class="fas fa-faucet mr-2"></i> Apply Sanitary Permit
-                                </a>
-                                {{-- <a href="#"
-                                    class="bg-white text-red-700 border border-red-300 text-sm font-medium px-4 sm:px-5 py-2.5 rounded-lg shadow-sm hover:bg-red-50 transition-all duration-200">
-                                    <i class="fas fa-user mr-2"></i> Profile
-                                </a> --}}
-                            </div>
-                        </div>
-
-                        <div class="hidden lg:block relative flex-shrink-0">
-                            <img src="{{ asset('asset/img/welcome.png') }}" alt="Welcome Illustration"
-                                class="w-52 xl:w-60 opacity-90 drop-shadow-md hover:scale-105 transition-transform duration-300">
-                        </div>
-
-                        <!-- Decorative Overlays -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-white/20 to-red-100/30 pointer-events-none">
-                        </div>
-                        <div
-                            class="absolute -bottom-10 -right-10 w-32 sm:w-40 h-32 sm:h-40 bg-red-300/20 rounded-full blur-3xl">
-                        </div>
-                        <div
-                            class="absolute -top-10 -left-10 w-32 sm:w-40 h-32 sm:h-40 bg-pink-200/30 rounded-full blur-3xl">
-                        </div>
-                    </div>
-
-                    <!-- RIGHT: Short Scrollable Announcements -->
-                    <div
-                        class="lg:w-1/3 w-full bg-gradient-to-br from-rose-50 via-white to-red-50 border border-red-100 rounded-2xl shadow-md p-5 sm:p-6 flex flex-col text-center hover:shadow-lg transition-shadow duration-300">
-
-                        <!-- Header -->
-                        <div class="flex items-center justify-center gap-2 mb-3">
-                            <div
-                                class="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center bg-red-100 text-red-600 rounded-full shadow-sm">
-                                <i class="fas fa-bullhorn text-base sm:text-lg"></i>
-                            </div>
-                            <h3 class="text-base sm:text-lg font-semibold text-red-700">Announcements</h3>
-                        </div>
-
-                        <!-- Scrollable Content -->
-                        <div
-                            class="overflow-y-auto flex-1 max-h-[260px] space-y-2 pr-1 scrollbar-thin scrollbar-thumb-rose-300 scrollbar-track-rose-100 hover:scrollbar-thumb-rose-400 transition-all duration-200">
-
-                            @for ($i = 1; $i <= 10; $i++)
-                                <div
-                                    class="bg-white/80 border border-red-100 rounded-lg p-3 text-left hover:bg-rose-50 transition-all duration-200">
-                                    <h4 class="font-semibold text-red-700 text-sm mb-1">Announcement #{{ $i }}
-                                    </h4>
-                                    <p class="text-gray-700 text-sm leading-snug">
-                                        This is a sample announcement number {{ $i }} for testing shorter layout
-                                        behavior.
-                                    </p>
-                                    <span class="text-xs text-gray-400 mt-1 block">{{ $i }} hrs ago</span>
-                                </div>
-                            @endfor
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Application Overview Section -->
-        <div class="mt-10 bg-white rounded-2xl shadow-md border border-red-100 p-5 sm:p-6 lg:p-8">
-
-            <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-red-700 mb-4 flex items-center gap-2">
-                <i class="fas fa-chart-line text-red-600 text-base sm:text-xl"></i>
-                Your Application Overview
-            </h3>
-
-            <p class="text-gray-600 text-sm sm:text-base mb-6">
-                Here’s a quick snapshot of your current applications and their progress.
-            </p>
-
-            <!-- Dropdown -->
-            <div class="mb-6">
-                <label for="applicationFilter" class="block text-gray-700 font-semibold mb-2">Select Application
-                    Type:</label>
-                <select id="applicationFilter"
-                    class="w-full sm:w-64 p-2 rounded border border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                    <option value="building">Building Applications</option>
-                    <option value="zoning">Zoning Applications</option>
-                    <option value="sanitary">Sanitary Applications</option>
-                </select>
-            </div>
-
-
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="statsGrid">
-                @foreach (['total', 'approved', 'disapproved', 'resubmit'] as $status)
-                    @php
-                        switch ($status) {
-                            case 'total':
-                                $cardBg = 'bg-red-50';
-                                $iconBg = 'bg-red-100 text-red-600';
-                                $icon = 'fas fa-folder-open';
-                                $label = 'Total Applications';
-                                break;
-                            case 'approved':
-                                $cardBg = 'bg-green-50';
-                                $iconBg = 'bg-green-100 text-green-600';
-                                $icon = 'fas fa-check-circle';
-                                $label = 'Approved';
-                                break;
-                            case 'disapproved':
-                                $cardBg = 'bg-red-50';
-                                $iconBg = 'bg-red-100 text-red-600';
-                                $icon = 'fas fa-times-circle';
-                                $label = 'Disapproved';
-                                break;
-                            case 'resubmit':
-                                $cardBg = 'bg-gray-50';
-                                $iconBg = 'bg-gray-200 text-gray-600';
-                                $icon = 'fas fa-redo';
-                                $label = 'Resubmit';
-                                break;
-                        }
-                    @endphp
-
-                    <div
-                        class="flex items-center gap-4 rounded-xl p-5 shadow-sm border border-gray-100 {{ $cardBg }}">
-                        <!-- Icon -->
-                        <div class="p-3 rounded-lg {{ $iconBg }}">
-                            <i class="{{ $icon }} text-lg"></i>
-                        </div>
-
-                        <!-- Text -->
                         <div>
-                            <p class="text-sm text-gray-600 font-medium">{{ $label }}</p>
-                            <h3 class="text-xl font-semibold text-gray-900" id="{{ $status }}Count">0</h3>
+                            <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Lagonoy Building Permit System</h1>
+                            <p class="text-sm text-slate-500">Lagonoy Municipal Office</p>
                         </div>
+                    </div>
+
+                    <!-- Search Bar -->
+                    <div x-data="searchApplications()" class="relative flex-1 max-w-2xl xl:max-w-3xl">
+                        <input type="text" placeholder="Search applications by number or type..." x-model="query"
+                            @input.debounce.300ms="filterApplications"
+                            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm transition-all" />
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+
+                        <!-- Search Results Dropdown -->
+                        <div x-show="query.length > 0" x-transition
+                            class="absolute mt-2 w-full bg-white shadow-xl rounded-xl max-h-72 overflow-y-auto z-50 border border-slate-200">
+
+                            <template x-if="filtered.length === 0">
+                                <div class="text-center py-8 px-4">
+                                    <div
+                                        class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                        <i class="fas fa-folder-open text-3xl text-slate-400"></i>
+                                    </div>
+                                    <p class="text-base font-semibold text-slate-700 mb-1">No records found</p>
+                                    <p class="text-sm text-slate-500">Try adjusting your search terms</p>
+                                </div>
+                            </template>
+
+                            <template x-for="item in filtered" :key="item.id">
+                                <div class="px-4 py-3 hover:bg-blue-50 cursor-pointer transition-colors border-b border-slate-100 last:border-0"
+                                    @click="selectApplication(item)">
+                                    <p class="text-sm font-semibold text-slate-800" x-text="getApplicationTitle(item)"></p>
+                                    <p class="text-xs text-slate-500 mt-0.5" x-text="item.application_no"></p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Right Section: Notifications + Profile -->
+                    <div class="flex items-center gap-3">
+                        <!-- Notification Bell -->
+                        <div x-data="{ open: false }" class="relative">
+                            <button @click="open = !open"
+                                class="relative w-11 h-11 flex items-center justify-center bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors">
+                                <i class="fas fa-bell text-slate-600 text-lg"></i>
+                                <span
+                                    class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">3</span>
+                            </button>
+
+                            <!-- Notification Dropdown -->
+                            <div x-show="open" @click.away="open = false" x-transition
+                                class="absolute top-full right-0 mt-2 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50">
+
+                                <div class="flex justify-between items-center px-5 py-4 border-b border-slate-200">
+                                    <h3 class="text-base font-semibold text-slate-800">Notifications</h3>
+                                    <button class="text-xs text-blue-600 hover:text-blue-700 font-medium">Mark all
+                                        read</button>
+                                </div>
+
+                                <div class="max-h-96 overflow-y-auto">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <div
+                                            class="flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors border-b border-slate-100 last:border-0">
+                                            <div
+                                                class="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-xl flex-shrink-0">
+                                                <i class="fas fa-bell text-sm"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm text-slate-700 leading-relaxed">
+                                                    <span class="font-semibold">Admin</span> posted a new announcement about
+                                                    system updates.
+                                                </p>
+                                                <span class="text-xs text-slate-400 mt-1 block">5 mins ago</span>
+                                            </div>
+                                        </div>
+                                    @endfor
+                                </div>
+
+                                <div class="text-center py-3 border-t border-slate-200">
+                                    <a href="#" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View all
+                                        notifications</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Profile -->
+                        {{-- <div
+                            class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 rounded-xl px-4 py-2.5 transition-colors cursor-pointer">
+                            <div
+                                class="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-700 hidden sm:block">
+                                {{ ucwords(Auth::user()->first_name) }}
+                            </span>
+                        </div> --}}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Verification Alert -->
+            @if (Auth::check() && Auth::user()->pre_registration_status === 'pending')
+                <div
+                    class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-clock text-amber-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-amber-900 mb-1">Account Under Review</h4>
+                                <p class="text-sm text-amber-700 leading-relaxed">
+                                    Your account is being verified by the <span class="font-semibold">Office of the Building
+                                        Official (OBO)</span>. You'll be notified once approved.
+                                </p>
+                            </div>
+                        </div>
+                        <a href="#"
+                            class="inline-flex items-center justify-center bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
+                            Contact Support
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Welcome Banner -->
+            <div
+                class="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 rounded-2xl shadow-xl h-90 p-6 sm:p-8 mb-6 flex items-center overflow-hidden">
+                <!-- Decorative Background Elements -->
+                <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none"></div>
+                <div class="absolute -right-20 -top-20 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-indigo-400/20 rounded-full blur-3xl"></div>
+
+                <!-- Decorative Icons -->
+                <div class="absolute top-8 right-32 opacity-10">
+                    <i class="fas fa-compass text-white text-6xl"></i>
+                </div>
+                <div class="absolute top-30 right-12 opacity-10">
+                    <i class="fas fa-building text-white text-6xl"></i>
+                </div>
+
+                <div class="absolute bottom-8 right-64 opacity-10">
+                    <i class="fas fa-user text-white text-5xl"></i>
+                </div>
+
+                <div class="absolute bottom-20 right-30 opacity-10">
+                    <i class="fas fa-shield text-white text-5xl"></i>
+                </div>
+
+                <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8 w-full">
+                    <!-- Welcome Message with Icon -->
+                    <div class="flex-1 text-white">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div
+                                class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-xl border border-white/30">
+                                <i class="fas fa-user-circle text-3xl"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-3xl sm:text-4xl font-bold drop-shadow-lg">
+                                    Welcome back, {{ ucwords(Auth::user()->first_name) }}!
+                                </h2>
+                                <p class="text-blue-100 text-sm sm:text-base mt-1">Manage your building permits efficiently
+                                </p>
+                            </div>
+                        </div>
+                        <p class="text-blue-50 text-sm leading-relaxed max-w-2xl mb-5">
+                            Track your applications, schedule appointments, and stay updated with your building permit
+                            progress all in one place.
+                        </p>
+                        <a href="{{ route('applicant.buildingPermit') }}"
+                            class="inline-flex items-center justify-center gap-2 bg-white text-blue-700 font-semibold px-6 py-3.5 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+                            <i class="fas fa-plus-circle text-lg"></i>
+                            <span>New Application</span>
+                        </a>
+                        <a href="{{ route('applicant.calendar.schedule') }}"
+                            class="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm text-white font-semibold px-6 py-3.5 rounded-xl border border-white/30 hover:bg-white/20 transition-all duration-200">
+                            <i class="fas fa-calendar-alt text-lg"></i>
+                            <span>View Schedule</span>
+                        </a>
+                    </div>
+
+                    <!-- Quick Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                @php
+                    $quickStats = [
+                        [
+                            'icon' => 'fas fa-file-alt',
+                            'label' => 'Active Applications',
+                            'value' => $activeApplications,
+                            'color' => 'blue',
+                        ],
+                        [
+                            'icon' => 'fas fa-check-circle',
+                            'label' => 'Approved This Month',
+                            'value' => $approvedThisMonth,
+                            'color' => 'green',
+                        ],
+                        [
+                            'icon' => 'fas fa-calendar-check',
+                            'label' => 'Upcoming Appointments',
+                            'value' => '3',
+                            'color' => 'purple',
+                        ],
+                        [
+                            'icon' => 'fas fa-clock',
+                            'label' => 'Pending Reviews',
+                            'value' => $pendingReviews,
+                            'color' => 'amber',
+                        ],
+                    ];
+                @endphp
+
+                @foreach ($quickStats as $stat)
+                    <div class="bg-white border border-slate-200 rounded-xl p-5 hover:shadow-md transition-all group">
+                        <div class="flex items-center justify-between mb-3">
+                            <div
+                                class="w-12 h-12 bg-{{ $stat['color'] }}-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="{{ $stat['icon'] }} text-{{ $stat['color'] }}-600 text-xl"></i>
+                            </div>
+                            <i
+                                class="fas fa-arrow-right text-slate-300 group-hover:text-{{ $stat['color'] }}-600 transition-colors"></i>
+                        </div>
+                        <h3 class="text-3xl font-bold text-slate-900 mb-1">{{ $stat['value'] }}</h3>
+                        <p class="text-sm font-medium text-slate-600">{{ $stat['label'] }}</p>
                     </div>
                 @endforeach
             </div>
 
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
+                <!-- Header -->
+                <div class="px-6 py-4 border-b border-slate-200">
+                    <h3 class="text-lg font-bold text-blue-700">Recent Applications</h3>
+                </div>
+
+                <div class="p-6">
+
+                    @php
+                        $statusConfig = [
+                            'submitted' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-700', 'label' => 'Submitted'],
+                            'under_review' => [
+                                'bg' => 'bg-blue-50',
+                                'text' => 'text-blue-700',
+                                'label' => 'Under Review',
+                            ],
+                            'approved' => ['bg' => 'bg-green-50', 'text' => 'text-green-700', 'label' => 'Approved'],
+                            'disapproved' => ['bg' => 'bg-red-50', 'text' => 'text-red-700', 'label' => 'Disapproved'],
+                            'resubmit' => ['bg' => 'bg-amber-50', 'text' => 'text-amber-700', 'label' => 'Resubmit'],
+                        ];
+                    @endphp
+
+                    <!-- ================= DESKTOP / TABLET TABLE ================= -->
+                    <div class="hidden md:block overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="border-b-2 border-slate-200">
+                                <tr>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Application No.</th>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Project Type</th>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Date Submitted</th>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Status</th>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="divide-y divide-slate-100 text-center">
+                                @foreach ($applications as $application)
+                                    @php
+                                        $status = $statusConfig[$application->status] ?? [
+                                            'bg' => 'bg-gray-100',
+                                            'text' => 'text-gray-700',
+                                            'label' => ucfirst($application->status),
+                                        ];
+                                    @endphp
+
+                                    <tr class="hover:bg-slate-50 transition">
+                                        <td class="px-6 py-4 text-sm font-medium text-slate-900">
+                                            {{ $application->application_no }}
+                                        </td>
+
+                                        <td class="px-6 py-4 text-sm text-slate-700">
+                                            {{ ucfirst($application->type_of_application ?? 'New Construction') }}
+                                        </td>
+
+                                        <td class="px-6 py-4 text-sm text-slate-700">
+                                            {{ $application->created_at->format('M d, Y') }}
+                                        </td>
+
+                                        <td class="px-6 py-4">
+                                            <span
+                                                class="inline-flex px-3 py-1 rounded-md text-sm font-medium {{ $status['bg'] }} {{ $status['text'] }}">
+                                                {{ $status['label'] }}
+                                            </span>
+                                        </td>
+
+                                        <td class="px-6 py-4 text-center">
+                                            <a href="{{ route('applicant.obo.building_application_view', $application->id) }}"
+                                                class="inline-flex items-center px-4 py-2 rounded-lg text-white text-sm font-semibold
+                                   {{ $application->status === 'approved' ? 'bg-blue-700 hover:bg-blue-800' : 'bg-red-600 hover:bg-red-700' }}">
+                                                {{ $application->status === 'approved' ? 'Download' : 'View' }}
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- ================= MOBILE CARD VIEW ================= -->
+                    <div class="space-y-4 md:hidden">
+                        @foreach ($applications as $application)
+                            @php
+                                $status = $statusConfig[$application->status] ?? [
+                                    'bg' => 'bg-gray-100',
+                                    'text' => 'text-gray-700',
+                                    'label' => ucfirst($application->status),
+                                ];
+                            @endphp
+
+                            <div class="border border-slate-200 rounded-lg p-4 shadow-sm">
+
+                                <div class="flex justify-between items-center mb-3">
+                                    <span class="font-semibold text-slate-900">
+                                        {{ $application->application_no }}
+                                    </span>
+
+                                    <span class="text-xs px-2 py-1 rounded {{ $status['bg'] }} {{ $status['text'] }}">
+                                        {{ $status['label'] }}
+                                    </span>
+                                </div>
+
+                                <div class="text-sm text-slate-700 space-y-1">
+                                    <p><span class="font-medium">Project:</span>
+                                        {{ ucfirst($application->type_of_application ?? 'New Construction') }}
+                                    </p>
+                                    <p><span class="font-medium">Date:</span>
+                                        {{ $application->created_at->format('M d, Y') }}
+                                    </p>
+                                </div>
+
+                                <div class="mt-4">
+                                    <a href="{{ route('applicant.obo.building_application_view', $application->id) }}"
+                                        class="w-full inline-flex justify-center items-center px-4 py-2 rounded-lg text-white text-sm font-semibold
+                           {{ $application->status === 'approved' ? 'bg-blue-700 hover:bg-blue-800' : 'bg-red-600 hover:bg-red-700' }}">
+                                        {{ $application->status === 'approved' ? 'Download Permit' : 'View Application' }}
+                                    </a>
+                                </div>
+
+                            </div>
+                        @endforeach
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- DataTables CSS -->
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+            <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.tailwindcss.min.css">
+
+            <!-- jQuery (required for DataTables) -->
+            <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+            <!-- DataTables JS -->
+            <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/1.13.7/js/dataTables.tailwindcss.min.js"></script>
+
+            <!-- Custom DataTables Styling -->
+            <style>
+                /* Custom DataTables styling to match design */
+                #applicationsTable_wrapper .dataTables_length,
+                #applicationsTable_wrapper .dataTables_filter,
+                #applicationsTable_wrapper .dataTables_info,
+                #applicationsTable_wrapper .dataTables_paginate {
+                    padding: 0.75rem 0;
+                }
+
+                #applicationsTable_wrapper .dataTables_filter input {
+                    border: 1px solid #e2e8f0;
+                    border-radius: 0.5rem;
+                    padding: 0.5rem 1rem;
+                    margin-left: 0.5rem;
+                    outline: none;
+                    transition: all 0.2s;
+                }
+
+                #applicationsTable_wrapper .dataTables_filter input:focus {
+                    border-color: #3b82f6;
+                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+                }
+
+                #applicationsTable_wrapper .dataTables_length select {
+                    border: 1px solid #e2e8f0;
+                    border-radius: 0.5rem;
+                    padding: 0.375rem 2rem 0.375rem 0.75rem;
+                    margin: 0 0.5rem;
+                    outline: none;
+                }
+
+                #applicationsTable_wrapper .dataTables_paginate .paginate_button {
+                    padding: 0.375rem 0.75rem;
+                    margin: 0 0.125rem;
+                    border-radius: 0.375rem;
+                    border: 1px solid #e2e8f0;
+                    background: white;
+                    color: #475569;
+                    transition: all 0.2s;
+                }
+
+                #applicationsTable_wrapper .dataTables_paginate .paginate_button:hover {
+                    background: #f1f5f9;
+                    border-color: #cbd5e1;
+                    color: #1e293b;
+                }
+
+                #applicationsTable_wrapper .dataTables_paginate .paginate_button.current {
+                    background: #1d4ed8;
+                    border-color: #1d4ed8;
+                    color: white;
+                }
+
+                #applicationsTable_wrapper .dataTables_paginate .paginate_button.current:hover {
+                    background: #1e40af;
+                    border-color: #1e40af;
+                    color: white;
+                }
+
+                #applicationsTable_wrapper .dataTables_paginate .paginate_button.disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+
+                /* Remove default DataTables sorting icons */
+                table.dataTable thead th {
+                    position: relative;
+                }
+
+                table.dataTable thead .sorting:before,
+                table.dataTable thead .sorting_asc:before,
+                table.dataTable thead .sorting_desc:before,
+                table.dataTable thead .sorting:after,
+                table.dataTable thead .sorting_asc:after,
+                table.dataTable thead .sorting_desc:after {
+                    opacity: 0.3;
+                    font-size: 0.75rem;
+                }
+            </style>
+
+            <script>
+                $(document).ready(function() {
+                    var table = $('#applicationsTable').DataTable({
+                        responsive: true,
+                        pageLength: 15,
+                        order: [
+                            [2, 'desc']
+                        ], // Sort by date submitted (newest first)
+                        searching: false, // Disable search box
+                        lengthChange: false, // Disable show entries dropdown
+                        info: false, // Disable info display
+                        language: {
+                            emptyTable: "No applications available",
+                            zeroRecords: "No matching applications found",
+                            paginate: {
+                                first: "First",
+                                last: "Last",
+                                next: "Next",
+                                previous: "Previous"
+                            }
+                        },
+                        columnDefs: [{
+                            targets: 4, // Action column
+                            orderable: false,
+                            searchable: false
+                        }],
+                        drawCallback: function(settings) {
+                            var api = this.api();
+                            var pagination = $(this).closest('.dataTables_wrapper').find(
+                                '.dataTables_paginate');
+
+                            // Hide pagination if total records are less than page length (15)
+                            if (api.page.info().recordsTotal <= 15) {
+                                pagination.hide();
+                            } else {
+                                pagination.show();
+                            }
+                        }
+                    });
+                });
+            </script>
 
         </div>
     </div>
+
     <script>
         function searchApplications() {
             return {
@@ -321,65 +521,43 @@
                 filtered: [],
                 getApplicationTitle(item) {
                     if (item.application_no.startsWith('APPB')) {
-                        return 'Building Permit Applications';
-                    } else if (item.application_no.startsWith('APP')) {
-                        return 'Zoning Applications';
-                    } else if (item.application_no.startsWith('APP')) {
-                        return 'Sanitary Applications';
-                    } else {
-                        return item.title; // Default title if no prefix matches
+                        return 'Building Permit Application';
+                    } else if (item.application_no.startsWith('ZN')) {
+                        return 'Zoning Application';
+                    } else if (item.application_no.startsWith('SNT')) {
+                        return 'Sanitary Application';
                     }
+                    return item.title || 'Application';
                 },
-                // This function filters applications based on the query
                 async filterApplications() {
                     if (this.query.length < 1) {
-                        this.filtered = []; // Clear filtered list if query is empty
+                        this.filtered = [];
                         return;
                     }
-
                     try {
-                        // API request to fetch the filtered applications based on the query
                         const res = await fetch(`/search-applications?query=${this.query}`);
                         const data = await res.json();
-
-                        // Update the filtered list with the response data
                         this.filtered = data;
-
-                        // Handle the case where no results are found (empty list)
-                        if (data.length === 0) {
-                            this.filtered = []; // You can also set a flag to show "No record found" text
-                        }
                     } catch (error) {
                         console.error('Search error:', error);
-                        this.filtered = []; // Clear filtered results in case of an error
+                        this.filtered = [];
                     }
                 },
-
-                // This function handles the selection of an application
                 selectApplication(item) {
-                    // Example condition based on application_no prefix
                     if (item.application_no.startsWith('APPB')) {
-                        // Redirect to Building Permit application details page
                         window.location.href = `/applicant/building_permit/view_application/${item.id}`;
                     } else if (item.application_no.startsWith('ZN')) {
-                        // Redirect to Zoning application details page
                         window.location.href = `/applicant/zoning/view_application/${item.id}`;
                     } else if (item.application_no.startsWith('SNT')) {
-                        // Redirect to Sanitary application details page
                         window.location.href = `/applicant/sanitary/view_application/${item.id}`;
                     } else {
-                        // Default redirect (for other types)
                         window.location.href = `/applications/${item.id}`;
                     }
                 }
-
             };
         }
-    </script>
-    <script>
-        const filterSelect = document.getElementById('applicationFilter');
 
-        // Summaries from PHP passed to JS
+        const filterSelect = document.getElementById('applicationFilter');
         const summaries = @json($summaries);
 
         const updateCards = (type) => {
@@ -389,9 +567,7 @@
             document.getElementById('disapprovedCount').innerText = summaries[type]['disapproved'];
         };
 
-        // Set initial view
         updateCards(filterSelect.value);
-
         filterSelect.addEventListener('change', function() {
             updateCards(this.value);
         });

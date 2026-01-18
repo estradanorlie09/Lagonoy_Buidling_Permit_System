@@ -1,13 +1,13 @@
 <div x-show="currentTab === 3" class="space-y-8">
 
     <!-- Section Header -->
-    <div class="bg-red-50 border border-red-100 rounded-lg p-6 shadow-sm">
+    <div class="bg-blue-50 border border-blue-100 rounded-lg p-6 shadow-sm">
         <div class="flex items-center gap-3 mb-2">
-            <i class="fa-solid fa-file-circle-check text-red-600 text-2xl"></i>
-            <h1 class="text-2xl font-bold text-red-700">Attached Requirements</h1>
+            <i class="fa-solid fa-file-circle-check text-blue-600 text-2xl"></i>
+            <h1 class="text-2xl font-bold text-blue-700">Attached Requirements</h1>
         </div>
         <p class="text-gray-700">
-            Please upload all required documents below. Make sure each file is clear, signed, and sealed by licensed
+            Please upload all requiblue documents below. Make sure each file is clear, signed, and sealed by licensed
             professionals.
             Accepted formats: <strong>PDF, JPG, PNG</strong> (max 5MB each).
         </p>
@@ -16,7 +16,7 @@
     <!-- Table -->
     <div class="overflow-x-auto">
         <table class="min-w-full border border-gray-200 text-sm">
-            <thead class="bg-red-100 text-red-700">
+            <thead class="bg-blue-100 text-blue-700">
                 <tr>
                     <th class="py-3 px-4 text-left w-1/12">#</th>
                     <th class="py-3 px-4 text-left">Document Type</th>
@@ -27,8 +27,8 @@
             <tbody class="divide-y divide-gray-200">
 
                 <!-- TECHNICAL DOCUMENTS -->
-                <tr class="bg-red-50 font-semibold">
-                    <td colspan="4" class="py-2 px-4 text-red-700">I. Technical Documents</td>
+                <tr class="bg-blue-50 font-semibold">
+                    <td colspan="4" class="py-2 px-4 text-blue-700">I. Technical Documents</td>
                 </tr>
 
                 @php
@@ -59,16 +59,16 @@
                     <tr>
                         <td class="py-2 px-4 text-gray-600">{{ $loop->iteration }}</td>
                         <td class="py-2 px-4 flex items-center gap-2">
-                            <i class="fa-solid fa-file-contract text-red-500"></i> {{ $doc['label'] }}
-                            <span class="text-red-500">*</span>
+                            <i class="fa-solid fa-file-contract text-blue-500"></i> {{ $doc['label'] }}
+                            <span class="text-blue-500">*</span>
                         </td>
                         <td class="py-2 px-4">
                             <input type="file" id="documents-{{ $doc['id'] }}" class="hidden"
                                 name="documents[{{ $doc['name'] }}]" multiple
                                 onchange="handleFiles(this, 'file-info-{{ $doc['id'] }}','{{ $doc['name'] }}')" />
                             <label for="documents-{{ $doc['id'] }}"
-                                class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                                <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fa-solid fa-upload text-blue-500"></i> Upload
                             </label>
                         </td>
                         <td class="py-2 px-4 text-gray-600">
@@ -78,8 +78,8 @@
                 @endforeach
 
                 <!-- PROOF OF OWNERSHIP -->
-                <tr class="bg-red-50 font-semibold">
-                    <td colspan="4" class="py-2 px-4 text-red-700">II. Proof of Ownership</td>
+                <tr class="bg-blue-50 font-semibold">
+                    <td colspan="4" class="py-2 px-4 text-blue-700">II. Proof of Ownership</td>
                 </tr>
 
                 @php
@@ -97,7 +97,7 @@
                         ],
                         [
                             'id' => 12,
-                            'label' => 'Authorization / SPA (if applicant is not registered owner)',
+                            'label' => 'Authorization / SPA (if applicant is not registeblue owner)',
                             'name' => 'SPA',
                         ],
                     ];
@@ -107,16 +107,16 @@
                     <tr>
                         <td class="py-2 px-4 text-gray-600">{{ $loop->iteration + 7 }}</td>
                         <td class="py-2 px-4 flex items-center gap-2">
-                            <i class="fa-solid fa-file-signature text-red-500"></i> {{ $doc['label'] }}
-                            <span class="text-red-500">*</span>
+                            <i class="fa-solid fa-file-signature text-blue-500"></i> {{ $doc['label'] }}
+                            <span class="text-blue-500">*</span>
                         </td>
                         <td class="py-2 px-4">
                             <input type="file" id="documents-{{ $doc['id'] }}" class="hidden"
                                 name="documents[{{ $doc['name'] }}]" multiple
                                 onchange="handleFiles(this, 'file-info-{{ $doc['id'] }}','{{ $doc['name'] }}')" />
                             <label for="documents-{{ $doc['id'] }}"
-                                class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                                <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fa-solid fa-upload text-blue-500"></i> Upload
                             </label>
                         </td>
                         <td class="py-2 px-4 text-gray-600">
@@ -126,8 +126,8 @@
                 @endforeach
 
                 <!-- WRITTEN CLEARANCES -->
-                <tr class="bg-red-50 font-semibold">
-                    <td colspan="4" class="py-2 px-4 text-red-700">III. Written Clearances / Certifications</td>
+                <tr class="bg-blue-50 font-semibold">
+                    <td colspan="4" class="py-2 px-4 text-blue-700">III. Written Clearances / Certifications</td>
                 </tr>
 
                 @php
@@ -139,7 +139,7 @@
                             'label' => 'Environmental Clearance / DENR (if applicable)',
                             'name' => 'Environmental_clearance',
                         ],
-                        ['id' => 16, 'label' => 'Other Clearances (DOH, DPWH, etc.) as required', 'name' => 'optional'],
+                        ['id' => 16, 'label' => 'Other Clearances (DOH, DPWH, etc.) as requiblue', 'name' => 'optional'],
                     ];
                 @endphp
 
@@ -147,16 +147,16 @@
                     <tr>
                         <td class="py-2 px-4 text-gray-600">{{ $loop->iteration + 11 }}</td>
                         <td class="py-2 px-4 flex items-center gap-2">
-                            <i class="fa-solid fa-file-shield text-red-500"></i> {{ $doc['label'] }}
-                            <span class="text-red-500">*</span>
+                            <i class="fa-solid fa-file-shield text-blue-500"></i> {{ $doc['label'] }}
+                            <span class="text-blue-500">*</span>
                         </td>
                         <td class="py-2 px-4">
                             <input type="file" id="documents-{{ $doc['id'] }}" class="hidden"
                                 name="documents[{{ $doc['name'] }}]" multiple
                                 onchange="handleFiles(this, 'file-info-{{ $doc['id'] }}','{{ $doc['name'] }}')" />
                             <label for="documents-{{ $doc['id'] }}"
-                                class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-red-50 hover:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-500">
-                                <i class="fa-solid fa-upload text-red-500"></i> Upload
+                                class="cursor-pointer inline-flex items-center gap-2 rounded border border-gray-300 bg-white px-3 py-2 hover:bg-blue-50 hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <i class="fa-solid fa-upload text-blue-500"></i> Upload
                             </label>
                         </td>
                         <td class="py-2 px-4 text-gray-600">

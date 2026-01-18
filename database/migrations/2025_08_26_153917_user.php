@@ -37,6 +37,15 @@ return new class extends Migration
             $table->string('street')->nullable();
             $table->enum('role', ['applicant', 'admin', 'obo', 'zoning_officer', 'sanitary_officer', 'do', 'bfp', 'professional'])->default('applicant');
             $table->rememberToken();
+
+            // Pre-registration & Verification
+            $table->string('tin_number')->nullable()->unique(); // TIN for verification
+            $table->string('tax_declaration_no')->nullable()->unique();
+            $table->string('gov_id_file')->nullable(); // store file path
+            $table->string('tax_declaration_file')->nullable(); // store file path
+            $table->enum('pre_registration_status', ['pending', 'approved', 'rejected'])->default('pending'); // OBO approval
+            $table->text('pre_registration_notes')->nullable(); // remarks from OBO
+            $table->string('email_verification_code')->nullable(); // store 6-digit code
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamps(); // created_at and updated_at
         });

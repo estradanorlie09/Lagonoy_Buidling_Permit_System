@@ -1,6 +1,6 @@
 @extends('layout.applicant.app')
 
-@section('title', 'Zoning Applications Management')
+@section('title', 'Building Application Records')
 
 @section('content')
     <div class="bg-white max-w-10xl mx-auto px-6 py-8">
@@ -16,7 +16,7 @@
                         <i class="fas fa-building text-red-600 text-2xl"></i>
                     </div>
                     <h2 class="text-2xl md:text-3xl font-extrabold text-red-800 tracking-tight">
-                        Building Application Records
+                        Building Application Records 
                     </h2>
                 </div>
                 <p class="text-gray-700 text-sm md:text-base max-w-xl leading-relaxed">
@@ -297,7 +297,7 @@
                                         </form>
 
                                         <!-- Disapprove -->
-                                        <form action="{{ route('zoning_officer.zoning.disapprove', $application->id) }}"
+                                        {{-- <form action="{{ route('zoning_officer.zoning.disapprove', $application->id) }}"
                                             method="POST" class="inline">
                                             @csrf
                                             <button type="button"
@@ -327,7 +327,7 @@
                                                 Resubmit
                                                 <div class="tooltip-arrow" data-popper-arrow></div>
                                             </div>
-                                        </form>
+                                        </form> --}}
                                     @endif
                                 </td>
 

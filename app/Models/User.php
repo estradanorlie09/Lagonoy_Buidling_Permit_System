@@ -25,7 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected $keyType = 'string';
 
-    protected $fillable = ['id', 'profession', 'first_name', 'middle_name', 'last_name', 'gender', 'suffix', 'birth_date', 'email', 'password', 'phone', 'street', 'province', 'municipality', 'barangay', 'role'];
+    protected $fillable = ['id', 'profession', 'first_name', 'middle_name', 'last_name', 'gender', 'suffix', 'birth_date', 'email', 'password', 'phone', 'street', 'province', 'municipality', 'barangay', 'role', 'tin_number', 'tax_declaration_no', 'gov_id_file', 'tax_declaration_file', 'pre_registration_status', 'pre_registration_notes', 'email_verification_code'];
 
     /**
      * The attributes that should be hidden for serialization.

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ApplicationRemark;
 use App\Models\BuildingApplication;
 use App\Models\BuildingDocument;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,11 +14,48 @@ use Illuminate\Support\Str;
 
 class OboOfficialController extends Controller
 {
+    public function login()
+    {
+        return view('obo.auth.login');
+    }
+
     public function BuildingApplicationRecord()
     {
         $applications = BuildingApplication::all();
 
         return view('obo.building_application', compact('applications'));
+    }
+
+    public function BuildingApplicantRecord()
+    {
+        $records = User::where('role', 'applicant')->get();
+
+        $approvedCount = User::where('role', 'applicant')
+            ->where('pre_registration_status', 'approved')
+            ->count();
+
+        $pendingCount = User::where('role', 'applicant')
+            ->where('pre_registration_status', 'pending')
+            ->count();
+
+        $rejectedCount = User::where('role', 'applicant')
+            ->where('pre_registration_status', 'rejected')
+            ->count();
+
+        return view('obo.applicant_record', compact(
+            'records',
+            'approvedCount',
+            'pendingCount',
+            'rejectedCount'
+        ));
+    }
+
+    public function show_applicant_record($id)
+    {
+
+        $applicant = user::where('id', $id)->firstOrFail();
+
+        return view('obo.obo.view_applicant_records', compact('applicant'));
     }
 
     public function show($id)
@@ -169,4 +207,6 @@ class OboOfficialController extends Controller
             return back()->with('error', 'Something went wrong while reviewing documents.');
         }
     }
+
+
 }

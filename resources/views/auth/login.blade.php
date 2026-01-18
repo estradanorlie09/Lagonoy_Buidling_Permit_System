@@ -1,11 +1,11 @@
 @include('partials._header')
 @include('components.landing_page_navbar')
-<div class="fixed inset-0 bg-gray-900 opacity-10 z-0"></div>
+{{-- <div class="fixed inset-0 bg-gray-900 opacity-10 z-0"></div> --}}
 
 {{-- login form --}}
 <div class="flex flex-col md:flex-row justify-center items-center w-full min-h-screen p-4 rounded">
 
-    <div class="w-full md:w-1/3 bg-white shadow-md p-6 z-50" style="height: 650px;">
+    <div class="w-full md:w-1/3 bg-white shadow-md p-6 z-50" style="height: 550px;">
         <form action="{{ route('login.submit') }}" method="POST">
             @csrf
             <div class="flex justify-center mb-4">
@@ -17,12 +17,12 @@
 
                 <img class="w-15 h-15" src="{{ asset('asset/icon/images.ico') }}" alt="logo">
             </div>
-            <h1 class="text-2xl font-bold mb-4 text-center">Lagonoy Permit Management System</h1>
-            <p class="text-gray-700 text-sm text-center">Please login your account</p>
+            <h1 class="text-2xl font-extrabold mb-2 text-center text-blue-900">Applicant Portal Login</h1>
+            <p class="text-gray-700 text-sm text-center">Access your building permit applications</p>
 
-            <div class="mt-10">
+            <div class="mt-10" hidden>
                 <label for="#" class="#">Role</label><br />
-                <select name="role" id="role"
+                {{-- <select name="role" id="role"
                     class="w-full border border-gray-300 rounded mt-2 px-3 py-3 focus:outline-none focus:ring-1 focus:ring-red-500">
 
                     <option value="">-- Please choose an option --</option>
@@ -42,15 +42,16 @@
                 </select>
                 @error('role')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                @enderror
+                @enderror --}}
+                <input type="text" name="role" value="applicant">
 
             </div>
-            <div class="mt-3">
-                <label for="email" class="text-gray-600">Email</label><br>
+            <div class="mt-8">
+                <label for="email" class="text-gray-900 font-extrabold text-sm">Email Address</label><br>
                 <div class="relative">
                     <input type="text" id="email" name="email" placeholder="Email" value="{{ old('email') }}"
-                        class=" p-2 border border-gray-300 w-full  text-gray-500 font-normal focus:outline-none focus:ring-1 focus:ring-red-500">
-                    <i class="fa-solid fa-user fa-sm mt-5 absolute top-0 right-0 mr-3 text-gray-400 cursor-pointer"
+                        class=" mt-2 p-2 border border-gray-300 w-full rounded-sm  text-gray-500 font-normal focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <i class="fa-solid fa-user fa-sm mt-7 absolute top-0 right-0 mr-3 text-gray-400 cursor-pointer"
                         id="email"></i>
                 </div>
                 @error('email')
@@ -58,25 +59,25 @@
                 @enderror
             </div>
             <div class="mt-3">
-                <label for="password" class="text-gray-600">Password</label><br>
+                <label for="password" class="text-gray-900 font-extrabold text-sm">Password</label><br>
                 <div class="relative">
                     <input type="password" id="password" name="password" placeholder="Password"
                         value="{{ old('password') }}"
-                        class=" p-2 border border-gray-300 w-full  text-gray-500 font-normal focus:outline-none focus:ring-1 focus:ring-red-500">
-                    <i class="fa-solid fa-eye-slash fa-sm mt-5 absolute top-0 right-0 mr-3 text-gray-400 cursor-pointer"
+                        class=" mt-2 p-2 border border-gray-300 w-full rounded-sm  text-gray-500 font-normal focus:outline-none focus:ring-1 focus:ring-blue-500">
+                    <i class="fa-solid fa-eye-slash fa-sm mt-7 absolute top-0 right-0 mr-3 text-gray-400 cursor-pointer"
                         id="togglePassword"></i>
                 </div>
                 @error('password')
                     <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                 @enderror
             </div>
-            <div class="flex justify-end mt-2">
-                <a href="{{ route('password.email') }}" class="text-gray-400">Forget password?</a>
+            <div class="flex justify-end mt-4">
+                <a href="{{ route('password.email') }}" class="text-gray-400 text-sm ">Forget password?</a>
             </div>
 
             {{-- button login/signup --}}
             <div>
-                <button type="submit" class="w-full mt-5 bg-red-600 text-white p-3">login</button>
+                <button type="submit" class="w-full mt-5 bg-red-600 text-white p-2 rounded-sm">login</button>
                 <div class="flex justify-center items-center">
                     <div class="w-1/2  border border-gray-300 bg-gray-300"></div>
                     <span class="p-2 text-gray-400">Or</span>
@@ -85,7 +86,7 @@
                 {{-- <button class="w-full mt-1 bg-gray-600 text-white p-3">SignUp</button> --}}
                 <div class="flex flex-row justify-center gap-1">
                     <span>Don't have an account?</span>
-                    <a href="{{ route('signup') }}" class="text-red-500">SignUp</a>
+                    <a href="{{ route('signup') }}" class="text-blue-900 font-extrabold">Register Here</a>
                 </div>
 
             </div>

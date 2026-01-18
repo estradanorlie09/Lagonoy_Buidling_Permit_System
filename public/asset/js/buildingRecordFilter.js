@@ -1,19 +1,28 @@
 $(document).ready(function () {
-    let table = $("#example").DataTable({
+    let table = $("#applicantTable").DataTable({
         dom: "<'hidden'f>rt<'flex flex-col sm:flex-row justify-between items-center mt-4 gap-3'<'w-full sm:w-1/2'i><'w-full sm:w-1/2'p>>",
         language: {
             search: "",
             lengthMenu: "Show _MENU_ entries",
             emptyTable: "🚫 No applications found.",
         },
+        columnDefs: [
+            {
+                targets: 0, // Row number column
+                orderable: false,
+                searchable: false,
+            },
+        ],
+        order: [[1, "asc"]], // Order by Full Name
     });
 
+    // Search functionality
     $("#customSearch").on("input", function () {
+        // alert(2);
         table.search(this.value).draw();
     });
 
     let selectedStatus = "all";
-    let selectedDate = "all";
 
     // When status dropdown changes
     $("#statusFilter").on("change", function () {
@@ -21,47 +30,26 @@ $(document).ready(function () {
         table.draw();
     });
 
-    // When date dropdown changes
-    $("#dateFilter").on("change", function () {
-        selectedDate = $(this).val();
-        table.draw();
-    });
-
-    // No color update functions needed anymore
-
+    // Custom filtering function
     $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-        let statusCell = data[5];
-        let dateStr = data[2];
+        let statusCell = data[4]; // Status column (index 4)
 
-        // Normalize status text
-        let statusText = statusCell.trim().toLowerCase().replace(/\s+/g, "_");
+        // Normalize status text - extract only the status word
+        let statusText = statusCell.trim().toLowerCase();
+        let statusValue = "";
 
-        let filterStatus = selectedStatus.toLowerCase().trim();
-
-        let recordDate = moment(dateStr, "MMM DD, YYYY");
-
-        let statusPass =
-            selectedStatus === "all" || statusText === selectedStatus;
-
-        // DATE filter
-        let datePass = true;
-        let today = moment();
-        if (selectedDate === "today") {
-            datePass = recordDate.isSame(today, "day");
-        } else if (selectedDate === "last_week") {
-            datePass = recordDate.isBetween(
-                today.clone().subtract(7, "days"),
-                today,
-                "day",
-                "[]"
-            );
-        } else if (selectedDate === "last_month") {
-            datePass = recordDate.isSame(
-                today.clone().subtract(1, "month"),
-                "month"
-            );
+        if (statusText.includes("approved")) {
+            statusValue = "approved";
+        } else if (statusText.includes("pending")) {
+            statusValue = "pending";
+        } else if (statusText.includes("rejected")) {
+            statusValue = "rejected";
         }
 
-        return statusPass && datePass;
+        // Check if status matches filter
+        let filterStatus = selectedStatus.toLowerCase().trim();
+        let statusPass = selectedStatus === "" || filterStatus === statusValue;
+
+        return statusPass;
     });
 });
