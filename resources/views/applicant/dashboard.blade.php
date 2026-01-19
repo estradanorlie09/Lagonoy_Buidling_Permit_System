@@ -118,6 +118,7 @@
 
             <!-- Verification Alert -->
             @if (Auth::check() && Auth::user()->pre_registration_status === 'pending')
+                <!-- PENDING BANNER -->
                 <div
                     class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-6 shadow-sm">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -139,6 +140,380 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- PENDING MODAL -->
+                @if (session('show_pending_modal'))
+                    <div x-data="{ open: !localStorage.getItem('pending_modal_dismissed') }" x-show="open" x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="fixed inset-0 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                            class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+
+                            <!-- Loading Animation SVG -->
+                            <div class="flex justify-center mb-6">
+                                <div class="relative w-32 h-32">
+                                    <!-- Outer circle with spinning animation -->
+                                    <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+                                        style="animation: spin 3s linear infinite;">
+                                        <!-- Face background -->
+                                        <circle cx="50" cy="50" r="45" fill="#FEF3C7" stroke="#F59E0B"
+                                            stroke-width="2" />
+
+                                        <!-- Left eye -->
+                                        <circle cx="35" cy="40" r="6" fill="#F59E0B" />
+                                        <circle cx="35" cy="40" r="3" fill="white" opacity="0.6" />
+
+                                        <!-- Right eye -->
+                                        <circle cx="65" cy="40" r="6" fill="#F59E0B" />
+                                        <circle cx="65" cy="40" r="3" fill="white" opacity="0.6" />
+
+                                        <!-- Neutral mouth -->
+                                        <path d="M 35 65 L 65 65" stroke="#F59E0B" stroke-width="2.5" fill="none"
+                                            stroke-linecap="round" />
+                                    </svg>
+
+                                    <!-- Animated clock overlay -->
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <i class="fa-solid fa-hourglass-half text-amber-600 text-5xl"
+                                            style="animation: bounce 2s infinite;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Header -->
+                            <div class="text-center mb-4">
+                                <h2 class="text-2xl font-bold text-amber-600 mb-2">
+                                    Account Under Review
+                                </h2>
+                                <p class="text-sm text-gray-500">Your application is being processed.</p>
+                            </div>
+
+                            <!-- Info Message -->
+                            <div class="bg-amber-50 border-l-4 border-amber-600 rounded-lg p-4 mb-6">
+                                <p class="text-sm text-gray-600 mb-2 font-semibold">What's Next:</p>
+                                <p class="text-gray-800 font-medium leading-relaxed">
+                                    Your account is being verified by the Office of the Building Official (OBO). This
+                                    process typically takes 3-5 business days. We'll send you an email notification once
+                                    your account has been reviewed.
+                                </p>
+                            </div>
+
+                            <!-- Info Message -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
+                                <p class="text-xs text-blue-800">
+                                    <i class="fa-solid fa-info-circle mr-2"></i>
+                                    Need help? Contact our support team for more information.
+                                </p>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex flex-col gap-3 justify-center sm:justify-end">
+                                <div class="flex gap-3">
+                                    <button @click="open = false"
+                                        class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 
+                        font-semibold text-sm transition-all duration-200">
+                                        Close
+                                    </button>
+                                    <a href="#"
+                                        class="px-5 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 
+                        font-semibold text-sm transition-all duration-200 inline-flex items-center gap-2">
+                                        <i class="fa-solid fa-headset"></i> Contact Support
+                                    </a>
+                                </div>
+                                <label
+                                    class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer hover:text-gray-800">
+                                    <input type="checkbox"
+                                        @change="localStorage.setItem('pending_modal_dismissed', $el.checked)"
+                                        class="rounded">
+                                    <span>Don't show this again</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        @keyframes spin {
+                            0% {
+                                transform: rotate(0deg);
+                            }
+
+                            100% {
+                                transform: rotate(360deg);
+                            }
+                        }
+
+                        @keyframes bounce {
+
+                            0%,
+                            100% {
+                                transform: translateY(0);
+                            }
+
+                            50% {
+                                transform: translateY(-10px);
+                            }
+                        }
+                    </style>
+                @endif
+            @elseif (Auth::check() && Auth::user()->pre_registration_status === 'rejected')
+                <!-- REJECTED BANNER -->
+                <div class="bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-5 mb-6 shadow-sm">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-red-900 mb-1">Application Rejected</h4>
+                                <p class="text-sm text-red-700 leading-relaxed">
+                                    Your application was rejected. <span class="font-semibold">Reason:</span>
+                                    <span
+                                        class="block mt-1">{{ Auth::user()->rejection_reason ?? 'No reason provided' }}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <a href="#"
+                            class="inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
+                            Resubmit Application
+                        </a>
+                    </div>
+                </div>
+
+                <!-- REJECTED MODAL -->
+                @if (session('show_rejected_modal'))
+                    <div x-data="{ open: !localStorage.getItem('rejected_modal_dismissed') }" x-show="open" x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="fixed inset-0 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                            class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+
+                            <!-- Sad Animation SVG -->
+                            <div class="flex justify-center mb-6">
+                                <div class="relative w-32 h-32">
+                                    <!-- Outer circle -->
+                                    <svg class="w-full h-full animate-pulse" viewBox="0 0 100 100"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Face background -->
+                                        <circle cx="50" cy="50" r="45" fill="#FEE2E2" stroke="#DC2626"
+                                            stroke-width="2" />
+
+                                        <!-- Left eye -->
+                                        <circle cx="35" cy="40" r="6" fill="#DC2626" />
+                                        <circle cx="35" cy="40" r="3" fill="white" opacity="0.6" />
+
+                                        <!-- Right eye -->
+                                        <circle cx="65" cy="40" r="6" fill="#DC2626" />
+                                        <circle cx="65" cy="40" r="3" fill="white" opacity="0.6" />
+
+                                        <!-- Tear left -->
+                                        <ellipse cx="35" cy="48" rx="2.5" ry="5"
+                                            fill="#93C5FD" opacity="0.7" />
+
+                                        <!-- Tear right -->
+                                        <ellipse cx="65" cy="48" rx="2.5" ry="5"
+                                            fill="#93C5FD" opacity="0.7" />
+
+                                        <!-- Sad mouth -->
+                                        <path d="M 35 65 Q 50 58 65 65" stroke="#DC2626" stroke-width="2.5"
+                                            fill="none" stroke-linecap="round" />
+                                    </svg>
+
+                                    <!-- Animated X mark overlay -->
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="animate-bounce" style="animation: bounce 2s infinite; opacity: 0.8;">
+                                            <i class="fa-solid fa-times-circle text-red-600 text-5xl"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Header -->
+                            <div class="text-center mb-4">
+                                <h2 class="text-2xl font-bold text-red-600 mb-2">
+                                    Application Rejected
+                                </h2>
+                                <p class="text-sm text-gray-500">Unfortunately, your application could not be approved.</p>
+                            </div>
+
+                            <!-- Reason Box -->
+                            <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4 mb-6">
+                                <p class="text-sm text-gray-600 mb-2 font-semibold">Reason for Rejection:</p>
+                                <p class="text-gray-800 font-medium leading-relaxed">
+                                    {{ Auth::user()->rejection_reason ?? 'No reason provided' }}
+                                </p>
+                            </div>
+
+                            <!-- Info Message -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
+                                <p class="text-xs text-blue-800">
+                                    <i class="fa-solid fa-info-circle mr-2"></i>
+                                    You can resubmit your application after reviewing the requirements.
+                                </p>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex flex-col gap-3 justify-center sm:justify-end">
+                                <div class="flex gap-3">
+                                    <button @click="open = false"
+                                        class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 
+                        font-semibold text-sm transition-all duration-200">
+                                        Close
+                                    </button>
+                                    <a href="#"
+                                        class="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 
+                        font-semibold text-sm transition-all duration-200 inline-flex items-center gap-2">
+                                        <i class="fa-solid fa-arrow-right"></i> Back to Records
+                                    </a>
+                                </div>
+                                <label
+                                    class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer hover:text-gray-800">
+                                    <input type="checkbox"
+                                        @change="localStorage.setItem('rejected_modal_dismissed', $el.checked)"
+                                        class="rounded">
+                                    <span>Don't show this again</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        @keyframes bounce {
+
+                            0%,
+                            100% {
+                                transform: translateY(0);
+                            }
+
+                            50% {
+                                transform: translateY(-10px);
+                            }
+                        }
+                    </style>
+                @endif
+            @elseif (Auth::check() && Auth::user()->pre_registration_status === 'approved')
+                <!-- APPROVED MODAL -->
+                @if (session('show_approved_modal'))
+                    <div x-data="{ open: !localStorage.getItem('approved_modal_dismissed') }" x-show="open" x-transition:enter="transition ease-out duration-300"
+                        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                        x-transition:leave-end="opacity-0"
+                        class="fixed inset-0 bg-gradient-to-br from-slate-900/40 via-slate-800/30 to-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50">
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                            class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full mx-4">
+
+                            <!-- Happy Animation SVG with Checkmark -->
+                            <div class="flex justify-center mb-6">
+                                <div class="relative w-32 h-32">
+                                    <!-- Outer circle -->
+                                    <svg class="w-full h-full animate-pulse" viewBox="0 0 100 100"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <!-- Face background -->
+                                        <circle cx="50" cy="50" r="45" fill="#DCFCE7" stroke="#16A34A"
+                                            stroke-width="2" />
+
+                                        <!-- Left eye -->
+                                        <circle cx="35" cy="40" r="6" fill="#16A34A" />
+                                        <circle cx="35" cy="40" r="3" fill="white" opacity="0.6" />
+
+                                        <!-- Right eye -->
+                                        <circle cx="65" cy="40" r="6" fill="#16A34A" />
+                                        <circle cx="65" cy="40" r="3" fill="white" opacity="0.6" />
+
+                                        <!-- Happy mouth -->
+                                        <path d="M 35 62 Q 50 70 65 62" stroke="#16A34A" stroke-width="2.5"
+                                            fill="none" stroke-linecap="round" />
+                                    </svg>
+
+                                    <!-- Animated Checkmark overlay -->
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="animate-bounce" style="animation: bounce 2s infinite; opacity: 0.9;">
+                                            <i class="fa-solid fa-check-circle text-green-600 text-5xl"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Header -->
+                            <div class="text-center mb-4">
+                                <h2 class="text-2xl font-bold text-green-600 mb-2">
+                                    Application Approved
+                                </h2>
+                                <p class="text-sm text-gray-500">Congratulations! Your application has been approved.</p>
+                            </div>
+
+                            <!-- Success Message -->
+                            <div class="bg-green-50 border-l-4 border-green-600 rounded-lg p-4 mb-6">
+                                <p class="text-sm text-gray-600 mb-2 font-semibold">Status:</p>
+                                <p class="text-gray-800 font-medium leading-relaxed">
+                                    Your application has been successfully approved by the Office of the Building Official
+                                    (OBO). You can now proceed with your building project.
+                                </p>
+                            </div>
+
+                            <!-- Info Message -->
+                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-6">
+                                <p class="text-xs text-blue-800">
+                                    <i class="fa-solid fa-info-circle mr-2"></i>
+                                    Your permit has been issued. Please download and keep a copy for your records.
+                                </p>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex flex-col gap-3 justify-center sm:justify-end">
+                                <div class="flex gap-3">
+                                    <button @click="open = false"
+                                        class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 
+                        font-semibold text-sm transition-all duration-200">
+                                        Close
+                                    </button>
+                                    <a href="#"
+                                        class="px-5 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 
+                        font-semibold text-sm transition-all duration-200 inline-flex items-center gap-2">
+                                        <i class="fa-solid fa-arrow-right"></i> View Permit
+                                    </a>
+                                </div>
+                                <label
+                                    class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer hover:text-gray-800">
+                                    <input type="checkbox"
+                                        @change="localStorage.setItem('approved_modal_dismissed', $el.checked)"
+                                        class="rounded">
+                                    <span>Don't show this again</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <style>
+                        @keyframes bounce {
+
+                            0%,
+                            100% {
+                                transform: translateY(0);
+                            }
+
+                            50% {
+                                transform: translateY(-10px);
+                            }
+                        }
+                    </style>
+                @endif
+
             @endif
 
             <!-- Welcome Banner -->
@@ -177,7 +552,8 @@
                                 <h2 class="text-3xl sm:text-4xl font-bold drop-shadow-lg">
                                     Welcome back, {{ ucwords(Auth::user()->first_name) }}!
                                 </h2>
-                                <p class="text-blue-100 text-sm sm:text-base mt-1">Manage your building permits efficiently
+                                <p class="text-blue-100 text-sm sm:text-base mt-1">Manage your building permits
+                                    efficiently
                                 </p>
                             </div>
                         </div>
@@ -250,7 +626,6 @@
                     </div>
                 @endforeach
             </div>
-
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
 
                 <!-- Header -->
@@ -262,15 +637,31 @@
 
                     @php
                         $statusConfig = [
-                            'submitted' => ['bg' => 'bg-gray-100', 'text' => 'text-gray-700', 'label' => 'Submitted'],
+                            'submitted' => [
+                                'bg' => 'bg-gray-100',
+                                'text' => 'text-gray-700',
+                                'label' => 'Submitted',
+                            ],
                             'under_review' => [
                                 'bg' => 'bg-blue-50',
                                 'text' => 'text-blue-700',
                                 'label' => 'Under Review',
                             ],
-                            'approved' => ['bg' => 'bg-green-50', 'text' => 'text-green-700', 'label' => 'Approved'],
-                            'disapproved' => ['bg' => 'bg-red-50', 'text' => 'text-red-700', 'label' => 'Disapproved'],
-                            'resubmit' => ['bg' => 'bg-amber-50', 'text' => 'text-amber-700', 'label' => 'Resubmit'],
+                            'approved' => [
+                                'bg' => 'bg-green-50',
+                                'text' => 'text-green-700',
+                                'label' => 'Approved',
+                            ],
+                            'disapproved' => [
+                                'bg' => 'bg-red-50',
+                                'text' => 'text-red-700',
+                                'label' => 'Disapproved',
+                            ],
+                            'resubmit' => [
+                                'bg' => 'bg-amber-50',
+                                'text' => 'text-amber-700',
+                                'label' => 'Resubmit',
+                            ],
                         ];
                     @endphp
 
@@ -279,9 +670,11 @@
                         <table class="min-w-full">
                             <thead class="border-b-2 border-slate-200">
                                 <tr>
-                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Application No.</th>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Application No.
+                                    </th>
                                     <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Project Type</th>
-                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Date Submitted</th>
+                                    <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Date Submitted
+                                    </th>
                                     <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Status</th>
                                     <th class="px-6 py-4 text-center text-sm font-bold text-blue-700">Action</th>
                                 </tr>

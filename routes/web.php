@@ -168,6 +168,14 @@ Route::middleware(['auth', 'verified', 'role:obo'])->group(function () {
         return response()->file($path);
     })->name('applicant.tax_id');
 
+    Route::post('/obo/{applicant}/approve',
+        [OboOfficialController::class, 'approveApplicant']
+    )->name('obo.applicant.approve');
+
+    Route::post('/obo/{applicant}/reject',
+        [OboOfficialController::class, 'reject']
+    )->name('obo.applicant.reject');
+
     // Route::get('/obo/building_application_doc', [OboOfficialController::class, 'buildingApplicationDoc'])->name('obo.building_application_doc');
     // Route::post('/obo/review-multiple', [OboOfficialController::class, 'reviewMultiple'])
     //     ->name('obo.review.multiple');

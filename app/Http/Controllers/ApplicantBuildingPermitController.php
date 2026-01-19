@@ -31,8 +31,12 @@ class ApplicantBuildingPermitController extends Controller
         $locations = new LocationService;
         $regionCode = '05'; // Region V - Bicol
         $user = auth()->user();
-        if ($user->pre_registration_status !== 'approved') {
+        if ($user->pre_registration_status === 'pending') {
             abort(403, 'Your account is still under review. You cannot access this page.');
+        }
+
+        if ($user->pre_registration_status === 'rejected') {
+            abort(403, 'Your account is rejected. You cannot access this page.');
         }
         // Get provinces only from Region V
         $provinces = $locations->getProvincesByRegion($regionCode);

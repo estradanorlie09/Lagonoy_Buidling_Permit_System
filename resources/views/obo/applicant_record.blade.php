@@ -3,49 +3,10 @@
 @section('title', 'Building Application Users')
 
 @section('content')
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100 p-0 md:p-0">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100 md:p-0">
         <div class="w-full">
-
             <!-- Hero Section -->
-            <div
-                class="relative w-full overflow-hidden bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 shadow-xl mb-8 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 border-b border-blue-200">
-
-                <!-- Left Section -->
-                <div class="relative z-10 flex-1">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div
-                            class="w-16 h-16 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full shadow-lg border-2 border-blue-400">
-                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12l2 2 4-4m7 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                        </div>
-                        <h2 class="text-3xl md:text-4xl font-bold text-blue-900 tracking-tight">
-                            Applicant Records Verification
-                        </h2>
-                    </div>
-                    <p class="text-slate-700 text-base md:text-lg max-w-2xl leading-relaxed">
-                        Manage, verify, and track all building permit applicant information and supporting documents with
-                        ease.
-                    </p>
-                </div>
-
-                <!-- Right Decorative Element -->
-                <div class="hidden md:flex items-center justify-center flex-1">
-                    <div class="relative">
-                        <img src="{{ asset('asset/img/download.png') }}" alt="Building Illustration"
-                            class="w-40 h-40 object-contain opacity-90 drop-shadow-lg hover:scale-105 transition-transform duration-300">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-blue-200/30 to-transparent rounded-full blur-2xl">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Decorative Overlays -->
-                <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-blue-200/20 pointer-events-none"></div>
-                <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-blue-300/10 rounded-full blur-3xl"></div>
-                <div class="absolute -top-16 -left-16 w-64 h-64 bg-blue-200/20 rounded-full blur-3xl"></div>
-            </div>
+           
 
             <!-- Statistics Cards -->
             <div class="px-4 md:px-8 mb-8">
@@ -120,7 +81,7 @@
             </div>
 
             <!-- Main Content Section -->
-            <div class="mx-4 md:mx-8 mb-8 bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="mx-4 md:mx-8 mb-8 bg-white rounded-xl shadow-lg overflow-hidden ">
 
                 <!-- Header -->
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 md:px-8 py-6 md:py-8">
@@ -175,8 +136,8 @@
                 </div>
 
                 <!-- Table Section -->
-                <div class="overflow-x-auto">
-                    <table id="applicantTable" class="w-full text-sm text-slate-700 divide-y divide-slate-200">
+                <div class="overflow-x-auto ">
+                    <table id="applicantTable" class="w-full text-sm mb-5 text-slate-700 divide-y divide-slate-200">
                         <!-- Table Header -->
                         <thead
                             class="bg-gradient-to-r from-blue-100 to-blue-50 border-b-2 border-blue-300 text-slate-700 text-xs font-bold uppercase tracking-wider">
@@ -286,15 +247,7 @@
                                             </a>
 
                                             <!-- Edit Button -->
-                                            <a href="{{ route('admin.updateUser', $record->id) }}"
-                                                class="inline-flex items-center justify-center w-9 h-9 text-blue-600 hover:bg-blue-100 rounded-lg transition-all duration-200"
-                                                title="Edit Record">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                    viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                            </a>
+                                          
                                         </div>
                                     </td>
 

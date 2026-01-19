@@ -16,7 +16,7 @@
                         <i class="fas fa-building text-red-600 text-2xl"></i>
                     </div>
                     <h2 class="text-2xl md:text-3xl font-extrabold text-red-800 tracking-tight">
-                        Building Application Records 
+                        Building Application Records
                     </h2>
                 </div>
                 <p class="text-gray-700 text-sm md:text-base max-w-xl leading-relaxed">
@@ -281,8 +281,8 @@
 
                                     @if ($application->status === 'under_review')
                                         <!-- Approve -->
-                                        <form action="{{ route('obo.approved', $application->id) }}"
-                                            method="POST" class="inline">
+                                        <form action="{{ route('obo.approved', $application->id) }}" method="POST"
+                                            class="inline">
                                             @csrf
                                             <button type="button" data-tooltip-target="tooltip-approved"
                                                 @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approved', par: 'approve'})"

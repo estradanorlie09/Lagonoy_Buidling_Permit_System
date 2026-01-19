@@ -163,6 +163,17 @@ class AuthController extends Controller
                 ->with('info', 'A new verification code has been sent to your email.');
         }
 
+        if ($user->isApplicant() && $user->pre_registration_status === 'rejected') {
+            session()->flash('show_rejected_modal', true);
+        }
+
+        if ($user->isApplicant() && $user->pre_registration_status === 'approved') {
+            session()->flash('show_approved_modal', true);
+        }
+
+        if ($user->isApplicant() && $user->pre_registration_status === 'pending') {
+            session()->flash('show_pending_modal', true);
+        }
         // Redirect based on role
         if ($user->isApplicant()) {
             return redirect()->intended(route('applicant.dashboard'));

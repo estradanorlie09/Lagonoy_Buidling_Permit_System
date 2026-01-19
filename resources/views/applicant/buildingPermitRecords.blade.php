@@ -27,6 +27,27 @@
                     </a>
                 </div>
             </div>
+        @elseif (Auth::check() && Auth::user()->pre_registration_status === 'rejected')
+            <div class="bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-5 mb-6 shadow-sm">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                        <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-exclamation-circle text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-red-900 mb-1">Application Rejected</h4>
+                            <p class="text-sm text-red-700 leading-relaxed">
+                                Your application was rejected. <span class="font-semibold">Reason:</span>
+                                <span class="block mt-1">{{ Auth::user()->rejection_reason ?? 'No reason provided' }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <a href="#"
+                        class="inline-flex items-center justify-center bg-red-600 hover:bg-red-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
+                        Resubmit Application
+                    </a>
+                </div>
+            </div>
         @endif
 
 
@@ -125,30 +146,37 @@
                 <!-- Header Section -->
                 <div
                     class="flex flex-col sm:flex-row justify-between items-center px-6 py-6 bg-gradient-to-r from-blue-500 to-indigo-600 gap-4">
+
+                    <!-- Title -->
                     <div class="w-full sm:w-1/2">
                         <h1 class="text-xl font-semibold text-white">Building Applications</h1>
                         <p class="text-sm text-blue-100">Manage your building permit applications.</p>
                     </div>
 
+                    <!-- Search + Button -->
                     <div class="w-full sm:w-1/2 flex flex-col sm:flex-row justify-end items-center gap-3">
+
                         <!-- Search -->
                         <div class="relative w-full sm:w-3/4">
                             <input type="search" id="customSearch" placeholder="Search applications..."
-                                class="w-full pl-10 pr-10 py-3 border border-blue-200 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none transition bg-white">
+                                class="w-full pl-10 pr-4 py-3 border border-blue-200 rounded-lg shadow-sm text-sm focus:ring-2 focus:ring-blue-400 focus:outline-none transition bg-white">
                             <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-blue-400"></i>
                         </div>
+
+                        <!-- New Application Button -->
                         <a href="{{ route('applicant.forms.obo.buidlingPermitForm') }}"
-                            @if (Auth::user()->pre_registration_status === 'pending') disabled 
-    class="inline-flex items-center gap-2 px-4 py-3 text-sm bg-gray-400 text-white rounded-md shadow-md cursor-not-allowed"
-@else 
-    @click="open = true" 
-    class="inline-flex items-center gap-2 px-4 py-3 text-sm bg-white text-blue-600 hover:bg-blue-50 rounded-md shadow-md font-medium transition-all hover:shadow-lg" @endif>
+                            @if (in_array(Auth::user()->pre_registration_status, ['pending', 'rejected'])) aria-disabled="true"
+                class="flex items-center justify-center px-4 py-2 text-xs bg-gray-400 text-white rounded-md shadow-md cursor-not-allowed opacity-70"
+            @else
+                @click="open = true"
+                class="flex items-center justify-center px-4 py-2 text-sm bg-white text-blue-600 hover:bg-blue-50 rounded-md shadow-md font-medium transition-all hover:shadow-lg" @endif>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" class="w-4 h-4">
+                                stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5 mr-1">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                             </svg>
-                            Create Application
+                            <span class="hidden sm:inline">New Application</span>
                         </a>
+
                     </div>
                 </div>
 

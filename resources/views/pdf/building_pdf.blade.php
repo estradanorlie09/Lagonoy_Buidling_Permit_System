@@ -311,9 +311,9 @@
                     style="width: 180px; height: 50px; display:block; margin: 0 auto;">
 
                 {{-- Printed name --}}
-                <h4 style="font-weight:600;">
+                {{-- <h4 style="font-weight:600;">
                     {{ $application->approver->first_name }} {{ $application->approver->last_name }}
-                </h4>
+                </h4> --}}
 
                 <hr style="width: 100%; margin: 0.3rem auto;">
                 <h4 style="text-align: center;">BUILDING OFFICIAL</h4>

@@ -17,13 +17,13 @@
             <!-- Left Section: Hamburger + Logo + Title -->
             <div class="flex items-center gap-4">
                 <!-- Hamburger Menu (Mobile) -->
-                <button @click="sidebarOpen = !sidebarOpen"
+                {{-- <button @click="sidebarOpen = !sidebarOpen"
                     class="text-slate-600 hover:text-slate-900 focus:outline-none lg:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"
                         stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 6h16M4 12h16M4 18h16"></path>
                     </svg>
-                </button>
+                </button> --}}
 
                 <!-- Logo and Title -->
                 <div class="flex items-center gap-3">
@@ -71,42 +71,45 @@
     </div>
 
     <!-- Navigation Menu -->
-    <nav class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 text-white">
-        <div class="px-4 lg:px-8">
-            <ul class="flex justify-center items-center gap-1 overflow-x-auto">
-                <li>
-                    <a href="{{ route('applicant.dashboard') }}"
-                        class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap {{ request()->routeIs('applicant.dashboard') ? 'bg-blue-800' : '' }}">
-                        Home
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('applicant.dashboard') }}"
-                        class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap {{ request()->routeIs('applicant.dashboard') ? 'bg-blue-800' : '' }}">
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('applicant.buildingPermit') }}"
-                        class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap {{ request()->routeIs('applicant.buildingPermit') ? 'bg-blue-800' : '' }}">
-                        New Application
-                    </a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap">
-                        Track Application
-                    </a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap">
-                        Requirements
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
+
+    @if (Auth::check() && Auth::user()->role === 'applicant')
+        <nav class="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 text-white">
+            <div class="px-4 lg:px-8">
+                <ul class="flex justify-center items-center gap-1 overflow-x-auto">
+                    <li>
+                        <a href="{{ route('applicant.dashboard') }}"
+                            class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap {{ request()->routeIs('applicant.dashboard') ? 'bg-blue-800' : '' }}">
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('applicant.dashboard') }}"
+                            class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap {{ request()->routeIs('applicant.dashboard') ? 'bg-blue-800' : '' }}">
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('applicant.buildingPermit') }}"
+                            class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap {{ request()->routeIs('applicant.buildingPermit') ? 'bg-blue-800' : '' }}">
+                            New Application
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap">
+                            Track Application
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="block px-6 py-3.5 hover:bg-blue-600 transition-colors font-medium whitespace-nowrap">
+                            Requirements
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    @endif
 </header>
 
 <!-- Alternative: Simple Dashboard Header with Hamburger -->
