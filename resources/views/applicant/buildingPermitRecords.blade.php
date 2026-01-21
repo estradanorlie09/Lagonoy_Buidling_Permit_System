@@ -38,7 +38,7 @@
                             <h4 class="font-semibold text-red-900 mb-1">Application Rejected</h4>
                             <p class="text-sm text-red-700 leading-relaxed">
                                 Your application was rejected. <span class="font-semibold">Reason:</span>
-                                <span class="block mt-1">{{ Auth::user()->rejection_reason ?? 'No reason provided' }}</span>
+                                <span class="block mt-1">{{ $applicationValidationReason ?? 'No reason provided' }}</span>
                             </p>
                         </div>
                     </div>

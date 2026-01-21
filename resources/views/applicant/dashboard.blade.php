@@ -273,8 +273,7 @@
                                 <h4 class="font-semibold text-red-900 mb-1">Application Rejected</h4>
                                 <p class="text-sm text-red-700 leading-relaxed">
                                     Your application was rejected. <span class="font-semibold">Reason:</span>
-                                    <span
-                                        class="block mt-1">{{ Auth::user()->rejection_reason ?? 'No reason provided' }}</span>
+                                    <span class="block mt-1">{{ $applicationValidationReason }}</span>
                                 </p>
                             </div>
                         </div>
@@ -351,7 +350,7 @@
                             <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4 mb-6">
                                 <p class="text-sm text-gray-600 mb-2 font-semibold">Reason for Rejection:</p>
                                 <p class="text-gray-800 font-medium leading-relaxed">
-                                    {{ Auth::user()->rejection_reason ?? 'No reason provided' }}
+                                    {{ $applicationValidationReason ?? 'No reason provided' }}
                                 </p>
                             </div>
 
@@ -710,12 +709,20 @@
                                             </span>
                                         </td>
 
-                                        <td class="px-6 py-4 text-center">
+                                        {{-- <td class="px-6 py-4 text-center">
                                             <a href="{{ route('applicant.obo.building_application_view', $application->id) }}"
                                                 class="inline-flex items-center px-4 py-2 rounded-lg text-white text-sm font-semibold
                                    {{ $application->status === 'approved' ? 'bg-blue-700 hover:bg-blue-800' : 'bg-red-600 hover:bg-red-700' }}">
                                                 {{ $application->status === 'approved' ? 'Download' : 'View' }}
                                             </a>
+                                        </td> --}}
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="flex justify-center gap-2">
+                                                <a href="{{ route('applicant.obo.building_application_view', $application->id) }}"
+                                                    class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white text-sm rounded-lg hover:from-blue-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach

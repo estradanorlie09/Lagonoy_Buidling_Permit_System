@@ -1,30 +1,71 @@
 $(document).ready(function () {
     let selectedStatus = "all";
+    let selectedDate = "all";
 
+    // Add custom filter for status and date
     $.fn.dataTable.ext.search.push(function (settings, data) {
-        let statusCell = data[4];
-        if (!statusCell) return true;
+        let statusCell = data[5]; // Status is in column 5
+        let dateCell = data[3]; // Date is in column 3
 
+        // Extract status value
         let statusText = statusCell.toString().toLowerCase();
         let statusValue = "";
 
         if (statusText.includes("approved")) statusValue = "approved";
-        else if (statusText.includes("pending")) statusValue = "pending";
-        else if (statusText.includes("rejected")) statusValue = "rejected";
+        else if (statusText.includes("under review"))
+            statusValue = "under_review";
+        else if (statusText.includes("disapproved"))
+            statusValue = "disapproved";
+        else if (statusText.includes("resubmit")) statusValue = "resubmit";
+        else if (statusText.includes("submitted")) statusValue = "submitted";
 
-        if (selectedStatus === "all" || selectedStatus === "") {
-            return true;
+        // Status Filter
+        if (selectedStatus !== "all" && selectedStatus !== "") {
+            if (statusValue !== selectedStatus.toLowerCase()) {
+                return false;
+            }
         }
 
-        return statusValue === selectedStatus.toLowerCase();
+        // Date Filter
+        if (selectedDate !== "all" && selectedDate !== "") {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Parse date from cell (format: "M dd, Y")
+            const rowDate = new Date(dateCell);
+            rowDate.setHours(0, 0, 0, 0);
+
+            const diffTime = today - rowDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            switch (selectedDate) {
+                case "today":
+                    if (diffDays !== 0) return false;
+                    break;
+                case "last_week":
+                    if (diffDays < 0 || diffDays > 7) return false;
+                    break;
+                case "last_month":
+                    if (diffDays < 0 || diffDays > 30) return false;
+                    break;
+            }
+        }
+
+        return true;
     });
 
+    // Initialize DataTable
     let table = $("#applicantTable").DataTable({
         dom: "<'hidden'f>rt<'flex flex-col sm:flex-row justify-between items-center mt-4 gap-3'<'w-full sm:w-1/2'i><'w-full sm:w-1/2'p>>",
 
         language: {
             search: "",
-            emptyTable: "🚫 No applications found.",
+            emptyTable: "No applications found.",
+            paginate: {
+                previous: "← Previous",
+                next: "Next →",
+            },
+            info: "Showing _START_ to _END_ of _TOTAL_ applications",
         },
 
         columnDefs: [
@@ -36,12 +77,14 @@ $(document).ready(function () {
         ],
 
         order: [[1, "asc"]],
+        pageLength: 10,
 
         drawCallback: function () {
             let info = this.api().page.info();
             let records = info.recordsDisplay;
 
-            if (records <=10) {
+            // Hide pagination if 10 or fewer records
+            if (records <= 10) {
                 $("#applicantTable_info").hide();
                 $("#applicantTable_paginate").hide();
             } else {
@@ -51,12 +94,30 @@ $(document).ready(function () {
         },
     });
 
+    // Search functionality
     $("#customSearch").on("keyup change clear input", function () {
         table.search(this.value, false, false).draw();
     });
 
+    // Status filter
     $("#statusFilter").on("change", function () {
         selectedStatus = $(this).val();
         table.draw();
+    });
+
+    // Date filter
+    $("#dateFilter").on("change", function () {
+        selectedDate = $(this).val();
+        table.draw();
+    });
+
+    // Optional: Add reset button functionality
+    $(document).on("click", "#resetFilters", function () {
+        selectedStatus = "all";
+        selectedDate = "all";
+        $("#statusFilter").val("all");
+        $("#dateFilter").val("all");
+        $("#customSearch").val("");
+        table.search("").draw();
     });
 });

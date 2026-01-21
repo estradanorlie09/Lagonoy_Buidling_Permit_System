@@ -7,7 +7,7 @@ function markStatus(id, status) {
         confirmButtonText: "Yes, confirm!",
     }).then((result) => {
         if (result.isConfirmed) {
-            fetch(`/visitations/${id}/status`, {
+            fetch(`/obo/visitation/${id}/status`, {
                 method: "PUT",
                 headers: {
                     "X-CSRF-TOKEN": document

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="bg-gradient-to-br from-blue-50 to-indigo-50 min-h-screen py-6">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="w-full max-w-full px-4 sm:px-6 lg:px-8">
 
             {{-- Back Button --}}
             <div class="mb-6">
@@ -88,7 +88,7 @@
                 <div class="px-6 md:px-8 py-8">
 
                     {{-- Information Grid --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
                         {{-- Personal Info --}}
                         <div
@@ -101,16 +101,17 @@
                                 Personal Information
                             </h4>
                             <div class="space-y-4 text-sm">
-                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                <div class="flex justify-between items-start pb-3 border-b border-gray-100">
                                     <span class="text-gray-600 font-medium">Full Name</span>
-                                    <span class="font-semibold text-gray-800">{{ $applicant->first_name }}
+                                    <span class="font-semibold text-gray-800 text-right">{{ $applicant->first_name }}
                                         {{ $applicant->middle_name }} {{ $applicant->last_name }}</span>
                                 </div>
-                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                <div class="flex justify-between items-start pb-3 border-b border-gray-100">
                                     <span class="text-gray-600 font-medium">Email</span>
-                                    <span class="font-semibold text-gray-800 text-right">{{ $applicant->email }}</span>
+                                    <span
+                                        class="font-semibold text-gray-800 text-right break-words">{{ $applicant->email }}</span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div class="flex justify-between items-start">
                                     <span class="text-gray-600 font-medium">Phone</span>
                                     <span class="font-semibold text-gray-800">{{ $applicant->phone }}</span>
                                 </div>
@@ -128,19 +129,61 @@
                                 Application Information
                             </h4>
                             <div class="space-y-4 text-sm">
-                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                <div class="flex justify-between items-start pb-3 border-b border-gray-100">
                                     <span class="text-gray-600 font-medium">Application Date</span>
                                     <span
                                         class="font-semibold text-gray-800">{{ $applicant->created_at->format('M d, Y') }}</span>
                                 </div>
-                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                <div class="flex justify-between items-start pb-3 border-b border-gray-100">
                                     <span class="text-gray-600 font-medium">Role</span>
                                     <span class="font-semibold text-gray-800">{{ ucfirst($applicant->role) }}</span>
                                 </div>
-                                <div class="flex justify-between items-center">
+                                <div class="flex justify-between items-start">
                                     <span class="text-gray-600 font-medium">Email Verified</span>
                                     <span
                                         class="font-semibold text-gray-800">{{ $applicant->email_verified_at->format('M d, Y') }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Documents Status --}}
+                        <div
+                            class="bg-white rounded-xl p-6 border-2 border-purple-50 shadow-sm
+                            hover:shadow-md hover:border-purple-200 transition-all duration-200">
+                            <h4 class="font-bold text-gray-800 mb-5 flex items-center gap-3">
+                                <span class="w-10 h-10 flex items-center justify-center bg-purple-100 rounded-lg">
+                                    <i class="fa-solid fa-file-shield text-purple-600"></i>
+                                </span>
+                                Documents
+                            </h4>
+                            <div class="space-y-4 text-sm">
+                                <div class="flex justify-between items-center pb-3 border-b border-gray-100">
+                                    <span class="text-gray-600 font-medium">Government ID</span>
+                                    @if ($applicant->gov_id_file)
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-semibold">
+                                            ✓ Uploaded
+                                        </span>
+                                    @else
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600 font-semibold">
+                                            ✗ Missing
+                                        </span>
+                                    @endif
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-gray-600 font-medium">Tax Declaration</span>
+                                    @if ($applicant->tax_declaration_file)
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700 font-semibold">
+                                            ✓ Uploaded
+                                        </span>
+                                    @else
+                                        <span
+                                            class="text-xs px-2 py-1 rounded-full bg-gray-200 text-gray-600 font-semibold">
+                                            ✗ Missing
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -152,10 +195,10 @@
                             <span class="w-10 h-10 flex items-center justify-center bg-blue-100 rounded-lg">
                                 <i class="fa-solid fa-file-shield text-blue-600"></i>
                             </span>
-                            Uploaded Documents
+                            Document Preview
                         </h4>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
                             {{-- Government ID --}}
                             <div class="border rounded-xl p-5 bg-gray-50">
@@ -261,7 +304,8 @@
 
                             <p class="text-sm text-gray-600 mt-2 sm:mt-0">
                                 By: <span class="font-medium">
-                                    {{ $applicantlogs->user->first_name  ?? 'System' }} {{ $applicantlogs->user->last_name  ?? 'System' }}
+                                    {{ $applicantlogs->user->first_name ?? 'System' }}
+                                    {{ $applicantlogs->user->last_name ?? 'System' }}
                                 </span>
                                 on: <span class="font-medium">
                                     {{ optional($applicantlogs->created_at)->format('M d, Y h:i A') ?? 'N/A' }}
@@ -348,7 +392,28 @@
             </form>
         </div>
     </div>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Applicant Verication Saved!',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
 
+            setTimeout(function() {
+
+                window.location.href = "{{ route('obo.obo.view_applicant_records', $applicant->id) }}";
+            }, 2500);
+        </script>
+    @endif
     <script>
         function openApproveModal() {
             document.getElementById('approveModal').classList.remove('hidden');

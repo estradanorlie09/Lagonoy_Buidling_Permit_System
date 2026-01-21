@@ -176,6 +176,10 @@ Route::middleware(['auth', 'verified', 'role:obo'])->group(function () {
         [OboOfficialController::class, 'reject']
     )->name('obo.applicant.reject');
 
+    Route::get('/obo/visitation', [OboOfficialController::class, 'schedule'])->name('obo.obo_visitation');
+    Route::post('/obo/visitation/{id}/set_schedule', [OboOfficialController::class, 'scheduleVisit'])->name('obo.obo.schedule');
+    Route::post('/obo/visitation/{id}/reschedule', [OboOfficialController::class, 'reschedule'])->name('obo.obo.reschedule');
+    Route::put('/obo/visitation/{id}/status', [OboOfficialController::class, 'updateStatus'])->name('obo.obo.updateStatus');
     // Route::get('/obo/building_application_doc', [OboOfficialController::class, 'buildingApplicationDoc'])->name('obo.building_application_doc');
     // Route::post('/obo/review-multiple', [OboOfficialController::class, 'reviewMultiple'])
     //     ->name('obo.review.multiple');

@@ -7,6 +7,8 @@ use App\Models\ApplicationRemark;
 use App\Models\BuildingApplication;
 use App\Models\BuildingDocument;
 use App\Models\User;
+use App\Models\Visitation;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -257,5 +259,183 @@ class OboOfficialController extends Controller
         ]);
 
         return back()->with('success', 'Application rejected.');
+    }
+
+    // visitations
+    public function schedule()
+    {
+        $data = DB::table('building_applications')
+            ->join('users', 'building_applications.user_id', '=', 'users.id')
+            ->leftJoin(
+                'visitations',
+                'building_applications.id',
+                '=',
+                'visitations.building_application_id'
+            )
+            ->whereIn('building_applications.status', ['submitted', 'under_review'])
+            ->select(
+                'building_applications.id as application_id',
+                'building_applications.application_no',
+                'building_applications.status as application_status',
+                'users.first_name',
+                'users.middle_name',
+                'users.last_name',
+                'visitations.id as visitation_id',
+                'visitations.visit_date',
+                'visitations.visit_time',
+                'visitations.status as visitation_status',
+                'visitations.created_at',
+                'visitations.updated_at'
+            )
+            ->get();
+
+        $applications = $data->groupBy('application_no')
+            ->map(function ($group) {
+                // Sort group by the max of created_at and updated_at descending
+                return $group->sortByDesc(function ($item) {
+                    return max(strtotime($item->created_at), strtotime($item->updated_at));
+                })->first();
+            })
+            ->values();
+
+        return view('obo.scheduler.visitation_scheduler', compact('applications'));
+    }
+
+    public function scheduleVisit(Request $request, $applicationId)
+    {
+        $request->validate([
+            'visit_date' => 'required|date|after_or_equal:today',
+            'visit_time' => 'required',
+            'remarks' => 'nullable|string|max:500',
+        ]);
+
+        $application = BuildingApplication::findOrFail($applicationId);
+
+        $visitDateTime = Carbon::parse($request->visit_date.' '.$request->visit_time);
+
+        if ($visitDateTime->lessThan(Carbon::now())) {
+            return redirect()->back()->with('error', 'You cannot set a time earlier than the current time today.');
+        }
+
+        // Only check other building
+        $exists = Visitation::where('visit_date', $request->visit_date)
+            ->where('visit_time', $request->visit_time)
+            ->whereNotNull('building_application_id')
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'This time slot is already taken!');
+        }
+
+        Visitation::create([
+            'id' => \Illuminate\Support\Str::uuid(),
+            'building_application_id' => $application->id,
+            'scheduled_by' => Auth::id(),
+            'visit_date' => $request->visit_date,
+            'visit_time' => $request->visit_time,
+            'remarks' => $request->remarks,
+        ]);
+
+        return redirect()->back()->with('success', 'Building Official visit scheduled successfully.');
+    }
+
+    public function reschedule(Request $request, $id)
+    {
+        $request->validate([
+            'visit_date' => 'required|date',
+            'visit_time' => 'required',
+            'remarks' => 'nullable|string',
+        ]);
+
+        $application = BuildingApplication::findOrFail($id);
+        $visitation = $application->visitation;
+
+        $visitDateTime = Carbon::parse($request->visit_date.' '.$request->visit_time);
+        if ($visitDateTime->lessThan(Carbon::now())) {
+            return redirect()->back()->with('error', 'You cannot set a time earlier than the current time today.');
+        }
+
+        // Conflict check: only other Zoning visits, ignore current visit
+        $exists = Visitation::where('visit_date', $request->visit_date)
+            ->where('visit_time', $request->visit_time)
+            ->whereNotNull('building_application_id') //
+            ->when($visitation, fn ($q) => $q->where('id', '!=', $visitation->id)) // ignore current
+            ->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'This time slot is already taken by another zoning applicant.');
+        }
+
+        // Update or create visitation
+        if ($visitation) {
+            $visitation->update([
+                'visit_date' => $request->visit_date,
+                'visit_time' => $request->visit_time,
+                'status' => 'rescheduled',
+                'remarks' => $request->remarks,
+            ]);
+        } else {
+            $application->visitation()->create([
+                'visit_date' => $request->visit_date,
+                'visit_time' => $request->visit_time,
+                'status' => 'scheduled',
+                'remarks' => $request->remarks,
+            ]);
+        }
+
+        $application->load('visitation');
+
+        // Send email notification
+        // Mail::to($application->user->email)
+        //     ->send(new ScheduleRescheduleEmail($application));
+
+        return redirect()->back()->with('success', 'Visitation Rescheduled Successfully.');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:completed,absent,cancelled',
+            ]);
+
+            $visitation = Visitation::findOrFail($id);
+
+            $remarks = match ($request->status) {
+                'completed' => 'Visitation Completed',
+                'cancelled' => 'Visitation Canceled',
+                'absent' => 'No Show / Absent',
+                default => null,
+            };
+
+            $visitation->update([
+                'status' => $request->status,
+                'remarks' => $remarks,
+            ]);
+
+            $visitation->loadMissing('application.user');
+
+            // if ($visitation->application && $visitation->application->user) {
+            //     $email = $visitation->application->user->email;
+
+            //     match ($request->status) {
+            //         'cancelled' => Mail::to($email)->queue(new ScheduleCancelEmail($visitation->application, $visitation)),
+            //         'absent' => Mail::to($email)->queue(new ScheduleAbsent($visitation->application, $visitation)),
+            //         'completed' => Mail::to($email)->queue(new ScheduleApproved($visitation->application, $visitation)),
+            //         default => null,
+            //     };
+            // }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Visitation marked as '.ucfirst($request->status).'.',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Something went wrong: '.$e->getMessage(),
+            ], 500);
+        }
     }
 }

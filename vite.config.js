@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     server: {
-        host: "172.20.10.3", //  LAN IP192.168.1.8
+        host: "192.168.1.10", //  LAN IP192.168.1.8
         port: 5173,
         strictPort: true,
         cors: true, // Optional: Allows other origins to connect (dev only)

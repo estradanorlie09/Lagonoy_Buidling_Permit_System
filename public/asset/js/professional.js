@@ -69,13 +69,13 @@ function addProfessional(data = null, isDefault = false) {
 
     const removeBtn = isDefault
         ? ""
-        : `<button type="button" onclick="removeProfessional(this)" class="absolute top-2 right-2 text-red-500 font-bold">✖</button>`;
+        : `<button type="button" onclick="removeProfessional(this)" class="absolute top-2 right-2 text-blue-500 font-bold">✖</button>`;
 
     newProf.innerHTML = `
             ${removeBtn}
             <div class="w-full">
-                <label class="block text-sm font-medium text-gray-700">Professional Type <span class="text-red-500">*</span></label>
-                <select name="prof_type[]" class="prof-type w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="prof_type_${index}">
+                <label class="block text-sm font-medium text-gray-700">Professional Type <span class="text-blue-500">*</span></label>
+                <select name="prof_type[]" class="prof-type w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="prof_type_${index}">
                     <option value="">-- Select --</option>
                     <option>Architect</option>
                     <option>Civil/Structural Engineer</option>
@@ -90,41 +90,41 @@ function addProfessional(data = null, isDefault = false) {
 
             <div class="flex gap-5 mt-2">
                 <div class="w-full">
-                    <label class="block text-sm font-medium text-gray-700">Full Name <span class="text-red-500">*</span></label>
-                    <input type="text" name="prof_name[]" placeholder="Full Name" class="prof-name w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="prof_name_${index}">
+                    <label class="block text-sm font-medium text-gray-700">Full Name <span class="text-blue-500">*</span></label>
+                    <input type="text" name="prof_name[]" placeholder="Full Name" class="prof-name w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="prof_name_${index}">
                 </div>
 
                 <div class="w-full">
-                    <label class="block text-sm font-medium text-gray-700">PRC Number <span class="text-red-500">*</span></label>
-                    <input type="text" name="prc_no[]" placeholder="PRC Number" class="prof-prc w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="prc_no_${index}">
+                    <label class="block text-sm font-medium text-gray-700">PRC Number <span class="text-blue-500">*</span></label>
+                    <input type="text" name="prc_no[]" placeholder="PRC Number" class="prof-prc w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="prc_no_${index}">
                 </div>
 
                 <div class="w-full">
-                    <label class="block text-sm font-medium text-gray-700">PTR Number <span class="text-red-500">*</span></label>
-                    <input type="text" name="ptr_no[]" placeholder="PTR Number" class="prof-ptr w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="ptr_no_${index}">
+                    <label class="block text-sm font-medium text-gray-700">PTR Number <span class="text-blue-500">*</span></label>
+                    <input type="text" name="ptr_no[]" placeholder="PTR Number" class="prof-ptr w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="ptr_no_${index}">
                 </div>
             </div>
 
             <div class="flex gap-5 mt-2">
                 <div class="w-full">
-                    <label class="block text-sm font-medium text-gray-700">Birthday <span class="text-red-500">*</span></label>
-                    <input type="date" name="birthday[]" class="prof-birthday w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="birthday_${index}">
+                    <label class="block text-sm font-medium text-gray-700">Birthday <span class="text-blue-500">*</span></label>
+                    <input type="date" name="birthday[]" class="prof-birthday w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="birthday_${index}">
                 </div>
 
                 <div class="w-full">
-                    <label class="block text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
-                    <input type="email" name="email[]" placeholder="Email" class="prof-email w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="email_${index}">
+                    <label class="block text-sm font-medium text-gray-700">Email <span class="text-blue-500">*</span></label>
+                    <input type="email" name="email[]" placeholder="Email" class="prof-email w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="email_${index}">
                 </div>
 
                 <div class="w-full">
-                    <label class="block text-sm font-medium text-gray-700">Phone Number <span class="text-red-500">*</span></label>
-                    <input type="text" name="phone_number[]" placeholder="Phone Number" class="prof-phone w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="phone_number_${index}">
+                    <label class="block text-sm font-medium text-gray-700">Phone Number <span class="text-blue-500">*</span></label>
+                    <input type="text" name="phone_number[]" placeholder="Phone Number" class="prof-phone w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="phone_number_${index}">
                 </div>
             </div>
 
             <div class="w-full mt-2">
-                <label class="block text-sm font-medium text-gray-700">Address <span class="text-red-500">*</span></label>
-                <input type="text" name="prof_address[]" placeholder="Address" class="prof-address w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-red-500" id="prof_address_${index}">
+                <label class="block text-sm font-medium text-gray-700">Address <span class="text-blue-500">*</span></label>
+                <input type="text" name="prof_address[]" placeholder="Address" class="prof-address w-full border border-gray-300 rounded p-2 mt-1 focus:outline-none focus:ring-1 focus:ring-blue-500" id="prof_address_${index}">
             </div>
         `;
 

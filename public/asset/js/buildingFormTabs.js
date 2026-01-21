@@ -9,10 +9,13 @@ function formTabs() {
                 label: "Property Information",
             },
             {
-                label: "Professional",
+                label: "Location of Property",
             },
             {
-                label: "Documents",
+                label: "Legal & Scope",
+            },
+            {
+                label: "Professional",
             },
         ],
         setTab(index) {

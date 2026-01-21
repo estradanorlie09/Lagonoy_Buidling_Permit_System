@@ -91,6 +91,14 @@
                 <span class="font-medium text-sm">Building Applications</span>
             </a>
 
+            <a href="{{ route('obo.obo_visitation') }}"
+                class="group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                {{ request()->routeIs('obo.obo_visitation') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/50' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">
+                <i
+                    class="fas fa-calendar w-5 text-center {{ request()->routeIs('obo.obo_visitation') ? 'text-white' : 'text-slate-400 group-hover:text-blue-400' }}"></i>
+                <span class="font-medium text-sm">Visitation Scheduler</span>
+            </a>
+
             <a href="{{ route('applicant.setting') }}"
                 class="group flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
                 {{ request()->routeIs('applicant.setting') ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/50' : 'text-slate-300 hover:bg-slate-700/50 hover:text-white' }}">

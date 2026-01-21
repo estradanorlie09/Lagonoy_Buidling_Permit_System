@@ -146,7 +146,7 @@
             </div>
 
             <div class="overflow-x-auto">
-                <table class="w-full text-sm">
+                <table class="w-full text-sm" id="example">
                     <thead>
                         <tr class="border-b border-slate-200 bg-slate-50">
                             <th class="px-6 py-4 text-left font-semibold text-slate-700">Application No</th>
@@ -390,4 +390,6 @@
             </div>
         </div>
     </div>
+
+    {{-- <script src="{{ asset('asset/js/datatable.js') }}"></script> --}}
 @endsection

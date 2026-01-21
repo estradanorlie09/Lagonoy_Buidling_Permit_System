@@ -13,7 +13,7 @@ class Visitation extends Model
 
     public $incrementing = false;
 
-    protected $fillable = ['zoning_application_id', 'sanitary_application_id', 'visit_date', 'visit_time', 'remarks', 'status', 'scheduled_by'];
+    protected $fillable = ['zoning_application_id', 'sanitary_application_id', 'building_application_id', 'visit_date', 'visit_time', 'remarks', 'status', 'scheduled_by'];
 
     // protected $table = 'application_remark';
     protected static function boot()
@@ -45,5 +45,10 @@ class Visitation extends Model
     public function sanitaryApplication()
     {
         return $this->belongsTo(SanitaryApplication::class);
+    }
+
+    public function buildingApplication()
+    {
+        return $this->belongsTo(buildingApplication::class);
     }
 }

@@ -24,6 +24,11 @@ return new class extends Migration
                 ->references('id')->on('sanitary_applications')
                 ->onDelete('cascade');
 
+            $table->uuid('building_application_id')->nullable();
+            $table->foreign('building_application_id')
+                ->references('id')->on('building_applications')
+                ->onDelete('cascade');
+
             $table->date('visit_date');
             $table->time('visit_time');
             $table->enum('status', ['pending', 'completed', 'cancelled', 'rescheduled', 'scheduled', 'absent'])->default('scheduled');

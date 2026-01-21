@@ -28,52 +28,71 @@ $(document).ready(function () {
             $(".status-btn").each(function () {
                 const val = $(this).data("value");
                 let baseClasses =
-                    "filter-btn status-btn p-2 rounded-xl font-medium ";
+                    "filter-btn status-btn px-3 py-1.5 rounded-full font-medium text-xs transition-all border ";
                 switch (val) {
                     case "all":
-                        baseClasses += "bg-gray-200 text-gray-800";
+                        baseClasses +=
+                            "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200";
                         break;
                     case "scheduled":
-                        baseClasses += "bg-blue-100 text-blue-800";
+                        baseClasses +=
+                            "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100";
+                        break;
+                    case "rescheduled":
+                        baseClasses +=
+                            "bg-cyan-50 text-cyan-700 border-cyan-200 hover:bg-cyan-100";
                         break;
                     case "completed":
-                        baseClasses += "bg-green-100 text-green-800";
+                        baseClasses +=
+                            "bg-green-50 text-green-700 border-green-200 hover:bg-green-100";
                         break;
                     case "absent":
-                        baseClasses += "bg-red-100 text-red-800";
+                        baseClasses +=
+                            "bg-red-50 text-red-700 border-red-200 hover:bg-red-100";
                         break;
                     case "cancelled":
-                        baseClasses += "bg-yellow-100 text-yellow-800";
+                        baseClasses +=
+                            "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100";
                         break;
                     default:
-                        baseClasses += "bg-gray-200 text-gray-800";
+                        baseClasses +=
+                            "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200";
                         break;
                 }
                 $(this).attr("class", baseClasses);
             });
 
-            // Highlight active status button with dark bg
+            // Highlight active status button with solid color
             if (selectedStatus !== "all") {
                 let activeBtn = $(".status-btn").filter(
-                    `[data-value='${selectedStatus}']`
+                    `[data-value='${selectedStatus}']`,
                 );
                 let activeClasses =
-                    "filter-btn status-btn p-2 rounded-xl font-medium text-white ";
+                    "filter-btn status-btn px-3 py-1.5 rounded-full font-medium text-xs transition-all border text-white ";
                 switch (selectedStatus) {
                     case "scheduled":
-                        activeClasses += "bg-blue-800";
+                        activeClasses +=
+                            "bg-blue-600 border-blue-600 hover:bg-blue-700";
+                        break;
+                    case "rescheduled":
+                        activeClasses +=
+                            "bg-cyan-600 border-cyan-600 hover:bg-cyan-700";
                         break;
                     case "completed":
-                        activeClasses += "bg-green-800";
+                        activeClasses +=
+                            "bg-green-600 border-green-600 hover:bg-green-700";
                         break;
                     case "absent":
-                        activeClasses += "bg-red-800";
+                        activeClasses +=
+                            "bg-red-600 border-red-600 hover:bg-red-700";
                         break;
                     case "cancelled":
-                        activeClasses += "bg-yellow-800";
+                        activeClasses +=
+                            "bg-gray-600 border-gray-600 hover:bg-gray-700";
                         break;
                     default:
-                        activeClasses += "bg-gray-800";
+                        activeClasses +=
+                            "bg-gray-600 border-gray-600 hover:bg-gray-700";
                         break;
                 }
                 activeBtn.attr("class", activeClasses);
@@ -86,22 +105,27 @@ $(document).ready(function () {
             $(".date-btn").each(function () {
                 const val = $(this).data("value");
                 let baseClasses =
-                    "filter-btn date-btn p-2 rounded-xl font-medium ";
+                    "filter-btn date-btn px-3 py-1.5 rounded-full font-medium text-xs transition-all border ";
                 switch (val) {
                     case "all":
-                        baseClasses += "bg-gray-200 text-gray-800";
+                        baseClasses +=
+                            "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200";
                         break;
                     case "today":
-                        baseClasses += "bg-blue-100 text-blue-800";
+                        baseClasses +=
+                            "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100";
                         break;
                     case "last_week":
-                        baseClasses += "bg-green-100 text-green-800";
+                        baseClasses +=
+                            "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100";
                         break;
                     case "last_month":
-                        baseClasses += "bg-yellow-100 text-yellow-800";
+                        baseClasses +=
+                            "bg-cyan-50 text-cyan-700 border-cyan-200 hover:bg-cyan-100";
                         break;
                     default:
-                        baseClasses += "bg-gray-200 text-gray-800";
+                        baseClasses +=
+                            "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200";
                         break;
                 }
                 $(this).attr("class", baseClasses);
@@ -109,22 +133,26 @@ $(document).ready(function () {
 
             if (selectedDate !== "all") {
                 let activeBtn = $(".date-btn").filter(
-                    `[data-value='${selectedDate}']`
+                    `[data-value='${selectedDate}']`,
                 );
                 let activeClasses =
-                    "filter-btn date-btn px-4 py-2 rounded-xl font-medium text-white ";
+                    "filter-btn date-btn px-3 py-1.5 rounded-full font-medium text-xs transition-all border text-white ";
                 switch (selectedDate) {
                     case "today":
-                        activeClasses += "bg-blue-800";
+                        activeClasses +=
+                            "bg-blue-600 border-blue-600 hover:bg-blue-700";
                         break;
                     case "last_week":
-                        activeClasses += "bg-green-800";
+                        activeClasses +=
+                            "bg-indigo-600 border-indigo-600 hover:bg-indigo-700";
                         break;
                     case "last_month":
-                        activeClasses += "bg-yellow-800";
+                        activeClasses +=
+                            "bg-cyan-600 border-cyan-600 hover:bg-cyan-700";
                         break;
                     default:
-                        activeClasses += "bg-gray-800";
+                        activeClasses +=
+                            "bg-gray-600 border-gray-600 hover:bg-gray-700";
                         break;
                 }
                 activeBtn.attr("class", activeClasses);
@@ -158,12 +186,12 @@ $(document).ready(function () {
                     today.clone().subtract(7, "days"),
                     today,
                     "day",
-                    "[]"
+                    "[]",
                 );
             } else if (selectedDate === "last_month") {
                 datePass = recordDate.isSame(
                     today.clone().subtract(1, "month"),
-                    "month"
+                    "month",
                 );
             }
         }

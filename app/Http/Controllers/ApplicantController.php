@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApplicantLog;
 use App\Models\BuildingApplication;
 use App\Models\SanitaryApplication;
 use App\Models\User;
@@ -51,41 +52,47 @@ class ApplicantController extends Controller
 
     public function getVisitationEvents()
     {
-        // Fetch all visitations for the authenticated user
-        $visitations = Visitation::where(function ($query) {
-            $query->whereHas('zoningApplication', function ($q) {
+        $visitations = Visitation::whereHas('buildingApplication', function ($q) {
+            $q->where('user_id', auth()->id());
+        })
+            ->orWhereHas('sanitaryApplication', function ($q) {
                 $q->where('user_id', auth()->id());
-            })->orWhereHas('sanitaryApplication', function ($q) {
+            })
+            ->orWhereHas('zoningApplication', function ($q) {
                 $q->where('user_id', auth()->id());
-            });
-        })->get();
+            })
+            ->orderBy('visit_date', 'desc') // latest date first
+            ->orderBy('visit_time', 'desc') // latest time first
+            ->get();
 
         $events = $visitations->map(function ($visitation) {
-            // Determine application type and number
-            if ($visitation->zoningApplication) {
-                $applicationNo = $visitation->zoningApplication->application_no;
-                $role = 'Zoning';
+            if ($visitation->buildingApplication) {
+                $applicationNo = $visitation->buildingApplication->application_no;
+                $role = 'Building';
             } elseif ($visitation->sanitaryApplication) {
                 $applicationNo = $visitation->sanitaryApplication->application_no;
                 $role = 'Sanitary';
+            } elseif ($visitation->zoningApplication) {
+                $applicationNo = $visitation->zoningApplication->application_no;
+                $role = 'Zoning';
             } else {
                 $applicationNo = 'N/A';
                 $role = 'Unknown';
             }
 
-            // Set colors based on role and status
             $roleColor = match ($role) {
-                'Zoning' => '#2563eb',   // blue
-                'Sanitary' => '#8b5cf6', // purple
-                default => '#6b7280',    // gray
+                'Zoning' => '#2563eb',
+                'Sanitary' => '#8b5cf6',
+                'Building' => '#3B82F6',
+                default => '#6b7280',
             };
 
             $statusColor = match ($visitation->status) {
-                'completed' => '#16a34a',   // green
-                'cancelled' => '#dc2626',   // red
-                'rescheduled' => '#f59e0b', // yellow
-                'absent' => '#6b7280',      // gray
-                default => $roleColor,      // fallback to role color
+                'completed' => '#16a34a',
+                'cancelled' => '#dc2626',
+                'rescheduled' => '#f59e0b',
+                'absent' => '#6b7280',
+                default => $roleColor,
             };
 
             return [
@@ -100,17 +107,6 @@ class ApplicantController extends Controller
         });
 
         return response()->json($events);
-    }
-
-    public function sanitary()
-    {
-        $applications = SanitaryApplication::with('property')
-            ->where('user_id', Auth::id())
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        //  dd($applications);
-        return view('applicant.sanitary', compact('applications'));
     }
 
     public function index()
@@ -142,7 +138,7 @@ class ApplicantController extends Controller
 
         // 🔵 QUICK STATS (FOR DASHBOARD CARDS)
         $activeApplications = BuildingApplication::where('user_id', $userId)
-            ->whereIn('status', ['submitted', 'pending'])
+            ->whereIn('status', ['submitted', 'pending','under_review'])
             ->count();
 
         $approvedThisMonth = BuildingApplication::where('user_id', $userId)
@@ -160,12 +156,16 @@ class ApplicantController extends Controller
             ->where('status', 'pending')
             ->count();
 
+        $applicationValidationReason = ApplicantLog::where('applicant_id', $userId)
+            ->latest()
+            ->value('remarks');
+
         return view('applicant.dashboard', compact(
             'applications',
             'summaries',
             'activeApplications',
             'approvedThisMonth',
-            // 'upcomingAppointments',
+            'applicationValidationReason',
             'pendingReviews'
         ));
     }

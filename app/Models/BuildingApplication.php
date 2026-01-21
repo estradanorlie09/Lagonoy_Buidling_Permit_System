@@ -82,7 +82,7 @@ class BuildingApplication extends Model
 
     public function visitation()
     {
-        return $this->hasOne(Visitation::class, 'zoning_application_id');
+        return $this->hasOne(Visitation::class, 'building_application_id');
     }
 
     public function approver()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\BuildingApplicationSubmitted;
+use App\Models\ApplicantLog;
 use App\Models\BuildingApplication;
 use App\Models\BuildingDocument;
 use App\Models\BuildingProperty;
@@ -18,12 +19,17 @@ class ApplicantBuildingPermitController extends Controller
 {
     public function buildingPermit()
     {
+        $userId = Auth()->id();
         $applications = BuildingApplication::with('property')
             ->where('user_id', Auth::id())
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('applicant.buildingPermitRecords', compact('applications'));
+        $applicationValidationReason = ApplicantLog::where('applicant_id', $userId)
+            ->latest()
+            ->value('remarks');
+
+        return view('applicant.buildingPermitRecords', compact('applications', 'applicationValidationReason'));
     }
 
     public function buildingPermitForms()
@@ -111,35 +117,35 @@ class ApplicantBuildingPermitController extends Controller
             'phone_number.*' => ['required', 'regex:/^(0|9)\d{9,10}$/'],
             'prof_address' => 'required|array',
             'prof_address.*' => 'required|string',
-
-            // Documents
-            'documents.architecture_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.structure_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.plumbing_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.mechanical_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.electronics_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.estimated_cost' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.electrical_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.dos' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.crptx' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.site_plan' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.SPA' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.zoning_clearance' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.bfp_certificate' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.Environmental_clearance' => 'required|file|mimes:pdf,jpg,png|max:40000',
-            'documents.optional' => 'nullable|file|mimes:pdf,jpg,png|max:40000',
-        ],
-            [
-                // Human-readable field names
-                'prof_type.*' => 'professional type',
-                'prof_name.*' => 'professional name',
-                'prc_no.*' => 'PRC number',
-                'ptr_no.*' => 'PTR number',
-                'birthday.*' => 'birthday',
-                'email.*' => 'email address',
-                'phone_number.*' => 'phone number',
-                'prof_address.*' => 'address',
-            ], $messages);
+        ]);
+        //     // Documents
+        //     'documents.architecture_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.structure_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.plumbing_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.mechanical_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.electronics_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.estimated_cost' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.electrical_plans' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.dos' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.crptx' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.site_plan' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.SPA' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.zoning_clearance' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.bfp_certificate' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.Environmental_clearance' => 'required|file|mimes:pdf,jpg,png|max:40000',
+        //     'documents.optional' => 'nullable|file|mimes:pdf,jpg,png|max:40000',
+        // ],
+        //     [
+        //         // Human-readable field names
+        //         'prof_type.*' => 'professional type',
+        //         'prof_name.*' => 'professional name',
+        //         'prc_no.*' => 'PRC number',
+        //         'ptr_no.*' => 'PTR number',
+        //         'birthday.*' => 'birthday',
+        //         'email.*' => 'email address',
+        //         'phone_number.*' => 'phone number',
+        //         'prof_address.*' => 'address',
+        //     ], $messages);
         $floorArea = (float) $request->floor_area;
         $lotArea = (float) $request->lot_area;
         $far = $lotArea > 0 ? round($floorArea / $lotArea, 2) : null;
@@ -179,19 +185,19 @@ class ApplicantBuildingPermitController extends Controller
                     'status' => 'submitted',
                 ]);
 
-                if ($request->hasFile('documents')) {
-                    foreach ($request->file('documents') as $type => $file) {
-                        $path = $file->store('building_permit_docs', 'public');
+                // if ($request->hasFile('documents')) {
+                //     foreach ($request->file('documents') as $type => $file) {
+                //         $path = $file->store('building_permit_docs', 'public');
 
-                        BuildingDocument::create([
-                            'id' => (string) Str::uuid(),
-                            'building_application_id' => $application->id,
-                            'document_type' => $type,
-                            'file_path' => $path,
-                            'version' => 1,
-                        ]);
-                    }
-                }
+                //         BuildingDocument::create([
+                //             'id' => (string) Str::uuid(),
+                //             'building_application_id' => $application->id,
+                //             'document_type' => $type,
+                //             'file_path' => $path,
+                //             'version' => 1,
+                //         ]);
+                //     }
+                // }
 
                 // 👷 Save professionals
                 $count = count($request->prof_type);
