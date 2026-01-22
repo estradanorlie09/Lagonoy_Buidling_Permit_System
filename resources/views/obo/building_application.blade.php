@@ -8,20 +8,21 @@
 
             <!-- Header Banner -->
             <div
-                class="relative rounded-2xl overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 shadow-lg mb-8 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+                class="relative rounded-xl overflow-hidden bg-gradient-to-r from-blue-600 via-blue-700 to-blue-800 shadow-md mb-5 p-4 md:p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+
                 <!-- Left Section -->
                 <div class="relative z-10">
-                    <div class="flex items-center gap-4 mb-4">
+                    <div class="flex items-center gap-3">
                         <div
-                            class="w-16 h-16 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-full shadow-lg border border-white/30">
-                            <i class="fas fa-building text-white text-3xl"></i>
+                            class="w-12 h-12 flex items-center justify-center bg-white/20 backdrop-blur-md rounded-full shadow border border-white/30">
+                            <i class="fas fa-building text-white text-xl"></i>
                         </div>
                         <div>
-                            <h1 class="text-3xl md:text-4xl font-bold text-white tracking-tight">
+                            <h1 class="text-xl md:text-2xl font-bold text-white tracking-tight leading-tight">
                                 Building Applications
                             </h1>
-                            <p class="text-blue-100 text-sm md:text-base mt-1">
-                                Manage and review applicant building permit submissions
+                            <p class="text-blue-100 text-xs md:text-sm mt-0.5">
+                                Manage and review building permit submissions
                             </p>
                         </div>
                     </div>
@@ -30,17 +31,18 @@
                 <!-- Right Decorative Illustration -->
                 <div class="hidden md:block relative">
                     <img src="{{ asset('asset/img/architecture-and-city.png') }}" alt="Building Illustration"
-                        class="w-40 opacity-90 drop-shadow-lg hover:scale-105 transition-transform duration-300">
+                        class="w-28 opacity-90 drop-shadow hover:scale-105 transition-transform duration-300">
                 </div>
 
                 <!-- Decorative Overlays -->
-                <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-blue-900/20 pointer-events-none"></div>
-                <div class="absolute -bottom-16 -right-16 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl"></div>
-                <div class="absolute -top-16 -left-16 w-64 h-64 bg-blue-300/20 rounded-full blur-3xl"></div>
+                <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-blue-900/20 pointer-events-none"></div>
+                <div class="absolute -bottom-12 -right-12 w-40 h-40 bg-blue-400/20 rounded-full blur-2xl"></div>
+                <div class="absolute -top-12 -left-12 w-40 h-40 bg-blue-300/20 rounded-full blur-2xl"></div>
             </div>
 
+
             <!-- Summary Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 <!-- Total Applications -->
                 <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-blue-600 p-6">
                     <div class="flex items-center justify-between">
@@ -85,21 +87,6 @@
                     </div>
                 </div>
 
-                <!-- Resubmit -->
-                <div
-                    class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow border-l-4 border-amber-500 p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-600 text-sm font-medium mb-1">Awaiting Resubmit</p>
-                            <h3 class="text-3xl font-bold text-gray-900">
-                                {{ $applications->where('status', 'resubmit')->count() }}
-                            </h3>
-                        </div>
-                        <div class="p-3 bg-amber-100 text-amber-600 rounded-lg">
-                            <i class="fas fa-redo text-2xl"></i>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Applications Table Section -->
@@ -151,7 +138,7 @@
                     <table class="min-w-full text-sm text-gray-700" id="applicantTable">
                         <thead class="bg-gray-100 border-b border-gray-300">
                             <tr>
-                                <th class="px-6 py-4 text-left font-semibold text-gray-900 w-10">#</th>
+                                {{-- <th class="px-6 py-4 text-left font-semibold text-gray-900 w-10">#</th> --}}
                                 <th class="px-6 py-4 text-left font-semibold text-gray-900">Application ID</th>
                                 <th class="px-6 py-4 text-left font-semibold text-gray-900">Applicant Name</th>
                                 <th class="px-6 py-4 text-center font-semibold text-gray-900">Date Submitted</th>
@@ -165,9 +152,9 @@
                             @foreach ($applications as $index => $application)
                                 <tr class="hover:bg-blue-50 transition-colors duration-150">
                                     <!-- Row Number -->
-                                    <td class="px-6 py-4 font-semibold text-gray-700">
+                                    {{-- <td class="px-6 py-4 font-semibold text-gray-700">
                                         {{ $index + 1 }}
-                                    </td>
+                                    </td> --}}
 
                                     <!-- Application ID -->
                                     <td class="px-6 py-4">
@@ -232,11 +219,11 @@
                                                     'text' => 'text-red-700',
                                                     'label' => 'Disapproved',
                                                 ],
-                                                'resubmit' => [
-                                                    'icon' => 'fas fa-sync-alt',
+                                                'payment' => [
+                                                    'icon' => 'fas fa-credit-card',
                                                     'bg' => 'bg-amber-100',
                                                     'text' => 'text-amber-700',
-                                                    'label' => 'Resubmit',
+                                                    'label' => 'Payment',
                                                 ],
                                                 'under_review' => [
                                                     'icon' => 'fas fa-hourglass-half',
@@ -277,7 +264,34 @@
                                             </a>
 
                                             <!-- Approve Button (Under Review) -->
-                                            @if ($application->status === 'under_review')
+
+                                            {{-- <button type="button"
+                                                @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approve', action: 'approve'})"
+                                                class="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition duration-200"
+                                                title="Approve Application">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button> --}}
+
+                                            @if ($application->status == 'approved' || $application->status == 'disapproved')
+                                                <button type="button" {{-- @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Disapproved', action: 'disapprove'})" --}}
+                                                    class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition duration-200"
+                                                    title="Disapprove Application">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                <button type="button" disabled
+                                                    @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approve', action: 'approve'})"
+                                                    class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition duration-200"
+                                                    title="Approve Application">
+                                                    <i class="fas fa-check-circle bg-gray-400"></i>
+                                                </button>
+                                            @endif
+
+                                            @if ($application->status == 'payment')
+                                                <button type="button" {{-- @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Disapproved', action: 'disapprove'})" --}}
+                                                    class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition duration-200"
+                                                    title="Disapprove Application">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
                                                 <button type="button"
                                                     @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approve', action: 'approve'})"
                                                     class="p-2 bg-green-100 hover:bg-green-200 text-green-600 rounded-lg transition duration-200"
@@ -285,6 +299,22 @@
                                                     <i class="fas fa-check-circle"></i>
                                                 </button>
                                             @endif
+
+                                            @if ($application->status == 'under_review')
+                                                <button type="button"
+                                                    @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Disapproved', action: 'disapprove'})"
+                                                    class="p-2 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition duration-200"
+                                                    title="Disapprove Application">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                <button type="button" disabled
+                                                    @click="$dispatch('open-remarks-modal', { id: '{{ $application->id }}', title: 'Approve', action: 'approve'})"
+                                                    class="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg transition duration-200"
+                                                    title="Approve Application">
+                                                    <i class="fas fa-check-circle bg-gray-400"></i>
+                                                </button>
+                                            @endif
+
                                         </div>
                                     </td>
                                 </tr>

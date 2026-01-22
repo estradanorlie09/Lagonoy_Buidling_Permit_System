@@ -2,36 +2,40 @@ $(document).ready(function () {
     let selectedStatus = "all";
     let selectedDate = "all";
 
-    // Add custom filter for status and date
+    // Custom filter for status and date
     $.fn.dataTable.ext.search.push(function (settings, data) {
-        let statusCell = data[5]; // Status is in column 5
-        let dateCell = data[3]; // Date is in column 3
+        let statusCell = data[4]; // Status column
+        let dateCell = data[2]; // Date column
 
-        // Extract status value
-        let statusText = statusCell.toString().toLowerCase();
+        // Normalize status text
+        let statusText = statusCell.toString().toLowerCase().trim();
         let statusValue = "";
 
-        if (statusText.includes("approved")) statusValue = "approved";
-        else if (statusText.includes("under review"))
-            statusValue = "under_review";
-        else if (statusText.includes("disapproved"))
+        // IMPORTANT: order matters (disapproved must come first)
+        if (statusText.includes("disapproved")) {
             statusValue = "disapproved";
-        else if (statusText.includes("resubmit")) statusValue = "resubmit";
-        else if (statusText.includes("submitted")) statusValue = "submitted";
+        } else if (statusText.includes("approved")) {
+            statusValue = "approved";
+        } else if (statusText.includes("under review")) {
+            statusValue = "under_review";
+        } else if (statusText.includes("resubmit")) {
+            statusValue = "resubmit";
+        } else if (statusText.includes("submitted")) {
+            statusValue = "submitted";
+        }
 
-        // Status Filter
+        // STATUS FILTER
         if (selectedStatus !== "all" && selectedStatus !== "") {
-            if (statusValue !== selectedStatus.toLowerCase()) {
+            if (statusValue !== selectedStatus) {
                 return false;
             }
         }
 
-        // Date Filter
+        // DATE FILTER
         if (selectedDate !== "all" && selectedDate !== "") {
             const today = new Date();
             today.setHours(0, 0, 0, 0);
 
-            // Parse date from cell (format: "M dd, Y")
             const rowDate = new Date(dateCell);
             rowDate.setHours(0, 0, 0, 0);
 
@@ -56,7 +60,9 @@ $(document).ready(function () {
 
     // Initialize DataTable
     let table = $("#applicantTable").DataTable({
-        dom: "<'hidden'f>rt<'flex flex-col sm:flex-row justify-between items-center mt-4 gap-3'<'w-full sm:w-1/2'i><'w-full sm:w-1/2'p>>",
+        dom:
+            "<'hidden'f>rt<'flex flex-col sm:flex-row justify-between items-center mt-4 gap-3'" +
+            "<'w-full sm:w-1/2'i><'w-full sm:w-1/2'p>>",
 
         language: {
             search: "",
@@ -83,7 +89,6 @@ $(document).ready(function () {
             let info = this.api().page.info();
             let records = info.recordsDisplay;
 
-            // Hide pagination if 10 or fewer records
             if (records <= 10) {
                 $("#applicantTable_info").hide();
                 $("#applicantTable_paginate").hide();
@@ -94,7 +99,7 @@ $(document).ready(function () {
         },
     });
 
-    // Search functionality
+    // Search
     $("#customSearch").on("keyup change clear input", function () {
         table.search(this.value, false, false).draw();
     });
@@ -111,7 +116,7 @@ $(document).ready(function () {
         table.draw();
     });
 
-    // Optional: Add reset button functionality
+    // Reset filters
     $(document).on("click", "#resetFilters", function () {
         selectedStatus = "all";
         selectedDate = "all";

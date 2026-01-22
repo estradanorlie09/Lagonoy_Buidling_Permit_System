@@ -242,8 +242,8 @@
                                                     'bg' => 'bg-red-100',
                                                     'text' => 'text-red-700',
                                                 ],
-                                                'resubmit' => [
-                                                    'icon' => 'fas fa-sync-alt',
+                                                'payment' => [
+                                                    'icon' => 'fas fa-credit-card',
                                                     'bg' => 'bg-yellow-100',
                                                     'text' => 'text-yellow-700',
                                                 ],

@@ -60,7 +60,7 @@
                     'submitted' => 'Submitted',
                     'under_review' => 'Under Review',
                     'disapproved' => 'Disapproved',
-                    'resubmit' => 'Resubmit',
+                    'payment' => 'Payment',
                     'approved' => 'Approved',
                 ];
 
@@ -69,7 +69,7 @@
                     'under_review' => 'fas fa-search',
                     'approved' => 'fas fa-check-circle',
                     'disapproved' => 'fas fa-times-circle',
-                    'resubmit' => 'fas fa-blueo',
+                    'payment' => 'fas fa-credit-card',
                 ];
 
                 switch ($status) {
@@ -79,12 +79,12 @@
                     case 'disapproved':
                         $stages = ['submitted', 'under_review', 'disapproved'];
                         break;
-                    case 'resubmit':
-                        $stages = ['submitted', 'under_review', 'resubmit'];
+                    case 'payment':
+                        $stages = ['submitted', 'under_review', 'payment', 'disapproved','approved'];
                         break;
                     default:
                         // submitted / under_review
-                        $stages = ['submitted', 'under_review', 'resubmit', 'disapproved', 'approved'];
+                        $stages = ['submitted', 'under_review', 'payment', 'disapproved', 'approved'];
                         break;
                 }
             @endphp
@@ -136,6 +136,7 @@
                 </div>
 
                 <!-- Status Tracker -->
+                <!-- Status Tracker -->
                 <div class="mt-6 bg-white shadow-md rounded-xl p-6">
                     <h4 class="text-sm font-semibold text-gray-600 mb-4">Application Progress</h4>
 
@@ -145,47 +146,57 @@
                                 $colorClass = 'bg-gray-300 text-gray-600';
                                 $lineColor = 'bg-gray-300';
 
+                                // Replace 'resubmit' with 'payment'
+                                $currentStage = $stage === 'resubmit' ? 'payment' : $stage;
+
+                                // Stage colors based on status
                                 if ($status === 'approved') {
-                                    if (in_array($stage, ['submitted', 'under_review', 'approved'])) {
+                                    if (in_array($currentStage, ['submitted', 'under_review', 'approved', 'payment'])) {
                                         $colorClass = 'bg-green-600 text-white';
                                     }
                                 }
 
                                 if ($status === 'disapproved') {
-                                    if (in_array($stage, ['submitted', 'under_review'])) {
+                                    if (in_array($currentStage, ['submitted', 'under_review'])) {
                                         $colorClass = 'bg-green-600 text-white';
                                     }
-                                    if ($stage === 'disapproved') {
+                                    if ($currentStage === 'disapproved') {
                                         $colorClass = 'bg-blue-600 text-white';
                                     }
                                 }
 
-                                if ($status === 'resubmit') {
-                                    if (in_array($stage, ['submitted', 'under_review'])) {
+                                if ($status === 'payment') {
+                                    if (in_array($currentStage, ['submitted', 'under_review'])) {
                                         $colorClass = 'bg-green-600 text-white';
                                     }
-                                    if ($stage === 'resubmit') {
+                                    if ($currentStage === 'payment') {
                                         $colorClass = 'bg-yellow-600 text-white';
                                     }
                                 }
 
                                 if ($status === 'submitted') {
-                                    if ($stage === 'submitted') {
+                                    if ($currentStage === 'submitted') {
                                         $colorClass = 'bg-gray-600 text-white';
                                     }
                                 }
 
                                 if ($status === 'under_review') {
-                                    if (in_array($stage, ['submitted', 'under_review'])) {
+                                    if (in_array($currentStage, ['submitted', 'under_review'])) {
                                         $colorClass = 'bg-green-600 text-white';
                                     }
-                                    if ($stage === 'under_review') {
+                                    if ($currentStage === 'under_review') {
                                         $colorClass = 'bg-blue-600 text-white';
                                     }
                                 }
 
                                 if ($index > 0) {
                                     $lineColor = 'bg-gray-300';
+                                }
+
+                                // Icon for each stage
+                                $icon = $stageIcons[$stage];
+                                if ($stage === 'resubmit') {
+                                    $icon = 'fas fa-credit-card'; // new payment icon
                                 }
                             @endphp
 
@@ -199,15 +210,16 @@
                             <!-- Step -->
                             <div class="flex flex-col items-center z-10 flex-1">
                                 <div class="w-10 h-10 rounded-full flex items-center justify-center {{ $colorClass }}">
-                                    <i class="{{ $stageIcons[$stage] }}"></i>
+                                    <i class="{{ $icon }}"></i>
                                 </div>
                                 <span class="text-xs mt-2 text-center capitalize">
-                                    {{ $stageLabels[$stage] }}
+                                    {{ $stageLabels[$stage] === 'Resubmit' ? 'Payment' : $stageLabels[$stage] }}
                                 </span>
                             </div>
                         @endforeach
                     </div>
                 </div>
+
             </div>
             <!-- Property Info Card -->
             <div class="bg-white shadow-sm rounded-xl p-6 mb-6 border border-gray-100">
@@ -462,228 +474,408 @@
 
 
 
+            <div class="container mx-auto py-8 px-4">
+                <div x-data="documentTracker(@js($application->id))" x-init="loadDocuments()"
+                    class="bg-white p-6 rounded-xl border border-blue-100 shadow-md">
 
+                    <!-- Header -->
+                    <div class="flex justify-between items-center">
+                        <div class="mb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                <i class="fas fa-clipboard-check text-blue-600"></i>
+                                Required Documents - Physical Submission
+                            </h3>
+                            <p class="text-gray-600 text-sm mt-2">
+                                The following documents must be submitted physically to the Office of Building Official
+                            </p>
+                        </div>
+                        <div x-show="allChecked" class="bg-green-600 text-white px-4 py-2 rounded">
+                            All Documents Submitted
+                        </div>
 
-            <!-- Documents -->
-
-            <div x-data="{ openResubmit: false, selectedDoc: null }" class="bg-gray-50 p-6 rounded-xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-gray-800">Submitted Documents</h3>
-                </div>
-
-                @php
-                    $latestDocs = $application->documents
-                        ->groupBy('document_type')
-                        ->map(fn($docs) => $docs->sortByDesc('version')->first());
-                @endphp
-
-                @if ($latestDocs->count() > 0)
-                    <div class="overflow-x-auto rounded-sm p-3 border border-gray-200 shadow-sm">
-                        <table id="example" class="min-w-full bg-white text-sm">
-                            <thead class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wide">
-                                <tr>
-                                    <th class="px-4 py-3 text-left">#</th>
-                                    <th class="px-4 py-3 text-center">File</th>
-                                    <th class="px-4 py-3 text-left">Type</th>
-                                    <th class="px-4 py-3 text-center">Status</th>
-                                    <th class="px-4 py-3 text-left">Remarks</th>
-                                    <th class="px-4 py-3 text-left">Reviewed By</th>
-                                    <th class="px-4 py-3 text-center">Date</th>
-                                    <th class="px-4 py-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                @foreach ($latestDocs as $index => $doc)
-                                    @php
-                                        $status = strtolower($doc->status ?? 'pending');
-                                        $statusStyles = match ($status) {
-                                            'approved' => [
-                                                'bg' => 'bg-green-100',
-                                                'text' => 'text-green-800',
-                                                'icon' => 'fas fa-check-circle',
-                                            ],
-                                            'rejected' => [
-                                                'bg' => 'bg-blue-100',
-                                                'text' => 'text-blue-800',
-                                                'icon' => 'fas fa-times-circle',
-                                            ],
-                                            'resubmit' => [
-                                                'bg' => 'bg-yellow-100',
-                                                'text' => 'text-yellow-800',
-                                                'icon' => 'fas fa-blueo',
-                                            ],
-                                            'under_review' => [
-                                                'bg' => 'bg-blue-100',
-                                                'text' => 'text-blue-800',
-                                                'icon' => 'fas fa-search',
-                                            ],
-                                            default => [
-                                                'bg' => 'bg-gray-100',
-                                                'text' => 'text-gray-700',
-                                                'icon' => 'fas fa-hourglass-half',
-                                            ],
-                                        };
-
-                                        $role = optional($doc->reviewer)->role;
-                                        if ($role === 'obo') {
-                                            $role = 'Office of Building Official';
-                                        }
-                                    @endphp
-
-                                    <tr class="hover:bg-gray-50 transition">
-                                        <!-- Index -->
-                                        <td class="px-4 py-3 text-gray-600 text-center">{{ $loop->iteration }}</td>
-
-                                        <!-- File Icon -->
-                                        <td class="px-4 py-3 text-center">
-                                            <a href="{{ asset('storage/' . $doc->file_path) }}" target="_blank"
-                                                class="text-blue-800 hover:text-gray-600">
-                                                <i class="fas fa-file text-blue-500 text-2xl"></i>
-                                            </a>
-                                        </td>
-
-
-                                        <!-- Type -->
-                                        @php
-                                            $documentNames = [
-                                                'dos' => 'Deed of Sale',
-                                                'tct' => 'Transfer Certificate of Title',
-                                                'fsec' => 'Fire Safety Evaluation Clearance',
-                                                'bldg_plan' => 'Building Plan',
-                                                'bp_form' => 'Building Permit Form',
-                                                'zoning' => 'Zoning Clearance',
-                                                'crptx' => 'Current Real Property Tax Reciept',
-                                                'SPA' => 'Special Power of Attorney'
-                                            ];
-
-                                            $docName =
-                                                $documentNames[$doc->document_type] ??
-                                                ucwords(str_replace('_', ' ', $doc->document_type));
-                                        @endphp
-
-                                        <td class="px-4 py-3">
-                                            {{ $docName }} (v{{ $doc->version }})
-                                        </td>
-
-                                        <!-- Status -->
-                                        <td class="px-4 py-3">
-                                            <div class="flex items-center justify-center">
-                                                <span
-                                                    class="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold {{ $statusStyles['bg'] }} {{ $statusStyles['text'] }}">
-                                                    <i class="{{ $statusStyles['icon'] }}"></i>
-                                                    {{ ucfirst($status) }}
-                                                </span>
-                                            </div>
-                                        </td>
-
-                                        <!-- Remarks -->
-                                        <td class="px-4 py-3 text-gray-700">
-                                            {{ $doc->remarks ?? '—' }}
-                                        </td>
-
-                                        <!-- Reviewer -->
-                                        <td class="px-4 py-3 text-gray-700">
-                                            @if ($doc->reviewed_by)
-                                                {{ optional($doc->reviewer)->first_name }}
-                                                {{ optional($doc->reviewer)->last_name }}
-                                                @if (optional($doc->reviewer)->profession || $role)
-                                                    (@if (optional($doc->reviewer)->profession)
-                                                        {{ optional($doc->reviewer)->profession }}
-                                                    @endif
-                                                    @if ($role)
-                                                        {{ optional($doc->reviewer)->profession ? ' / ' : '' }}{{ $role }}
-                                                    @endif)
-                                                @endif
-                                            @else
-                                                <span class="text-gray-400">Pending</span>
-                                            @endif
-                                        </td>
-
-                                        <!-- Date -->
-                                        <td class="px-4 py-3 text-center text-gray-600">
-                                            {{ $doc->updated_at ? $doc->updated_at->format('M d, Y h:i A') : '—' }}
-                                        </td>
-
-                                        <!-- Action -->
-                                        <td class="px-4 py-3 text-center">
-                                            @if ($status === 'resubmit' || $status === 'rejected')
-                                                <button @click="openResubmit = true; selectedDoc = {{ $doc->toJson() }}"
-                                                    class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">
-                                                    <i class="fas fa-upload mr-1"></i> Resubmit
-                                                </button>
-                                            @else
-                                                <span class="text-gray-400 text-xs">—</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </div>
-                @else
-                    <p class="text-gray-500 text-center">No documents submitted.</p>
-                @endif
 
 
-                <div x-show="openResubmit" x-transition.opacity.duration.300ms
-                    class="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50" x-cloak>
-                    <div @click.away="openResubmit = false" x-transition.scale.duration.300ms
-                        class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md relative border border-gray-100">
-                        <!-- Close Button -->
-                        <button @click="openResubmit = false"
-                            class="absolute top-3 right-3 text-gray-400 hover:text-blue-500 transition" title="Close">
-                            <i class="fas fa-times text-lg"></i>
-                        </button>
-
-                        <!-- Header -->
-                        <h2 class="text-xl font-semibold text-gray-800 mb-5 text-center">
-                            <i class="fas fa-file-upload text-blue-600 mr-2"></i>
-                            Resubmit Document
-                        </h2>
-
-                        <!-- Form -->
-                        <template x-if="selectedDoc">
-                            <form :action="`/applicant/building_permit/view_application/resubmit/${selectedDoc.id}`"
-                                method="POST" enctype="multipart/form-data" class="space-y-4">
-                                @csrf
-
-                                <!-- Document Type -->
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-600 mb-1">
-                                        Document Type
-                                    </label>
-                                    <p class="text-gray-900 text-base font-semibold capitalize border border-gray-200 rounded-md px-3 py-2 bg-gray-50"
-                                        x-text="selectedDoc.document_type"></p>
-                                </div>
-
-                                <!-- File Upload -->
-                                <div>
-                                    <label for="file" class="block text-sm font-medium text-gray-600 mb-1">
-                                        Upload New File
-                                    </label>
-                                    <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300 focus:border-blue-400 transition"
-                                        requiblue>
-                                </div>
-
-                                <!-- Buttons -->
-                                <div class="flex justify-end gap-3 mt-5">
-                                    <button type="button" @click="openResubmit = false"
-                                        class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition">
-                                        Cancel
-                                    </button>
-                                    <button type="submit"
-                                        class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition">
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
-                        </template>
+                    <!-- Loading State -->
+                    <div x-show="loading" class="text-center py-8">
+                        <i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i>
+                        <p class="mt-2 text-gray-600">Loading documents...</p>
                     </div>
+
+                    <!-- Success Message -->
+                    <div x-show="successMessage" x-transition
+                        class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-600"></i>
+                            <span class="text-green-800" x-text="successMessage"></span>
+                        </div>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div x-show="errorMessage" x-transition class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-exclamation-circle text-red-600"></i>
+                            <span class="text-red-800" x-text="errorMessage"></span>
+                        </div>
+                    </div>
+
+                    <div x-show="!loading">
+                        <!-- Select All Option -->
+                        {{-- <div class="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 flex items-center gap-3">
+                            <input type="checkbox" @click.prevent="requestConfirm('ALL', !allChecked)"
+                                :checked="allChecked"
+                                class="w-5 h-5 text-blue-600 rounded cursor-pointer accent-blue-600">
+
+                            <label class="flex-1 cursor-pointer text-sm font-semibold text-gray-800">
+                                Select All Documents
+                            </label>
+                        </div> --}}
+
+                        <!-- I. TECHNICAL DOCUMENTS -->
+                        <div class="mb-6">
+                            <h4
+                                class="text-sm font-bold text-gray-900 bg-blue-100 px-4 py-2 rounded-lg mb-3 uppercase tracking-wide">
+                                <i class="fas fa-drafting-compass mr-2 text-blue-600"></i>I. TECHNICAL DOCUMENTS
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <template x-for="doc in technicalDocs" :key="doc.key">
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
+                                        :class="checkedDocs[doc.key] ? 'bg-blue-50 border-blue-300' : ''">
+                                        <div class="flex items-center gap-4 flex-1">
+
+                                            <input type="checkbox"
+                                                @click.prevent="requestConfirm(doc.key, !checkedDocs[doc.key])"
+                                                :checked="checkedDocs[doc.key]"
+                                                class="w-5 h-5 text-blue-600 rounded cursor-pointer accent-blue-600 flex-shrink-0">
+                                            <h4 class="font-semibold text-gray-900" x-text="doc.label"></h4>
+                                        </div>
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 flex-shrink-0 ml-2">
+                                            <i class="fas fa-circle"></i>
+                                        </span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+
+                        <!-- II. PROOF OF OWNERSHIP -->
+                        <div class="mb-6">
+                            <h4
+                                class="text-sm font-bold text-gray-900 bg-green-100 px-4 py-2 rounded-lg mb-3 uppercase tracking-wide">
+                                <i class="fas fa-file-contract mr-2 text-green-600"></i>II. PROOF OF OWNERSHIP
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <template x-for="doc in ownershipDocs" :key="doc.key">
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
+                                        :class="checkedDocs[doc.key] ? 'bg-blue-50 border-blue-300' : ''">
+                                        <div class="flex items-center gap-4 flex-1">
+
+                                            <input type="checkbox"
+                                                @click.prevent="requestConfirm(doc.key, !checkedDocs[doc.key])"
+                                                :checked="checkedDocs[doc.key]"
+                                                class="w-5 h-5 text-blue-600 rounded cursor-pointer accent-blue-600 flex-shrink-0">
+                                            <h4 class="font-semibold text-gray-900" x-text="doc.label"></h4>
+                                        </div>
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 flex-shrink-0 ml-2">
+                                            <i class="fas fa-circle"></i>
+                                        </span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+
+                        <!-- III. WRITTEN CLEARANCES / CERTIFICATIONS -->
+                        <div class="mb-6">
+                            <h4
+                                class="text-sm font-bold text-gray-900 bg-amber-100 px-4 py-2 rounded-lg mb-3 uppercase tracking-wide">
+                                <i class="fas fa-certificate mr-2 text-amber-600"></i>III. WRITTEN CLEARANCES /
+                                CERTIFICATIONS
+                            </h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <template x-for="doc in clearanceDocs" :key="doc.key">
+                                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-gray-100 transition"
+                                        :class="checkedDocs[doc.key] ? 'bg-blue-50 border-blue-300' : ''">
+                                        <div class="flex items-center gap-4 flex-1">
+
+                                            <input type="checkbox"
+                                                @click.prevent="requestConfirm(doc.key, !checkedDocs[doc.key])"
+                                                :checked="checkedDocs[doc.key]"
+                                                class="w-5 h-5 text-blue-600 rounded cursor-pointer accent-blue-600 flex-shrink-0">
+                                            <h4 class="font-semibold text-gray-900" x-text="doc.label"></h4>
+                                        </div>
+                                        <span
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 flex-shrink-0 ml-2">
+                                            <i class="fas fa-circle"></i>
+                                        </span>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-semibold text-gray-800">Documents Prepared</h5>
+                                <span class="text-lg font-bold text-blue-600"
+                                    x-text="`${checkedCount}/${totalDocs}`"></span>
+                            </div>
+                            <div class="w-full bg-blue-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                    :style="`width: ${percentage}%`"></div>
+                            </div>
+                            <p class="text-sm text-gray-700 mt-2" x-text="`${percentage}% of documents prepared`"></p>
+                        </div>
+
+                        <!-- Important Notice -->
+                        <div class="mt-6 p-4 bg-amber-50 border border-amber-300 rounded-lg">
+                            <div class="flex gap-3">
+                                <i class="fas fa-info-circle text-amber-600 flex-shrink-0 mt-0.5"></i>
+                                <div>
+                                    <h5 class="font-semibold text-amber-900">Important Notice</h5>
+                                    <p class="text-sm text-amber-800 mt-1">
+                                        Please bring all required documents in <strong>printed format</strong> to the Office
+                                        of
+                                        Building
+                                        Official during your appointment. Documents will be physically verified and checked
+                                        by
+                                        the
+                                        authorized OBO officer.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>
         </div>
+        <button x-show="allChecked" class="bg-green-600 text-white px-4 py-2 rounded">
+            All Documents Submitted - Proceed
+        </button>
+        <script>
+            function documentTracker(applicationId) {
+                return {
+                    applicationId,
+                    loading: true,
+                    submitting: false,
+                    successMessage: '',
+                    errorMessage: '',
+                    showConfirmModal: false,
+                    pendingDocKey: null,
+                    pendingValue: null,
+                    checkedDocs: {},
+                    applicationStatus: '{{ $application->status }}',
+
+
+                    technicalDocs: [{
+                            key: 'architectural_plans',
+                            label: 'Architectural Plans'
+                        },
+                        {
+                            key: 'structural_plans',
+                            label: 'Structural Plans'
+                        },
+                        {
+                            key: 'sanitary_plumbing_plans',
+                            label: 'Sanitary / Plumbing Plans'
+                        },
+                        {
+                            key: 'electrical_plans',
+                            label: 'Electrical Plans'
+                        },
+                        {
+                            key: 'mechanical_plans',
+                            label: 'Mechanical Plans'
+                        },
+                        {
+                            key: 'electronics_alarm_cctv_plans',
+                            label: 'Electronics / Alarm / CCTV Plans'
+                        },
+                        {
+                            key: 'bill_of_materials_cost_estimates',
+                            label: 'Bill of Materials & Cost Estimates'
+                        },
+                    ],
+
+                    ownershipDocs: [{
+                            key: 'deed_of_sale_title',
+                            label: 'Deed of Sale / TCT / Title Documents'
+                        },
+                        {
+                            key: 'current_real_property_tax_receipt',
+                            label: 'Current Real Property Tax Receipt'
+                        },
+                        {
+                            key: 'lot_site_plan',
+                            label: 'Lot / Site Plan'
+                        },
+                        {
+                            key: 'authorization_spa',
+                            label: 'Authorization / SPA'
+                        },
+                    ],
+
+                    clearanceDocs: [{
+                            key: 'zoning_clearance',
+                            label: 'Zoning Clearance'
+                        },
+                        {
+                            key: 'fire_safety_clearance_bfp',
+                            label: 'Fire Safety Clearance (BFP)'
+                        },
+                        {
+                            key: 'environmental_clearance_denr',
+                            label: 'Environmental Clearance (DENR)'
+                        },
+                        {
+                            key: 'other_required_clearances',
+                            label: 'Other Required Clearances'
+                        },
+                    ],
+                    init() {
+                        this.$watch('allChecked', (value) => {
+                            if (value) {
+                                this.applicationStatus = 'payment';
+                            }
+                        });
+                    },
+                    get allChecked() {
+                        return Object.keys(this.checkedDocs).length > 0 &&
+                            Object.values(this.checkedDocs).every(v => v);
+                    },
+
+                    get checkedCount() {
+                        return Object.values(this.checkedDocs).filter(v => v).length;
+                    },
+
+                    get totalDocs() {
+                        return Object.keys(this.checkedDocs).length;
+                    },
+
+                    get percentage() {
+                        return this.totalDocs === 0 ? 0 :
+                            Math.round((this.checkedCount / this.totalDocs) * 100);
+                    },
+
+
+                    async loadDocuments() {
+                        this.loading = true;
+
+                        try {
+                            const res = await fetch(`/applicant/applications/${this.applicationId}/documents`, {
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    'Accept': 'application/json'
+                                }
+                            });
+
+                            const json = await res.json();
+                            console.log(json);
+                            const allDocs = [
+                                ...this.technicalDocs,
+                                ...this.ownershipDocs,
+                                ...this.clearanceDocs
+                            ];
+
+                            allDocs.forEach(d => this.checkedDocs[d.key] = false);
+
+                            if (json.success) {
+                                json.data.forEach(d => {
+                                    this.checkedDocs[d.document_key] = d.is_submitted;
+                                });
+                            }
+                        } catch {
+                            this.showError('Failed to load documents');
+                        } finally {
+                            this.loading = false;
+                        }
+                    },
+
+                    requestConfirm(key, value) {
+                        this.pendingDocKey = key;
+                        this.pendingValue = value;
+                        this.showConfirmModal = true;
+                    },
+
+                    async confirmCheck() {
+                        this.submitting = true;
+                        this.clearMessages();
+
+                        const isAll = this.pendingDocKey === 'ALL';
+
+                        const url = isAll ?
+                            `/applications/${this.applicationId}/documents/toggle-all` :
+                            `/applications/${this.applicationId}/documents/toggle`;
+
+                        const body = isAll ? {
+                            is_submitted: this.pendingValue
+                        } : {
+                            document_key: this.pendingDocKey,
+                            is_submitted: this.pendingValue
+                        };
+
+                        try {
+                            const res = await fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                    'Accept': 'application/json'
+                                },
+                                body: JSON.stringify(body)
+                            });
+
+                            const json = await res.json();
+
+                            if (json.success) {
+                                if (isAll) {
+                                    Object.keys(this.checkedDocs)
+                                        .forEach(k => this.checkedDocs[k] = this.pendingValue);
+                                } else {
+                                    this.checkedDocs[this.pendingDocKey] = this.pendingValue;
+                                }
+
+                                this.showSuccess(json.message);
+                                this.closeModal();
+                            } else {
+                                this.showError(json.message);
+                            }
+                        } catch {
+                            this.showError('Failed to update document');
+                        } finally {
+                            this.submitting = false;
+                        }
+                    },
+
+                    closeModal() {
+                        this.showConfirmModal = false;
+                        this.pendingDocKey = null;
+                        this.pendingValue = null;
+                    },
+
+                    showSuccess(msg) {
+                        this.successMessage = msg;
+                        setTimeout(() => this.successMessage = '', 3000);
+                    },
+
+                    showError(msg) {
+                        this.errorMessage = msg;
+                        setTimeout(() => this.errorMessage = '', 5000);
+                    },
+
+                    clearMessages() {
+                        this.successMessage = '';
+                        this.errorMessage = '';
+                    }
+                }
+            }
+        </script>
+
         @if (session('success'))
             <script>
                 Swal.fire({

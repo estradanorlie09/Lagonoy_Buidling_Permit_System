@@ -5,6 +5,7 @@ use App\Http\Controllers\ApplicantBuildingPermitController;
 use App\Http\Controllers\ApplicantController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentChecklistController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\OboController;
 use App\Http\Controllers\OboOfficialController;
@@ -77,6 +78,8 @@ Route::middleware(['auth', 'verified', 'role:applicant'])->group(function () {
     Route::get('/applicant/visitations/events', [ApplicantController::class, 'getVisitationEvents'])
         ->name('applicant.visitations.events');
 
+    Route::get('/applicant/applications/{application}/documents', [DocumentChecklistController::class, 'index'])
+        ->name('documents.index');
     // // Sanitary
     // Route::get('/applicant/sanitary', [ApplicantController::class, 'sanitary'])->name('applicant.sanitary');
     // Route::get('/applicant/sanitary/sanitary_form', [SanitaryContoller::class, 'sanitary_form'])->name('sanitary.forms.sanitary.sanitary_form');
@@ -180,6 +183,22 @@ Route::middleware(['auth', 'verified', 'role:obo'])->group(function () {
     Route::post('/obo/visitation/{id}/set_schedule', [OboOfficialController::class, 'scheduleVisit'])->name('obo.obo.schedule');
     Route::post('/obo/visitation/{id}/reschedule', [OboOfficialController::class, 'reschedule'])->name('obo.obo.reschedule');
     Route::put('/obo/visitation/{id}/status', [OboOfficialController::class, 'updateStatus'])->name('obo.obo.updateStatus');
+
+    Route::get('/applications/{application}/documents', [DocumentChecklistController::class, 'index'])
+        ->name('documents.index');
+
+    // Toggle single document
+    Route::post('/applications/{application}/documents/toggle', [DocumentChecklistController::class, 'toggle'])
+        ->name('documents.toggle');
+
+    // Toggle all documents
+    Route::post('/applications/{application}/documents/toggle-all', [DocumentChecklistController::class, 'toggleAll'])
+        ->name('documents.toggleAll');
+
+    // Get statistics
+    Route::get('/applications/{application}/documents/statistics', [DocumentChecklistController::class, 'statistics'])
+        ->name('documents.statistics');
+
     // Route::get('/obo/building_application_doc', [OboOfficialController::class, 'buildingApplicationDoc'])->name('obo.building_application_doc');
     // Route::post('/obo/review-multiple', [OboOfficialController::class, 'reviewMultiple'])
     //     ->name('obo.review.multiple');
